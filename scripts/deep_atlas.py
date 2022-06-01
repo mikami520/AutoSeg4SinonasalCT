@@ -19,7 +19,7 @@ from network import (
     regNet, segNet
 )
 from train import (
-    train
+    train_network
 )
 def parse_command_line():
     print('---'*10)
@@ -186,25 +186,25 @@ def main():
     '''
     dataloader_train_seg = monai.data.DataLoader(
         dataset_seg_available_train,
-        batch_size=8,
+        batch_size=1,
         num_workers=4,
         shuffle=True
     )
     dataloader_valid_seg = monai.data.DataLoader(
         dataset_seg_available_valid,
-        batch_size=8,
+        batch_size=1,
         num_workers=4,
         shuffle=False
     )
     dataloader_train_reg = {
         seg_availability: monai.data.DataLoader(
-                dataset,
-                batch_size=1,
-                num_workers=4,
-                shuffle=True
-            )
-            if len(dataset) > 0 else []  # empty dataloaders are not a thing-- put an empty list if needed
-            for seg_availability, dataset in dataset_pairs_train_subdivided.items()
+            dataset,
+            batch_size=1,
+            num_workers=4,
+            shuffle=True
+        )
+        if len(dataset) > 0 else []  # empty dataloaders are not a thing-- put an empty list if needed
+        for seg_availability, dataset in dataset_pairs_train_subdivided.items()
     }
 
     dataloader_valid_reg = {
@@ -218,7 +218,7 @@ def main():
         for seg_availability, dataset in dataset_pairs_valid_subdivided.items()
     }
 
-    train(dataloader_train_reg, 
+    train_network(dataloader_train_reg, 
           dataloader_valid_reg, 
           dataloader_train_seg, 
           dataloader_valid_seg, 
@@ -238,4 +238,3 @@ if __name__ == '__main__':
     # Set deterministic training for reproducibility
     monai.utils.set_determinism(seed=2938649572)
     main()
-     

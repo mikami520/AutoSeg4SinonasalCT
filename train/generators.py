@@ -9,7 +9,6 @@ import os.path
 import argparse
 import sys
 
-seg_availabilities = ['00', '01', '10', '11']
 
 def create_batch_generator(dataloader_subdivided, weights=None):
     """
@@ -26,6 +25,7 @@ def create_batch_generator(dataloader_subdivided, weights=None):
         The generator will weighted-randomly pick one of the seg_availabilities and
         yield the next batch from the corresponding dataloader.
     """
+    seg_availabilities = ['00', '01', '10', '11']
     if weights is None:
         weights = np.array([len(dataloader_subdivided[s]) for s in seg_availabilities])
     weights = np.array(weights)

@@ -36,7 +36,7 @@ def swap_training(network_to_train, network_to_not_train):
     network_to_not_train.eval()
     network_to_train.train()
 
-def train(dataloader_train_reg, 
+def train_network(dataloader_train_reg, 
          dataloader_valid_reg, 
          dataloader_train_seg, 
          dataloader_valid_seg, 
@@ -81,9 +81,9 @@ def train(dataloader_train_reg,
     lambda_r = 7.5 * (image_scale / 128)**2
 
     max_epochs = max_epoch
-    reg_phase_training_batches_per_epoch = 40
+    reg_phase_training_batches_per_epoch = 10
     seg_phase_training_batches_per_epoch = 5  # Fewer batches needed, because seg_net converges more quickly
-    reg_phase_num_validation_batches_to_use = 40
+    reg_phase_num_validation_batches_to_use = 10
     val_interval = val_step
 
     training_losses_reg = []
@@ -108,7 +108,7 @@ def train(dataloader_train_reg,
         losses = []
         for batch in batch_generator_train_reg(reg_phase_training_batches_per_epoch):
             optimizer_reg.zero_grad()
-            loss_sim, loss_reg, loss_ana = reg_losses(batch, device)
+            loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net)
             loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
             loss.backward()
             optimizer_reg.step()
@@ -123,7 +123,7 @@ def train(dataloader_train_reg,
             losses = []
             with torch.no_grad():
                 for batch in batch_generator_valid_reg(reg_phase_num_validation_batches_to_use):
-                    loss_sim, loss_reg, loss_ana = reg_losses(batch)
+                    loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net)
                     loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
                     losses.append(loss.item())
 

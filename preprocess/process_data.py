@@ -71,7 +71,7 @@ def load_seg_dataset(train, valid):
             monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
             monai.transforms.ResizeD(
                 keys=['img', 'seg'],
-                spatial_size=(256, 512, 512),
+                spatial_size=(128, 256, 256),
                 mode=['trilinear', 'nearest'],
                 align_corners=[False, None]
             ),
@@ -103,7 +103,7 @@ def load_reg_dataset(train, valid):
             monai.transforms.OrientationD(keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
             monai.transforms.ResizeD(
                 keys=['img1','seg1','img2', 'seg2'],
-                spatial_size=(256, 512, 512),
+                spatial_size=(128, 256, 256),
                 mode=['trilinear', 'nearest', 'trilinear', 'nearest'],
                 allow_missing_keys=True,
                 align_corners=[False, None, False, None]
