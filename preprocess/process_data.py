@@ -1,0 +1,170 @@
+import monai
+import torch
+import itk
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+import glob
+import os.path
+import argparse
+import sys
+sys.path.insert(0, '/home/ameen/DeepAtlas/utils')
+from utils import (
+    preview_image, preview_3D_vector_field, preview_3D_deformation,
+    jacobian_determinant, plot_against_epoch_numbers
+)
+
+def path_to_id(path):
+  return os.path.basename(path).split('.')[0]
+
+def split_data(img_path, seg_path, num_seg):
+    total_img_paths = []
+    total_seg_paths = []
+    for i in sorted(glob.glob(img_path + '/*.nii.gz')):
+        total_img_paths.append(i)
+
+    for j in sorted(glob.glob(seg_path + '/*.nii.gz')):
+        total_seg_paths.append(j)
+    
+    np.random.shuffle(total_img_paths)
+    num_train = int(round(len(total_img_paths)*0.7))
+    img_train = total_img_paths[:num_train]
+    img_test = total_img_paths[num_train:]
+    seg_train = []
+    seg_test = []
+    test = []
+    train = []
+    seg_ids = list(map(path_to_id, total_seg_paths))
+    img_ids_test = map(path_to_id, img_test)
+    img_ids_train = map(path_to_id, img_train)
+    for img_index, img_id in enumerate(img_ids_test):
+        data_item = {'img': img_test[img_index]}
+        if img_id in seg_ids:
+            seg_test.append(total_seg_paths[seg_ids.index(img_id)])
+            data_item['seg'] = total_seg_paths[seg_ids.index(img_id)]
+        
+        test.append(data_item)
+    
+    for img_index, img_id in enumerate(img_ids_train):
+        if img_id in seg_ids:
+            seg_train.append(total_seg_paths[seg_ids.index(img_id)])
+
+    np.random.shuffle(seg_train)
+    seg_train_available = seg_train[:num_seg]
+    seg_ids = list(map(path_to_id, seg_train_available))
+    img_ids = map(path_to_id, img_train)
+    for img_index, img_id in enumerate(img_ids):
+        data_item = {'img': img_train[img_index]}
+        if img_id in seg_ids:
+            data_item['seg'] = seg_train_available[seg_ids.index(img_id)]
+        train.append(data_item)
+    
+    return train, test, 
+
+def load_seg_dataset(train, valid):
+    transform_seg_available = monai.transforms.Compose(
+    transforms=[
+            monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True),
+            monai.transforms.TransposeD(keys=['img', 'seg'], indices=(2, 1, 0)),
+            monai.transforms.AddChannelD(keys=['img', 'seg']),
+            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest')),
+            monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
+            monai.transforms.ResizeD(
+                keys=['img', 'seg'],
+                spatial_size=(256, 512, 512),
+                mode=['trilinear', 'nearest'],
+                align_corners=[False, None]
+            ),
+            monai.transforms.ToTensorD(keys=['img', 'seg'])
+        ]
+    )
+    itk.ProcessObject.SetGlobalWarningDisplay(False)
+    dataset_seg_available_train = monai.data.CacheDataset(
+        data=train,
+        transform=transform_seg_available,
+        cache_num=16
+    )
+
+    dataset_seg_available_valid = monai.data.CacheDataset(
+        data=valid,
+        transform=transform_seg_available,
+        cache_num=16
+    )
+    return dataset_seg_available_train, dataset_seg_available_valid
+
+def load_reg_dataset(train, valid):
+    transform_pair = monai.transforms.Compose(
+        transforms=[
+            monai.transforms.LoadImageD(keys=['img1', 'seg1', 'img2', 'seg2'], image_only=True, allow_missing_keys=True),
+            monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(2, 1, 0), allow_missing_keys=True),
+            monai.transforms.ToTensorD(keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True), #if resize is not None else monai.transforms.Identity()
+            monai.transforms.AddChannelD(keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
+            monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest','trilinear', 'nearest'), allow_missing_keys=True),
+            monai.transforms.OrientationD(keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
+            monai.transforms.ResizeD(
+                keys=['img1','seg1','img2', 'seg2'],
+                spatial_size=(256, 512, 512),
+                mode=['trilinear', 'nearest', 'trilinear', 'nearest'],
+                allow_missing_keys=True,
+                align_corners=[False, None, False, None]
+            ),
+            monai.transforms.ConcatItemsD(keys=['img1', 'img2'], name='img12', dim=0),
+            monai.transforms.DeleteItemsD(keys=['img1', 'img2']),
+        ]
+    )
+    dataset_pairs_train_subdivided = {
+        seg_availability: monai.data.CacheDataset(
+            data=data_list,
+            transform=transform_pair,
+            cache_num=32
+        )
+        for seg_availability, data_list in train.items()
+    }
+
+    dataset_pairs_valid_subdivided = {
+        seg_availability: monai.data.CacheDataset(
+            data=data_list,
+            transform=transform_pair,
+            cache_num=32
+        )
+        for seg_availability, data_list in valid.items()
+    }
+    return dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided
+
+def take_data_pairs(data, symmetric=True):
+    """Given a list of dicts that have keys for an image and maybe a segmentation,
+    return a list of dicts corresponding to *pairs* of images and maybe segmentations.
+    Pairs consisting of a repeated image are not included.
+    If symmetric is set to True, then for each pair that is included, its reverse is also included"""
+    data_pairs = []
+    for i in range(len(data)):
+        j_limit = len(data) if symmetric else i
+        for j in range(j_limit):
+            if j == i:
+                continue
+            d1 = data[i]
+            d2 = data[j]
+            pair = {
+                'img1': d1['img'],
+                'img2': d2['img']
+            }
+            if 'seg' in d1.keys():
+                pair['seg1'] = d1['seg']
+            if 'seg' in d2.keys():
+                pair['seg2'] = d2['seg']
+            data_pairs.append(pair)
+    return data_pairs
+
+def subdivide_list_of_data_pairs(data_pairs_list):
+    out_dict = {'00': [], '01': [], '10': [], '11': []}
+    for d in data_pairs_list:
+        if 'seg1' in d.keys() and 'seg2' in d.keys():
+            out_dict['11'].append(d)
+        elif 'seg1' in d.keys():
+            out_dict['10'].append(d)
+        elif 'seg2' in d.keys():
+            out_dict['01'].append(d)
+        else:
+            out_dict['00'].append(d)
+    return out_dict
+
