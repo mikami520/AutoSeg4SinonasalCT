@@ -2,17 +2,8 @@ import monai
 import torch
 import itk
 import numpy as np
-import matplotlib.pyplot as plt
-import random
 import glob
 import os.path
-import argparse
-import sys
-sys.path.insert(0, '/home/ameen/DeepAtlas/utils')
-from utils import (
-    preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
-)
 
 def path_to_id(path):
   return os.path.basename(path).split('.')[0]
@@ -82,13 +73,15 @@ def load_seg_dataset(train, valid):
     dataset_seg_available_train = monai.data.CacheDataset(
         data=train,
         transform=transform_seg_available,
-        cache_num=16
+        cache_num=16,
+        hash_as_key=True
     )
 
     dataset_seg_available_valid = monai.data.CacheDataset(
         data=valid,
         transform=transform_seg_available,
-        cache_num=16
+        cache_num=16,
+        hash_as_key=True
     )
     return dataset_seg_available_train, dataset_seg_available_valid
 
@@ -116,7 +109,8 @@ def load_reg_dataset(train, valid):
         seg_availability: monai.data.CacheDataset(
             data=data_list,
             transform=transform_pair,
-            cache_num=32
+            cache_num=32,
+            hash_as_key=True
         )
         for seg_availability, data_list in train.items()
     }
@@ -125,7 +119,8 @@ def load_reg_dataset(train, valid):
         seg_availability: monai.data.CacheDataset(
             data=data_list,
             transform=transform_pair,
-            cache_num=32
+            cache_num=32,
+            hash_as_key=True
         )
         for seg_availability, data_list in valid.items()
     }
