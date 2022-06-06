@@ -24,7 +24,10 @@ cd <path to repo>/preprocessing
 ```
 Register data to template (can be used for multiple segmentations propagation)
 ```
-python3 registration.py -bp <full path of base dir> -ip <relative path to nifti images dir> -sp <relative path to segmentations dir> 
+python3 registration.py 
+-bp <full path of base dir> 
+-ip <relative path to nifti images dir> 
+-sp <relative path to segmentations dir> 
 ```
 If you want to make sure correspondence of the name and value of segmentations, you can add the following commands after above command
 ```
@@ -36,5 +39,20 @@ python3 registration.py -bp /Users/mikamixiao/Desktop -ip images -sp labels -sl 
 ```
 Final output of registered images and segmentations will be saved in 
 ```
-imagesRS/ && labelsRS/
+base_path/imagesRS/ && base_path/labelsRS/
+```
+### Step 2.2: Crop and Flip Data
+Crop and Flip data to extract region of interest (ROI)
+```
+python3 crop_flip.py 
+-bp <full path of base dir> 
+-ip <relative path to nifti images dir> 
+-sp <relative path to segmentations dir> 
+-op <relative path to output dir> 
+-rs <customized resized shape>
+```
+#### Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1.
+Final output of registered images and segmentations will be saved in
+```
+base_path/output/images/ && base_path/output/labels
 ```
