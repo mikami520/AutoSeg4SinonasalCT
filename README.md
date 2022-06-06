@@ -3,7 +3,7 @@ DeepAtlas: Joint Semi-supervised Learning of Image Registration and Segmentation
 
 ## Step 0: Fork This GitHub Repository 
 ```
-git clone https://github.com/mikami520/CIS2-EustachianTube.git
+git clone https://github.com/mikami520/DeepAtlas.git
 ```
 
 ## Step 1: Set Up Two Environments Using requirements.txt Files (virtual environment is recommended)
