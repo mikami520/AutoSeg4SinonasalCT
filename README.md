@@ -33,7 +33,7 @@ If you want to make sure correspondence of the name and value of segmentations, 
 ```
 -sl LabelValue1 LabelName1 LabelValue2 LabelName2 LabelValue3 LabelName3 ...
 ```
-For example, if I have two labels for maxillary sinus named ```L-MS``` and ```R-MS``` and I want ```L-MS``` matched to ```label 1``` and ```R-MS``` to ```label 2```
+For example, if I have two labels for maxillary sinus named ```L-MS``` and ```R-MS``` and I want ```L-MS``` matched to ```label 1``` and ```R-MS``` to ```label 2``` (**Pay attention to the order**)
 ```
 python3 registration.py -bp /Users/mikamixiao/Desktop -ip images -sp labels -sl 1 L-MS 2 R-MS
 ```
@@ -42,7 +42,7 @@ Final output of registered images and segmentations will be saved in
 base_dir/imagesRS/ && base_dir/labelsRS/
 ```
 ### Step 2.2: Crop and Flip Data
-Crop and Flip data to extract region of interest (ROI)
+Crop and flip data to extract region of interest (ROI). **Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1**
 ```
 python3 crop_flip.py 
 -bp <full path of base dir> 
@@ -51,8 +51,7 @@ python3 crop_flip.py
 -op <relative path to output dir> 
 -rs <customized resized shape>
 ```
-#### Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1.
-Final output of registered images and segmentations will be saved in
+Final output of ROI will be saved in
 ```
 base_dir/output/images/ && base_dir/output/labels
 ```
