@@ -247,7 +247,7 @@ def plot(
 ):
     # Plot the training and validation losses
     plot_against_epoch_numbers(training_losses_reg, label="training")
-    plot_against_epoch_numbers(validation_losses_reg, label="validation")
+    plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.legend()
     plt.ylabel('loss')
     plt.title('Alternating training: registration loss')
@@ -255,13 +255,8 @@ def plot(
     plt.show()
 
     plot_against_epoch_numbers(training_losses_seg, label="training")
+    plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
     plt.ylabel('training loss')
     plt.title('Alternating training: segmentation loss (training)')
-    plt.savefig('seg_net_training_losses.png')
-    plt.show()
-
-    plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
-    plt.ylabel('validation loss')
-    plt.title('Alternating training: segmentation loss (validation)')
-    plt.savefig('seg_net_validation_losses.png')
+    plt.savefig('seg_net_losses.png')
     plt.show()
