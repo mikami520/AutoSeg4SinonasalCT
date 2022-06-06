@@ -29,7 +29,7 @@ python3 registration.py
 -ip <relative path to nifti images dir> 
 -sp <relative path to segmentations dir> 
 ```
-If you want to make sure correspondence of the name and value of segmentations, you can add the following commands after above command
+If you want to make sure correspondence of the name and value of segmentations, you can add the following commands after above command (**Option**)
 ```
 -sl LabelValue1 LabelName1 LabelValue2 LabelName2 LabelValue3 LabelName3 ...
 ```
