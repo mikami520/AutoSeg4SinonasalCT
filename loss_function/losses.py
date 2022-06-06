@@ -1,11 +1,7 @@
 import monai
 import torch
-import itk
 import numpy as np
 import matplotlib.pyplot as plt
-import random
-import glob
-import os
 
 def warp_func():
     warp = monai.networks.blocks.Warp(mode="bilinear", padding_mode="border")
@@ -35,7 +31,7 @@ def similarity_loss(displacement_field, image_pair):
         image_pair[:, [0], :, :, :]  # target
     )
 
-def regularization_loss():
+def regularization_loss_func():
     return monai.losses.BendingEnergyLoss()
 
 def dice_loss_func():
@@ -43,6 +39,15 @@ def dice_loss_func():
         include_background=True,
         to_onehot_y=False,
         softmax=False,
+        reduction="mean"
+    )
+    return dice_loss
+
+def dice_loss_func2():
+    dice_loss = monai.losses.DiceLoss(
+        include_background=True,
+        to_onehot_y=True,
+        softmax=True,
         reduction="mean"
     )
     return dice_loss
@@ -85,17 +90,17 @@ def anatomy_loss(displacement_field, image_pair, seg_net, gt_seg1=None, gt_seg2=
         seg1  # target image segmentation
     )
 
-def reg_losses(batch, device, reg_net, seg_net):
+def reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes):
     img12 = batch['img12'].to(device)
     displacement_field12 = reg_net(img12)
 
     loss_sim = similarity_loss(displacement_field12, img12)
-
+    regularization_loss = regularization_loss_func()
     loss_reg = regularization_loss(displacement_field12)
 
     gt_seg1 = batch['seg1'].to(device) if 'seg1' in batch.keys() else None
     gt_seg2 = batch['seg2'].to(device) if 'seg2' in batch.keys() else None
-    loss_ana = anatomy_loss(displacement_field12, img12, seg_net, gt_seg1, gt_seg2)
+    loss_ana = anatomy_loss(displacement_field12, img12, seg_net, gt_seg1, gt_seg2, num_segmentation_classes)
 
     return loss_sim, loss_reg, loss_ana
 

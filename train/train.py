@@ -18,7 +18,7 @@ from utils import (
 )
 
 from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
 )
 import generators
 
@@ -108,7 +108,7 @@ def train_network(dataloader_train_reg,
         losses = []
         for batch in batch_generator_train_reg(reg_phase_training_batches_per_epoch):
             optimizer_reg.zero_grad()
-            loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net)
+            loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes)
             loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
             loss.backward()
             optimizer_reg.step()
@@ -123,7 +123,7 @@ def train_network(dataloader_train_reg,
             losses = []
             with torch.no_grad():
                 for batch in batch_generator_valid_reg(reg_phase_num_validation_batches_to_use):
-                    loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net)
+                    loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes)
                     loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
                     losses.append(loss.item())
 
@@ -149,6 +149,7 @@ def train_network(dataloader_train_reg,
         losses = []
         dice_loss = dice_loss_func()
         warp_nearest = warp_nearest_func()
+        dice_loss2 = dice_loss_func2()
         for batch in batch_generator_train_seg(seg_phase_training_batches_per_epoch):
             optimizer_seg.zero_grad()
 
@@ -167,7 +168,7 @@ def train_network(dataloader_train_reg,
                 seg1 = monai.networks.one_hot(batch['seg1'].to(device), num_segmentation_classes)
                 seg2 = monai.networks.one_hot(batch['seg2'].to(device), num_segmentation_classes)
                 loss_metric = dice_loss(seg2_predicted, seg2)
-                loss_supervised = dice_loss(seg1_predicted, seg1) + loss_metric
+                loss_supervised = loss_metric
                 # The above supervised loss looks a bit different from the one in the paper
                 # in that it includes predictions for both images in the current image pair;
                 # we might as well do this, since we have gone to the trouble of loading
@@ -217,7 +218,7 @@ def train_network(dataloader_train_reg,
                     imgs = batch['img'].to(device)
                     true_segs = batch['seg'].to(device)
                     predicted_segs = seg_net(imgs)
-                    loss = dice_loss(predicted_segs, true_segs)
+                    loss = dice_loss2(predicted_segs, true_segs)
                     losses.append(loss.item())
 
             validation_loss = np.mean(losses)
