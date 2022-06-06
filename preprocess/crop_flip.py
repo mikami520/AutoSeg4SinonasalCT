@@ -97,7 +97,6 @@ def main():
     seg_path = os.path.join(base_path, args.sp)
     output_path = os.path.join(base_path, args.op)
     resize_shape = args.rs
-
     output_img = os.path.join(output_path, 'images')
     output_seg = os.path.join(output_path, 'labels')
 
@@ -116,7 +115,7 @@ def main():
     except:
         print(f'{output_seg} is already existed')
 
-    for i in sorted(glob.glob(image_path + '/*.nii.gz')):
+    for i in sorted(glob.glob(image_path + '/*nii.gz')):
         id = os.path.basename(i).split('.')[0]
         label_path = os.path.join(seg_path, id + '.nii.gz')
         nib_img, nib_seg, ants_img, ants_seg = load_data(i, label_path)
