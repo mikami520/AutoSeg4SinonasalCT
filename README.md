@@ -17,7 +17,7 @@ pip3 install -r requirements.txt
 ```
 
 ## Step 2: Preprocess Datasets
-### Step 2.1: Register Data to Template
+### Step 2.1: Register Data to Template (make sure scan and segmentation are co-registered
 Activate scripting environment
 ```
 cd <path to repo>/preprocessing
