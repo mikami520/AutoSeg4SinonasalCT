@@ -1,4 +1,5 @@
 import os
+import nibabel as nib
 import ants
 import nrrd
 import numpy as np
@@ -25,52 +26,35 @@ def parse_command_line():
     return argv
 
 
-def split_and_registration(template, target, base, images_path, seg_path, fomat, checked=False):
+def correct_affine(scan, base, images_path, seg_path, fomat):
     print('---'*10)
     print('Creating file paths')
     # Define the path for template, target, and segmentations (from template)
-    fixed_path = os.path.join(base, images_path, template + '.' + fomat)
-    moving_path = os.path.join(base, images_path, target + '.' + fomat)
-    segmentation_path = os.path.join(
-        base, seg_path, target + '.nii.gz')
+    img_path = os.path.join(base, images_path, scan + '.' + fomat)
+    segment_path = os.path.join(base, seg_path, scan + '.nii.gz')
 
     segmentation_output = os.path.join(
-        base, 'labelsRS/', target + '.nii.gz')
-    images_output = os.path.join(base, 'imagesRS/', target + '.nii.gz')
+        base, 'labelsRS/', scan + '.nii.gz')
+    images_output = os.path.join(base, 'imagesRS/', scan + '.nii.gz')
     print('---'*10)
-    print('Reading in the segmentation')
+    print('Reading in the segmentation and scan')
     # Split segmentations into individual components
-    segment_target = ants.image_read(segmentation_path)
-    print('---'*10)
-    print('Reading in the template and target image')
-    # Read the template and target image
-    template_image = ants.image_read(fixed_path)
-    target_image = ants.image_read(moving_path)
-    print('---'*10)
-    print('Performing the template and target image registration')
-    transform_forward = ants.registration(fixed=template_image, moving=target_image,
-                                          type_of_transform="Similarity", verbose=False)
-    print('---'*10)
-    print('Applying the transfmation for label propagation and image registration')
-    predicted_targets_image = ants.apply_transforms(
-        fixed=template_image,
-        moving=segment_target,
-        transformlist=transform_forward["fwdtransforms"],
-        interpolator="genericLabel",
-        verbose=False)
+    segment = nib.load(segment_path)
+    image = nib.load(img_path)
+    if not (segment.affine == image.affine).all():
+        print('---'*10)
+        print('Match affine of segmentation and scan')
+        segment_nii = nib.Nifti1Image(
+            segment.get_fdata(), affine=image.affine, header=image.header)
+    else:
+        segment_nii = segment
 
-    reg_img = ants.apply_transforms(
-        fixed=template_image,
-        moving=target_image,
-        transformlist=transform_forward["fwdtransforms"],
-        interpolator="linear",
-        verbose=False)
     print('---'*10)
     print("writing out transformed template segmentation")
 
-    predicted_targets_image.to_file(segmentation_output)
-    reg_img.to_file(images_output)
-    print('Label Propagation & Image Registration complete')
+    segment_nii.to_filename(segmentation_output)
+    image.to_filename(images_output)
+    print('Affine correction complete')
 
 
 def convert_to_one_hot(data, header, segment_indices=None):
@@ -178,13 +162,8 @@ def checkCorrespondence(segmentation, base, paired_list, filename):
     return output
 
 
-def checkSegFormat(base, segmentation, paired_list, check=False):
+def checkSegFormat(base, segmentation, paired_list, check=False, save_dir=None):
     path = os.path.join(base, segmentation)
-    save_dir = os.path.join(base, 're-format_labels')
-    try:
-        os.mkdir(save_dir)
-    except:
-        print(f'{save_dir} already exists')
 
     for file in os.listdir(path):
         name = file.split('.')[0]
@@ -250,6 +229,12 @@ def main():
     images_output = os.path.join(base, 'imagesRS')
     labels_output = os.path.join(base, 'labelsRS')
     fomat = checkFormat(base, images_path)
+    save_dir = os.path.join(base, 're-format_labels')
+    try:
+        os.mkdir(save_dir)
+    except:
+        print(f'{save_dir} already exists')
+
     if label_list is not None:
         matched_output = os.path.join(base, 'MatchedSegs')
         try:
@@ -287,40 +272,19 @@ def main():
 
             # print(new_segmentation)
         seg_output_path = checkSegFormat(
-            base, segmentation, paired_list, check=True)
-        k = 0
+            base, segmentation, paired_list, check=True, save_dir=save_dir)
         for j in sorted(glob.glob(os.path.join(base, images_path) + '/*' + fomat)):
-            k += 1
-            if k == 1:
-                template = os.path.basename(j).split('.')[0]
-            else:
-                target = os.path.basename(j).split('.')[0]
-                split_and_registration(
-                    template, target, base, images_path, seg_output_path, fomat, checked=True)
+            scan = os.path.basename(j).split('.')[0]
+            correct_affine(
+                scan, base, images_path, seg_output_path, fomat)
 
-        image = ants.image_read(os.path.join(
-            base, images_path, template + '.' + fomat))
-        image.to_file(os.path.join(base, images_output, template + '.nii.gz'))
-        shutil.copy(os.path.join(base, seg_output_path,
-                    template + '.nii.gz'), labels_output)
     else:
         seg_output_path = checkSegFormat(
-            base, segmentation, paired_list, check=False)
-        k = 0
+            base, segmentation, paired_list, check=False, save_dir=save_dir)
         for i in sorted(glob.glob(os.path.join(base, images_path) + '/*' + fomat)):
-            k += 1
-            if k == 1:
-                template = os.path.basename(i).split('.')[0]
-            else:
-                target = os.path.basename(i).split('.')[0]
-                split_and_registration(
-                    template, target, base, images_path, seg_output_path, fomat, checked=False)
-
-        image = ants.image_read(os.path.join(
-            base, images_path, template + '.' + fomat))
-        image.to_file(os.path.join(base, images_output, template + '.nii.gz'))
-        shutil.copy(os.path.join(base, seg_output_path,
-                    template + '.nii.gz'), labels_output)
+            scan = os.path.basename(i).split('.')[0]
+            correct_affine(
+                scan, base, images_path, seg_output_path, fomat)
 
 
 if __name__ == '__main__':

@@ -3,10 +3,12 @@ import torch
 import itk
 import numpy as np
 import glob
-import os.path
+import os
+
 
 def path_to_id(path):
-  return os.path.basename(path).split('.')[0]
+    return os.path.basename(path).split('.')[0]
+
 
 def split_data(img_path, seg_path, num_seg):
     total_img_paths = []
@@ -16,7 +18,7 @@ def split_data(img_path, seg_path, num_seg):
 
     for j in sorted(glob.glob(seg_path + '/*.nii.gz')):
         total_seg_paths.append(j)
-    
+
     np.random.shuffle(total_img_paths)
     num_train = int(round(len(total_img_paths)*0.7))
     img_train = total_img_paths[:num_train]
@@ -33,9 +35,9 @@ def split_data(img_path, seg_path, num_seg):
         if img_id in seg_ids:
             seg_test.append(total_seg_paths[seg_ids.index(img_id)])
             data_item['seg'] = total_seg_paths[seg_ids.index(img_id)]
-        
+
         test.append(data_item)
-    
+
     for img_index, img_id in enumerate(img_ids_train):
         if img_id in seg_ids:
             seg_train.append(total_seg_paths[seg_ids.index(img_id)])
@@ -49,16 +51,19 @@ def split_data(img_path, seg_path, num_seg):
         if img_id in seg_ids:
             data_item['seg'] = seg_train_available[seg_ids.index(img_id)]
         train.append(data_item)
-    
-    return train, test, 
+
+    return train, test
+
 
 def load_seg_dataset(train, valid):
     transform_seg_available = monai.transforms.Compose(
-    transforms=[
+        transforms=[
             monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True),
-            monai.transforms.TransposeD(keys=['img', 'seg'], indices=(2, 1, 0)),
+            monai.transforms.TransposeD(
+                keys=['img', 'seg'], indices=(2, 1, 0)),
             monai.transforms.AddChannelD(keys=['img', 'seg']),
-            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest')),
+            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
+                1., 1., 1.), mode=('trilinear', 'nearest')),
             monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
             monai.transforms.ResizeD(
                 keys=['img', 'seg'],
@@ -85,23 +90,32 @@ def load_seg_dataset(train, valid):
     )
     return dataset_seg_available_train, dataset_seg_available_valid
 
+
 def load_reg_dataset(train, valid):
     transform_pair = monai.transforms.Compose(
         transforms=[
-            monai.transforms.LoadImageD(keys=['img1', 'seg1', 'img2', 'seg2'], image_only=True, allow_missing_keys=True),
-            monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(2, 1, 0), allow_missing_keys=True),
-            monai.transforms.ToTensorD(keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True), #if resize is not None else monai.transforms.Identity()
-            monai.transforms.AddChannelD(keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
-            monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest','trilinear', 'nearest'), allow_missing_keys=True),
-            monai.transforms.OrientationD(keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
+            monai.transforms.LoadImageD(
+                keys=['img1', 'seg1', 'img2', 'seg2'], image_only=True, allow_missing_keys=True),
+            monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(
+                2, 1, 0), allow_missing_keys=True),
+            # if resize is not None else monai.transforms.Identity()
+            monai.transforms.ToTensorD(
+                keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
+            monai.transforms.AddChannelD(
+                keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
+            monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
+                'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
+            monai.transforms.OrientationD(
+                keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
             monai.transforms.ResizeD(
-                keys=['img1','seg1','img2', 'seg2'],
+                keys=['img1', 'seg1', 'img2', 'seg2'],
                 spatial_size=(128, 256, 256),
                 mode=['trilinear', 'nearest', 'trilinear', 'nearest'],
                 allow_missing_keys=True,
                 align_corners=[False, None, False, None]
             ),
-            monai.transforms.ConcatItemsD(keys=['img1', 'img2'], name='img12', dim=0),
+            monai.transforms.ConcatItemsD(
+                keys=['img1', 'img2'], name='img12', dim=0),
             monai.transforms.DeleteItemsD(keys=['img1', 'img2']),
         ]
     )
@@ -125,6 +139,7 @@ def load_reg_dataset(train, valid):
         for seg_availability, data_list in valid.items()
     }
     return dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided
+
 
 def take_data_pairs(data, symmetric=True):
     """Given a list of dicts that have keys for an image and maybe a segmentation,
@@ -150,6 +165,7 @@ def take_data_pairs(data, symmetric=True):
             data_pairs.append(pair)
     return data_pairs
 
+
 def subdivide_list_of_data_pairs(data_pairs_list):
     out_dict = {'00': [], '01': [], '10': [], '11': []}
     for d in data_pairs_list:
@@ -162,4 +178,3 @@ def subdivide_list_of_data_pairs(data_pairs_list):
         else:
             out_dict['00'].append(d)
     return out_dict
-
