@@ -174,5 +174,6 @@ def plot_against_epoch_numbers(epoch_and_value_pairs, **kwargs):
     kwargs are forwarded to matplotlib.pyplot.plot
     """
     array = np.array(epoch_and_value_pairs)
+    plt.figure()
     plt.plot(array[:, 0], array[:, 1], **kwargs)
     plt.xlabel("epochs")
