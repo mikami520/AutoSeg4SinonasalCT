@@ -17,19 +17,19 @@ pip3 install -r requirements.txt
 ```
 
 ## Step 2: Preprocess Datasets
-### Step 2.1: Register Data to Template (make sure scan and segmentation are co-registered)
+### Step 2.1: Co-align the data (make sure scan and segmentation are co-aligned)
 Activate scripting environment
 ```
 cd <path to repo>/preprocessing
 ```
-Register data to template (can be used for multiple segmentations propagation)
+Co-align the scans and segmentations
 ```
-python3 registration.py 
+python3 affine.py 
 -bp <full path of base dir> 
 -ip <relative path to nifti images dir> 
 -sp <relative path to segmentations dir> 
 ```
-If you want to make sure correspondence of the name and value of segmentations, you can add the following commands after above command (**Option**)
+If you want to make sure correspondence of the name and value of segmentations, you can add the following commands after above command (**Option for nrrd format**)
 ```
 -sl LabelValue1 LabelName1 LabelValue2 LabelName2 LabelValue3 LabelName3 ...
 ```
@@ -51,6 +51,7 @@ python3 crop_flip.py
 -op <relative path to output dir> 
 -rs <customized resized shape>
 ```
+**Pay attention to the resized dimension which should not smaller than cropped dimension**
 Final output of ROI will be saved in
 ```
 base_dir/output/images/ && base_dir/output/labels
