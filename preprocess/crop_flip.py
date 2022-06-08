@@ -73,13 +73,13 @@ def load_data(img_path, seg_path):
 
 def save_file(left_img, left_seg, flipped_right_img, flipped_right_seg, nib_img, nib_seg, output_img, output_seg, scan_id):
     left_img_nii = nib.Nifti1Image(
-        left_img, affine=nib_img.affine)
+        left_img, affine=nib_img.affine, header=nib_img.header)
     left_seg_nii = nib.Nifti1Image(
-        left_seg, affine=nib_seg.affine)
+        left_seg, affine=nib_seg.affine, header=nib_seg.header)
     right_img_nii = nib.Nifti1Image(
-        flipped_right_img, affine=nib_img.affine)
+        flipped_right_img, affine=nib_img.affine, header=nib_img.header)
     right_seg_nii = nib.Nifti1Image(
-        flipped_right_seg, affine=nib_seg.affine)
+        flipped_right_seg, affine=nib_seg.affine, header=nib_seg.header)
     left_img_nii.to_filename(os.path.join(
         output_img, 'left_' + scan_id + '.nii.gz'))
     left_seg_nii.to_filename(os.path.join(
