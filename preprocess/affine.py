@@ -28,7 +28,7 @@ def parse_command_line():
 
 def correct_affine(scan, base, images_path, seg_path, fomat):
     print('---'*10)
-    print('Creating file paths')
+    print(f'Read file: {scan}')
     # Define the path for template, target, and segmentations (from template)
     img_path = os.path.join(base, images_path, scan + '.' + fomat)
     segment_path = os.path.join(base, seg_path, scan + '.nii.gz')
@@ -37,7 +37,7 @@ def correct_affine(scan, base, images_path, seg_path, fomat):
         base, 'labelsRS/', scan + '.nii.gz')
     images_output = os.path.join(base, 'imagesRS/', scan + '.nii.gz')
     print('---'*10)
-    print('Reading in the segmentation and scan')
+    print('Loading in the segmentation and scan')
     # Split segmentations into individual components
     segment = nib.load(segment_path)
     image = nib.load(img_path)
