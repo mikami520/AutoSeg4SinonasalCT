@@ -312,14 +312,12 @@ def plot_fig(
     plt.ylabel('loss')
     plt.title('Alternating training: registration loss')
     plt.savefig('reg_net_losses.png')
-    plt.show()
 
     plot_against_epoch_numbers(
         regularization_loss, label='regularization loss', color='red')
     plt.ylabel('loss')
     plt.title('Alternating training: registration regularization loss')
     plt.savefig('regularization_reg_losses.png')
-    plt.show()
 
     plot_against_epoch_numbers(
         anatomy_loss_reg, label='anatomy loss', color='green')
@@ -327,7 +325,6 @@ def plot_fig(
     plt.ylabel('loss')
     plt.title('Alternating training: registration anatomy loss')
     plt.savefig('anatomy_reg_losses.png')
-    plt.show()
 
     plot_against_epoch_numbers(
         similarity_loss, label='similarity loss', color='orange')
@@ -335,25 +332,21 @@ def plot_fig(
     plt.ylabel('loss')
     plt.title('Alternating training: registration similarity loss')
     plt.savefig('similarity_reg_losses.png')
-    plt.show()
 
     plot_against_epoch_numbers(training_losses_seg, label="training")
     #plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation loss')
     plt.savefig('seg_net_losses.png')
-    plt.show()
 
     plot_against_epoch_numbers(
         supervised_loss, label='supervised loss', color='red')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation supervised loss')
     plt.savefig('supervised_seg_losses.png')
-    plt.show()
 
     plot_against_epoch_numbers(
         anatomy_loss_seg, label='anatomy loss', color='green')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation anatomy loss')
     plt.savefig('anatomy_seg_losses.png')
-    plt.show()
