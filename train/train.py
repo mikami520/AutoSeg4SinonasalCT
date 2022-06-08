@@ -1,3 +1,4 @@
+import generators
 import monai
 import torch
 import itk
@@ -12,15 +13,13 @@ import sys
 sys.path.insert(0, '/home/ameen/DeepAtlas/utils')
 sys.path.insert(0, '/home/ameen/DeepAtlas/loss_function')
 
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
+)
 from utils import (
     preview_image, preview_3D_vector_field, preview_3D_deformation,
     jacobian_determinant, plot_against_epoch_numbers
 )
-
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
-)
-import generators
 
 def swap_training(network_to_train, network_to_not_train):
     """
@@ -36,32 +35,37 @@ def swap_training(network_to_train, network_to_not_train):
     network_to_not_train.eval()
     network_to_train.train()
 
-def train_network(dataloader_train_reg, 
-         dataloader_valid_reg, 
-         dataloader_train_seg, 
-         dataloader_valid_seg, 
-         device, 
-         seg_net, 
-         reg_net, 
-         image_scale, 
-         num_segmentation_classes, 
-         lr_reg, 
-         lr_seg, 
-         lam_a, 
-         lam_sp, 
-         max_epoch, 
-         val_step
-        ):
+
+def train_network(dataloader_train_reg,
+                  dataloader_valid_reg,
+                  dataloader_train_seg,
+                  dataloader_valid_seg,
+                  device,
+                  seg_net,
+                  reg_net,
+                  image_scale,
+                  num_segmentation_classes,
+                  lr_reg,
+                  lr_seg,
+                  lam_a,
+                  lam_sp,
+                  max_epoch,
+                  val_step
+                  ):
     # Training cell
     # (if already done then you may skip this and uncomment the loading checkpoint cell below)
     seg_availabilities = ['00', '01', '10', '11']
-    batch_generator_train_reg = generators.create_batch_generator(dataloader_train_reg)
-    batch_generator_valid_reg = generators.create_batch_generator(dataloader_valid_reg)
-    seg_train_sampling_weights = [0] + [len(dataloader_train_reg[s]) for s in seg_availabilities[1:]]
+    batch_generator_train_reg = generators.create_batch_generator(
+        dataloader_train_reg)
+    batch_generator_valid_reg = generators.create_batch_generator(
+        dataloader_valid_reg)
+    seg_train_sampling_weights = [
+        0] + [len(dataloader_train_reg[s]) for s in seg_availabilities[1:]]
     print('---'*10)
     print(f"""When training seg_net alone, segmentation availabilities {seg_availabilities}
     will be sampled with respective weights {seg_train_sampling_weights}""")
-    batch_generator_train_seg = generators.create_batch_generator(dataloader_train_reg, seg_train_sampling_weights)
+    batch_generator_train_seg = generators.create_batch_generator(
+        dataloader_train_reg, seg_train_sampling_weights)
     seg_net.to(device)
     reg_net.to(device)
 
@@ -82,7 +86,8 @@ def train_network(dataloader_train_reg,
 
     max_epochs = max_epoch
     reg_phase_training_batches_per_epoch = 10
-    seg_phase_training_batches_per_epoch = 5  # Fewer batches needed, because seg_net converges more quickly
+    # Fewer batches needed, because seg_net converges more quickly
+    seg_phase_training_batches_per_epoch = 5
     reg_phase_num_validation_batches_to_use = 10
     val_interval = val_step
 
@@ -90,7 +95,7 @@ def train_network(dataloader_train_reg,
     validation_losses_reg = []
     training_losses_seg = []
     validation_losses_seg = []
-    regularization_loss_reg =[]
+    regularization_loss_reg = []
     anatomy_loss_reg = []
     similarity_loss_reg = []
     supervised_loss_seg = []
@@ -116,7 +121,8 @@ def train_network(dataloader_train_reg,
         anatomy_loss = []
         for batch in batch_generator_train_reg(reg_phase_training_batches_per_epoch):
             optimizer_reg.zero_grad()
-            loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes)
+            loss_sim, loss_reg, loss_ana = reg_losses(
+                batch, device, reg_net, seg_net, num_segmentation_classes)
             loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
             loss.backward()
             optimizer_reg.step()
@@ -126,7 +132,8 @@ def train_network(dataloader_train_reg,
             anatomy_loss.append(loss_ana.item())
 
         training_loss = np.mean(losses)
-        regularization_loss_reg.append([epoch_number, np.mean(regularization_loss)])
+        regularization_loss_reg.append(
+            [epoch_number, np.mean(regularization_loss)])
         similarity_loss_reg.append([epoch_number, np.mean(similarity_loss)])
         anatomy_loss_reg.append([epoch_number, np.mean(anatomy_loss)])
         print(f"\treg training loss: {training_loss}")
@@ -137,7 +144,8 @@ def train_network(dataloader_train_reg,
             losses = []
             with torch.no_grad():
                 for batch in batch_generator_valid_reg(reg_phase_num_validation_batches_to_use):
-                    loss_sim, loss_reg, loss_ana = reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes)
+                    loss_sim, loss_reg, loss_ana = reg_losses(
+                        batch, device, reg_net, seg_net, num_segmentation_classes)
                     loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
                     losses.append(loss.item())
 
@@ -181,8 +189,10 @@ def train_network(dataloader_train_reg,
             # loss_metric: a single supervised seg loss, as a metric to track the progress of training
 
             if 'seg1' in batch.keys() and 'seg2' in batch.keys():
-                seg1 = monai.networks.one_hot(batch['seg1'].to(device), num_segmentation_classes)
-                seg2 = monai.networks.one_hot(batch['seg2'].to(device), num_segmentation_classes)
+                seg1 = monai.networks.one_hot(
+                    batch['seg1'].to(device), num_segmentation_classes)
+                seg2 = monai.networks.one_hot(
+                    batch['seg2'].to(device), num_segmentation_classes)
                 loss_metric = dice_loss(seg2_predicted, seg2)
                 loss_supervised = loss_metric
                 # The above supervised loss looks a bit different from the one in the paper
@@ -191,20 +201,22 @@ def train_network(dataloader_train_reg,
                 # both segmentations into memory.
 
             elif 'seg1' in batch.keys():  # seg1 available, but no seg2
-                seg1 = monai.networks.one_hot(batch['seg1'].to(device), num_segmentation_classes)
+                seg1 = monai.networks.one_hot(
+                    batch['seg1'].to(device), num_segmentation_classes)
                 loss_metric = dice_loss(seg1_predicted, seg1)
                 loss_supervised = loss_metric
                 seg2 = seg2_predicted  # Use this in anatomy loss
 
             else:  # seg2 available, but no seg1
                 assert('seg2' in batch.keys())
-                seg2 = monai.networks.one_hot(batch['seg2'].to(device), num_segmentation_classes)
+                seg2 = monai.networks.one_hot(
+                    batch['seg2'].to(device), num_segmentation_classes)
                 loss_metric = dice_loss(seg2_predicted, seg2)
                 loss_supervised = loss_metric
                 seg1 = seg1_predicted  # Use this in anatomy loss
 
             # seg1 and seg2 should now be in the form of one-hot class probabilities
-            
+
             loss_anatomy = dice_loss(warp_nearest(seg2, displacement_fields), seg1)\
                 if 'seg1' in batch.keys() or 'seg2' in batch.keys()\
                 else 0.  # It wouldn't really be 0, but it would not contribute to training seg_net
@@ -254,29 +266,33 @@ def train_network(dataloader_train_reg,
             seg1_predicted, seg2_predicted
         torch.cuda.empty_cache()
 
-    
     print(f"\n\nBest reg_net validation loss: {best_reg_validation_loss}")
     print(f"Best seg_net validation loss: {best_seg_validation_loss}")
 
-    plot_fig(training_losses_reg, 
-    validation_losses_reg, 
-    training_losses_seg, 
-    validation_losses_seg, 
-    regularization_loss=regularization_loss_reg, 
-    anatomy_loss_reg=anatomy_loss_reg,
-    anatomy_loss_seg=anatomy_loss_seg,
-    similarity_loss=similarity_loss_reg,
-    supervised_loss=supervised_loss_seg)
+    plot_fig(training_losses_reg,
+             validation_losses_reg,
+             training_losses_seg,
+             validation_losses_seg,
+             regularization_loss=regularization_loss_reg,
+             anatomy_loss_reg=anatomy_loss_reg,
+             anatomy_loss_seg=anatomy_loss_seg,
+             similarity_loss=similarity_loss_reg,
+             supervised_loss=supervised_loss_seg)
     regularization_loss_reg = np.array(regularization_loss_reg)
     anatomy_loss_reg = np.array(anatomy_loss_reg)
     anatomy_loss_seg = np.array(anatomy_loss_seg)
     similarity_loss_reg = np.array(similarity_loss_reg)
     supervised_loss_seg = np.array(supervised_loss_seg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/regularization_loss.txt', regularization_loss_reg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/anatomy_loss_reg.txt', anatomy_loss_reg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/anatomy_loss_seg.txt', anatomy_loss_seg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/similarity_loss_reg.txt', similarity_loss_reg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/supervised_loss_seg.txt', supervised_loss_seg)
+    np.savetxt('/home/ameen/DeepAtlas/scripts/regularization_loss.txt',
+               regularization_loss_reg)
+    np.savetxt('/home/ameen/DeepAtlas/scripts/anatomy_loss_reg.txt',
+               anatomy_loss_reg)
+    np.savetxt('/home/ameen/DeepAtlas/scripts/anatomy_loss_seg.txt',
+               anatomy_loss_seg)
+    np.savetxt('/home/ameen/DeepAtlas/scripts/similarity_loss_reg.txt',
+               similarity_loss_reg)
+    np.savetxt('/home/ameen/DeepAtlas/scripts/supervised_loss_seg.txt',
+               supervised_loss_seg)
 
 
 def plot_fig(
@@ -298,23 +314,26 @@ def plot_fig(
     plt.savefig('reg_net_losses.png')
     plt.show()
 
-    plot_against_epoch_numbers(regularization_loss, label='regularization loss', color='red')
+    plot_against_epoch_numbers(
+        regularization_loss, label='regularization loss', color='red')
     plt.ylabel('loss')
-    plt.title('Alternating training: registration loss')
+    plt.title('Alternating training: registration regularization loss')
     plt.savefig('regularization_reg_losses.png')
     plt.show()
-    
-    plot_against_epoch_numbers(anatomy_loss_reg, label='anatomy loss', color='green')
+
+    plot_against_epoch_numbers(
+        anatomy_loss_reg, label='anatomy loss', color='green')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
-    plt.title('Alternating training: registration loss')
+    plt.title('Alternating training: registration anatomy loss')
     plt.savefig('anatomy_reg_losses.png')
     plt.show()
-    
-    plot_against_epoch_numbers(similarity_loss, label='similarity loss', color='orange')
+
+    plot_against_epoch_numbers(
+        similarity_loss, label='similarity loss', color='orange')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
-    plt.title('Alternating training: registration loss')
+    plt.title('Alternating training: registration similarity loss')
     plt.savefig('similarity_reg_losses.png')
     plt.show()
 
@@ -325,14 +344,16 @@ def plot_fig(
     plt.savefig('seg_net_losses.png')
     plt.show()
 
-    plot_against_epoch_numbers(supervised_loss, label='supervised loss', color='red')
+    plot_against_epoch_numbers(
+        supervised_loss, label='supervised loss', color='red')
     plt.ylabel('loss')
-    plt.title('Alternating training: segmentation loss')
+    plt.title('Alternating training: segmentation supervised loss')
     plt.savefig('supervised_seg_losses.png')
     plt.show()
-    
-    plot_against_epoch_numbers(anatomy_loss_seg, label='anatomy loss', color='green')
+
+    plot_against_epoch_numbers(
+        anatomy_loss_seg, label='anatomy loss', color='green')
     plt.ylabel('loss')
-    plt.title('Alternating training: segmentation loss')
+    plt.title('Alternating training: segmentation anatomy loss')
     plt.savefig('anatomy_seg_losses.png')
     plt.show()
