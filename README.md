@@ -1,5 +1,5 @@
-# DeepAtlas
-DeepAtlas: Joint Semi-supervised Learning of Image Registration and Segmentation
+# Deep Atlas
+Deep Atlas: Joint Semi-supervised Learning of Image Registration and Segmentation
 
 ## Step 0: Fork This GitHub Repository 
 ```
