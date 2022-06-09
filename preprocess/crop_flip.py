@@ -10,13 +10,13 @@ def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for data preprocessing')
     parser.add_argument('-bp', metavar='base path', type=str,
-                        help="Absolute path of the base directory")
+                        help="absolute path of the base directory")
     parser.add_argument('-ip', metavar='image path', type=str,
-                        help="Relative path of the image directory")
+                        help="relative path of the image directory")
     parser.add_argument('-sp', metavar='segmentation path', type=str,
-                        help="Relative path of the image directory")
+                        help="relative path of the image directory")
     parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='output',
-                        help='Relative path of the preprocessing result directory')
+                        help='relative path of the preprocessing result directory')
     parser.add_argument('-rs', metavar='shape after resizing', type=int, nargs='+',
                         help='shape after resizing the image and segmentation. Expected to be 2^N')
     argv = parser.parse_args()
@@ -99,7 +99,7 @@ def main():
     resize_shape = args.rs
     output_img = os.path.join(output_path, 'images')
     output_seg = os.path.join(output_path, 'labels')
-
+    
     try:
         os.mkdir(output_path)
     except:

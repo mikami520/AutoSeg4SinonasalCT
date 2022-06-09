@@ -8,9 +8,13 @@ import glob
 import os.path
 import argparse
 import sys
+import json
+from collections import OrderedDict
+from pathlib import Path
 sys.path.insert(0, '/home/ameen/DeepAtlas/preprocess')
 sys.path.insert(0, '/home/ameen/DeepAtlas/network')
 sys.path.insert(0, '/home/ameen/DeepAtlas/train')
+sys.path.insert(0, '/home/ameen/DeepAtlas/test')
 
 from process_data import (
     split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
@@ -26,15 +30,17 @@ def parse_command_line():
     print('---'*10)
     print('Parsing Command Line Arguments')
     parser = argparse.ArgumentParser(
-        description='pipeline for deep atlas')
+        description='pipeline for deep atlas train')
     parser.add_argument('-bp', metavar='base path', type=str,
                         help="Absolute path of the base directory")
     parser.add_argument('-ip', metavar='image path', type=str,
                         help="Relative path of the image directory")
     parser.add_argument('-sp', metavar='segmentation path', type=str,
                         help="Relative path of the image directory")
-    parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='output',
-                        help='Relative path of the preprocessing result directory')
+    #parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='preprocessing',
+                        #help='Relative path of the preprocessing result directory')
+    parser.add_argument('-sl', metavar='segmentation information list', type=str, nargs='+',
+                        help='a list of label name and corresponding value')
     parser.add_argument('-ns', metavar='number of segmentations', type=int, default=3,
                         help='number of segmentations used for training')
     parser.add_argument('-sd', metavar='spatial dimension', type=int, default=3,
@@ -65,16 +71,54 @@ def parse_command_line():
                         help='maximum number of training epochs. Defaults to 100.')
     parser.add_argument('-vs', metavar='validation steps per epoch', type=int, default=5,
                         help='validation steps per epoch. Defaults to 5.')
+    parser.add_argument('-ti', metavar='task id and name', type=str, 
+                        help='task name and id')
     argv = parser.parse_args()
     return argv
 
 
+def get_seg_net(spatial_dims, num_label, dropout, activation_type, normalization_type, num_res):
+    seg_net = segNet(
+        spatial_dim=spatial_dims,  # spatial dims
+        in_channel=1,  # input channels
+        out_channel=num_label,  # output channels
+        channel=(8, 16, 16, 32, 32, 64, 64),  # channel sequence
+        stride=(1, 2, 1, 2, 1, 2),  # convolutional strides
+        dropouts=dropout,
+        acts=activation_type,
+        norms=normalization_type,
+        num_res_unit=num_res
+    )
+    return seg_net
+
+def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization_type, num_res):
+    reg_net = regNet(
+        spatial_dim=spatial_dims,  # spatial dims
+        in_channel=1,  # input channels
+        out_channel=num_label,  # output channels
+        channel=(8, 16, 16, 32, 32, 64, 64),  # channel sequence
+        stride=(1, 2, 1, 2, 1, 2),  # convolutional strides
+        dropouts=dropout,
+        acts=activation_type,
+        norms=normalization_type,
+        num_res_unit=num_res
+    )
+    return reg_net
+
+
 def main():
     args = parse_command_line()
+    ROOT_DIR = str(Path(os.getcwd()).parent.absolute())
+    data_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset')
     base_path = args.bp
+    seg_list = args.sl
     img_path = os.path.join(base_path, args.ip)
     seg_path = os.path.join(base_path, args.sp)
-    output_path = os.path.join(base_path, args.op)
+    task = os.path.join(data_path, args.ti)
+    imageTr_dir = os.path.join(task, 'imageTr')
+    imageTs_dir = os.path.join(task, 'imageTs')
+    labelTr_dir = os.path.join(task, 'labelTr')
+    #output_path = os.path.join(task, args.op) 
     num_seg = args.ns
     spatial_dim = args.sd
     dropout = args.dr
@@ -89,15 +133,71 @@ def main():
     max_epoch = args.me
     val_step = args.vs
     device = torch.device("cuda:" + gpu)
+
+    try:
+        os.mkdir(data_path)
+    except:
+        print('---'*10)
+        print(f'{data_path} is already existed !!!')
+
+    try:
+        os.mkdir(task)
+    except:
+        print('---'*10)
+        print(f'{task} is already existed !!!')
+    '''
     try:
         os.mkdir(output_path)
     except:
         print('---'*10)
         print(f'{output_path} is already existed !!!')
+    '''
+    try:
+        os.mkdir(imageTr_dir)
+    except:
+        print('---'*10)
+        print(f'{imageTr_dir} is already existed !!!')
+
+    try:
+        os.mkdir(imageTs_dir)
+    except:
+        print('---'*10)
+        print(f'{imageTs_dir} is already existed !!!')
+    
+    try:
+        os.mkdir(labelTr_dir)
+    except:
+        print('---'*10)
+        print(f'{labelTr_dir} is already existed !!!')
 
     print('---'*10)
     print('split dataset into train and test')
-    train, test = split_data(img_path, seg_path, num_seg)
+    json_dict = OrderedDict()
+    json_dict['name'] = os.path.basename(task).split('_')[0]
+    json_dict['description'] = os.path.basename(task).split('_')[1]
+    json_dict['tensorImageSize'] = "4D"
+    json_dict['reference'] = "MODIFY"
+    json_dict['licence'] = "MODIFY"
+    json_dict['release'] = "0.0"
+    json_dict['modality'] = {
+        "0": "CT"
+    }
+    json_dict['labels'] = {
+        "0": "background",
+    }
+    for i in range(0, len(seg_list), 2):
+        assert(seg_list[i].isdigit() == True)
+        assert(seg_list[i + 1].isdigit() == False)
+        json_dict['labels'].update({
+            seg_list[i]: seg_list[i + 1]
+        })
+    
+    train, test, num_train, num_test = split_data(img_path, seg_path, num_seg)
+    json_dict['total_numScanTraining'] = num_train
+    json_dict['total_numLabelTraining'] = num_seg
+    json_dict['total_numTest'] = num_test
+    json_dict['toal_train'] = train
+    json_dict['total_test'] = test
     # prepare segmentation dataset
     print('---'*10)
     print('prepare segmentation dataset')
@@ -105,23 +205,15 @@ def main():
     data_seg_unavailable = list(filter(lambda d: 'seg' not in d.keys(), train))
     data_seg_available_train, data_seg_available_valid = \
         monai.data.utils.partition_dataset(data_seg_available, ratios=(8, 2))
+    json_dict['seg_numTrain'] = len(data_seg_available)
+    json_dict['seg_train'] = data_seg_available
     dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(
         data_seg_available_train, data_seg_available_valid)
     data_item = random.choice(dataset_seg_available_train)
     num_label = len(torch.unique(data_item['seg']))
     print('---'*10)
     print('prepare segmentation network')
-    seg_net = segNet(
-        spatial_dim=spatial_dim,  # spatial dims
-        in_channel=1,  # input channels
-        out_channel=num_label,  # output channels
-        channel=(8, 16, 16, 32, 32, 64, 64),  # channel sequence
-        stride=(1, 2, 1, 2, 1, 2),  # convolutional strides
-        dropouts=dropout,
-        acts=activation_type,
-        norms=normalization_type,
-        num_res_unit=num_res
-    )
+    seg_net = get_seg_net(spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
     print(seg_net)
     '''
     print('---'*10)
@@ -140,6 +232,7 @@ def main():
         ratios=(2, 8),  # Note the order
         shuffle=False
     )
+    data_paires_without_seg_valid = take_data_pairs(data_without_seg_valid)
     data_pairs_valid = take_data_pairs(data_valid)
     data_pairs_train = take_data_pairs(data_train)
     data_pairs_valid_subdivided = subdivide_list_of_data_pairs(
@@ -153,26 +246,20 @@ def main():
     num_train_both = len(data_pairs_train_subdivided['01']) +\
         len(data_pairs_train_subdivided['10']) +\
         len(data_pairs_train_subdivided['11'])
+    json_dict['reg_numTrain'] = num_train_reg_net + num_valid_reg_net
+    json_dict['reg_train'] = data_paires_without_seg_valid
     print('---'*10)
     print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
     and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
     print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
+    with open(os.path.join(task, 'dataset.json'), 'w') as f:
+        json.dump(json_dict, f, indent=4, sort_keys=False)
 
     dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided = load_reg_dataset(
         data_pairs_train_subdivided, data_pairs_valid_subdivided)
     print('---'*10)
     print('prepare registration network')
-    reg_net = regNet(
-        spatial_dim=spatial_dim,  # spatial dims
-        in_channel=2,  # input channels
-        out_channel=spatial_dim,  # output channels
-        channel=(16, 32, 32, 32, 32),  # channel sequence
-        stride=(1, 2, 2, 2),  # convolutional strides
-        dropouts=dropout,
-        acts=activation_type,
-        norms=normalization_type,
-        num_res_unit=num_res
-    )
+    reg_net = get_reg_net(spatial_dim, spatial_dim, dropout, activation_type, normalization_type, num_res)
     print(reg_net)
     datasets = list(dataset_pairs_train_subdivided.values())
     datasets_combined = sum(datasets[1:], datasets[0])
@@ -205,7 +292,7 @@ def main():
     dataloader_train_reg = {
         seg_availability: monai.data.DataLoader(
             dataset,
-            batch_size=4,
+            batch_size=8,
             num_workers=4,
             shuffle=True
         )
@@ -216,7 +303,7 @@ def main():
     dataloader_valid_reg = {
         seg_availability: monai.data.DataLoader(
             dataset,
-            batch_size=4,
+            batch_size=8,
             num_workers=4,
             shuffle=True  # Shuffle validation data because we will only take a sample for validation each time
         )

@@ -21,6 +21,7 @@ def split_data(img_path, seg_path, num_seg):
 
     np.random.shuffle(total_img_paths)
     num_train = int(round(len(total_img_paths)*0.7))
+    num_test = len(total_img_paths) - num_train
     img_train = total_img_paths[:num_train]
     img_test = total_img_paths[num_train:]
     seg_train = []
@@ -52,7 +53,7 @@ def split_data(img_path, seg_path, num_seg):
             data_item['seg'] = seg_train_available[seg_ids.index(img_id)]
         train.append(data_item)
 
-    return train, test
+    return train, test, num_train, num_test
 
 
 def load_seg_dataset(train, valid):
@@ -65,12 +66,6 @@ def load_seg_dataset(train, valid):
             monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
                 1., 1., 1.), mode=('trilinear', 'nearest')),
             monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
-            monai.transforms.ResizeD(
-                keys=['img', 'seg'],
-                spatial_size=(128, 128, 128),
-                mode=['trilinear', 'nearest'],
-                align_corners=[False, None]
-            ),
             monai.transforms.ToTensorD(keys=['img', 'seg'])
         ]
     )
@@ -107,13 +102,6 @@ def load_reg_dataset(train, valid):
                 'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
             monai.transforms.OrientationD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
-            monai.transforms.ResizeD(
-                keys=['img1', 'seg1', 'img2', 'seg2'],
-                spatial_size=(128, 128, 128),
-                mode=['trilinear', 'nearest', 'trilinear', 'nearest'],
-                allow_missing_keys=True,
-                align_corners=[False, None, False, None]
-            ),
             monai.transforms.ConcatItemsD(
                 keys=['img1', 'img2'], name='img12', dim=0),
             monai.transforms.DeleteItemsD(keys=['img1', 'img2']),
