@@ -13,7 +13,7 @@
         "1": "ET"
     },
     "total_numScanTraining": 43,
-    "total_numLabelTraining": 10,
+    "total_numLabelTraining": 12,
     "total_numTest": 19,
     "toal_train": [
         {
@@ -30,7 +30,8 @@
             "img": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz"
         },
         {
-            "img": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
+            "img": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
         },
         {
             "img": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
@@ -54,7 +55,8 @@
             "img": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
         },
         {
-            "img": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
+            "img": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz"
@@ -234,11 +236,19 @@
             "seg": "/home/ameen/ET_single_label/output/labels/right_IR_146.nii.gz"
         }
     ],
-    "seg_numTrain": 10,
+    "seg_numTrain": 12,
     "seg_train": [
         {
             "img": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "seg": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
@@ -289,10 +299,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -318,10 +324,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
@@ -411,6 +413,16 @@
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
@@ -457,10 +469,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -486,10 +494,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
@@ -579,6 +583,16 @@
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
@@ -625,10 +639,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -654,10 +664,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
@@ -750,6 +756,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -780,174 +796,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
         },
@@ -965,10 +813,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz"
         },
         {
@@ -990,10 +834,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
@@ -1083,6 +923,16 @@
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
@@ -1133,10 +983,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -1158,10 +1004,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
@@ -1254,6 +1096,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -1301,10 +1153,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -1326,10 +1174,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
@@ -1422,6 +1266,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -1469,10 +1323,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -1494,10 +1344,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
@@ -1590,6 +1436,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -1637,10 +1493,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -1662,10 +1514,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
@@ -1758,6 +1606,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -1805,10 +1663,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -1830,10 +1684,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
@@ -1926,6 +1776,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -1973,10 +1833,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -1998,10 +1854,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
@@ -2094,6 +1946,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -2128,174 +1990,6 @@
             "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
         },
         {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
-            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
-        },
-        {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz"
         },
@@ -2306,10 +2000,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
@@ -2338,10 +2028,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
@@ -2430,6 +2116,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -2477,10 +2173,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -2506,10 +2198,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
@@ -2598,6 +2286,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -2645,10 +2343,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -2674,10 +2368,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
@@ -2766,6 +2456,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -2813,10 +2513,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -2842,10 +2538,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
@@ -2934,6 +2626,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -2981,10 +2683,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -3010,10 +2708,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
@@ -3102,6 +2796,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -3149,10 +2853,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -3178,10 +2878,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
@@ -3270,6 +2966,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -3317,10 +3023,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -3346,10 +3048,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
@@ -3438,6 +3136,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -3485,10 +3193,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -3514,10 +3218,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
@@ -3606,6 +3306,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -3653,10 +3363,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -3682,10 +3388,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
@@ -3774,6 +3476,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -3821,10 +3533,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -3850,10 +3558,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
@@ -3942,6 +3646,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -3989,10 +3703,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -4018,10 +3728,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
@@ -4110,6 +3816,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -4157,10 +3873,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -4186,10 +3898,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
@@ -4278,6 +3986,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -4325,10 +4043,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -4354,10 +4068,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
@@ -4446,6 +4156,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -4493,10 +4213,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -4522,10 +4238,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
@@ -4614,6 +4326,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -4661,10 +4383,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -4690,10 +4408,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
@@ -4782,6 +4496,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -4829,10 +4553,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -4858,10 +4578,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
@@ -4950,6 +4666,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -4997,10 +4723,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -5026,10 +4748,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
@@ -5118,6 +4836,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -5165,10 +4893,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -5194,10 +4918,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
@@ -5286,6 +5006,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -5333,10 +5063,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -5362,10 +5088,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
@@ -5454,6 +5176,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -5501,10 +5233,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -5530,10 +5258,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
@@ -5622,6 +5346,16 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
@@ -5669,10 +5403,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz"
         },
         {
@@ -5698,10 +5428,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
@@ -5787,6 +5513,16 @@
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
@@ -5840,11 +5576,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
         },
@@ -5876,11 +5607,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
         },
         {
@@ -5990,6 +5716,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -6031,6 +5769,424 @@
             "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
         },
         {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_154.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_172.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_186.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_176.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_155.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_152.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_170.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_152.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_148.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_172.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_150.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_151.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_150.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_181.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_189.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_149.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_187.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_177.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_168.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_155.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_154.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_139.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_147.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_175.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_176.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
+        },
+        {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/left_IR_184.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -6043,11 +6199,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/left_IR_138.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
         {
@@ -6083,11 +6234,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
         },
         {
@@ -6203,6 +6349,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
@@ -6254,11 +6412,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
         },
@@ -6290,11 +6443,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz"
         },
         {
@@ -6410,6 +6558,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_148.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_148.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -6461,11 +6621,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
         },
@@ -6497,11 +6652,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz"
         },
         {
@@ -6617,6 +6767,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_185.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_185.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -6668,11 +6830,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
         },
@@ -6704,11 +6861,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz"
         },
         {
@@ -6824,6 +6976,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_146.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_146.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -6875,11 +7039,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
         },
@@ -6911,11 +7070,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz"
         },
         {
@@ -7031,6 +7185,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_183.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_183.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -7082,11 +7248,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
         },
@@ -7118,11 +7279,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz"
         },
         {
@@ -7238,6 +7394,18 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/right_IR_171.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_174.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/right_IR_171.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_174.nii.gz"
@@ -7289,11 +7457,6 @@
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_168.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
         },
@@ -7325,11 +7488,6 @@
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_169.nii.gz",
-            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
-        },
-        {
-            "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
-            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz"
         },
         {
@@ -7442,6 +7600,18 @@
             "img2": "/home/ameen/ET_single_label/output/images/right_IR_183.nii.gz",
             "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz",
             "seg2": "/home/ameen/ET_single_label/output/labels/right_IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_140.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",
+            "img2": "/home/ameen/ET_single_label/output/images/left_IR_141.nii.gz",
+            "seg1": "/home/ameen/ET_single_label/output/labels/left_IR_177.nii.gz",
+            "seg2": "/home/ameen/ET_single_label/output/labels/left_IR_141.nii.gz"
         },
         {
             "img1": "/home/ameen/ET_single_label/output/images/left_IR_177.nii.gz",

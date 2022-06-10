@@ -1,13 +1,9 @@
 import generators
 import monai
 import torch
-import itk
 import numpy as np
 import matplotlib.pyplot as plt
-import random
-import glob
-import os.path
-import argparse
+import os
 import sys
 
 sys.path.insert(0, '/home/ameen/DeepAtlas/utils')
@@ -50,7 +46,9 @@ def train_network(dataloader_train_reg,
                   lam_a,
                   lam_sp,
                   max_epoch,
-                  val_step
+                  val_step,
+                  result_seg_path,
+                  result_reg_path
                   ):
     # Training cell
     # (if already done then you may skip this and uncomment the loading checkpoint cell below)
@@ -82,7 +80,7 @@ def train_network(dataloader_train_reg,
     # This often requires some careful tuning. Here we suggest a value, which unfortunately needs to
     # depend on image scale. This is because the bending energy loss is not scale-invariant.
     # 7.5 worked well with the above hyperparameters for images of size 128x128x128.
-    lambda_r = 7.5 * (image_scale / 128)**2
+    lambda_r = 7.5 * (image_scale / 96)**2
 
     max_epochs = max_epoch
     reg_phase_training_batches_per_epoch = 10
@@ -155,7 +153,7 @@ def train_network(dataloader_train_reg,
 
             if validation_loss < best_reg_validation_loss:
                 best_reg_validation_loss = validation_loss
-                torch.save(reg_net.state_dict(), 'reg_net_best.pth')
+                torch.save(reg_net.state_dict(), os.path.join(result_reg_path, 'reg_net_best.pth'))
 
         # Free up memory
         del loss, loss_sim, loss_reg, loss_ana
@@ -259,7 +257,7 @@ def train_network(dataloader_train_reg,
 
             if validation_loss < best_seg_validation_loss:
                 best_seg_validation_loss = validation_loss
-                torch.save(seg_net.state_dict(), 'seg_net_best.pth')
+                torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'seg_net_best.pth'))
 
         # Free up memory
         del loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\
@@ -273,25 +271,28 @@ def train_network(dataloader_train_reg,
              validation_losses_reg,
              training_losses_seg,
              validation_losses_seg,
+             result_seg_path,
+             result_reg_path,
              regularization_loss=regularization_loss_reg,
              anatomy_loss_reg=anatomy_loss_reg,
              anatomy_loss_seg=anatomy_loss_seg,
              similarity_loss=similarity_loss_reg,
-             supervised_loss=supervised_loss_seg)
+             supervised_loss=supervised_loss_seg
+             )
     regularization_loss_reg = np.array(regularization_loss_reg)
     anatomy_loss_reg = np.array(anatomy_loss_reg)
     anatomy_loss_seg = np.array(anatomy_loss_seg)
     similarity_loss_reg = np.array(similarity_loss_reg)
     supervised_loss_seg = np.array(supervised_loss_seg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/regularization_loss.txt',
+    np.savetxt(os.path.join(result_reg_path, 'regularization_loss.txt'),
                regularization_loss_reg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/anatomy_loss_reg.txt',
+    np.savetxt(os.path.join(result_reg_path, 'anatomy_loss_reg.txt'),
                anatomy_loss_reg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/anatomy_loss_seg.txt',
+    np.savetxt(os.path.join(result_seg_path, 'anatomy_loss_seg.txt'),
                anatomy_loss_seg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/similarity_loss_reg.txt',
+    np.savetxt(os.path.join(result_reg_path, 'similarity_loss_reg.txt'),
                similarity_loss_reg)
-    np.savetxt('/home/ameen/DeepAtlas/scripts/supervised_loss_seg.txt',
+    np.savetxt(os.path.join(result_seg_path, 'supervised_loss_seg.txt'),
                supervised_loss_seg)
 
 
@@ -300,6 +301,8 @@ def plot_fig(
     validation_losses_reg,
     training_losses_seg,
     validation_losses_seg,
+    result_seg_path,
+    result_reg_path,
     regularization_loss=None,
     anatomy_loss_reg=None,
     anatomy_loss_seg=None,
@@ -311,42 +314,42 @@ def plot_fig(
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration loss')
-    plt.savefig('reg_net_losses.png')
+    plt.savefig(os.path.join(result_reg_path, 'reg_net_losses.png'))
 
     plot_against_epoch_numbers(
         regularization_loss, label='regularization loss', color='red')
     plt.ylabel('loss')
     plt.title('Alternating training: registration regularization loss')
-    plt.savefig('regularization_reg_losses.png')
+    plt.savefig(os.path.join(result_reg_path,'regularization_reg_losses.png'))
 
     plot_against_epoch_numbers(
         anatomy_loss_reg, label='anatomy loss', color='green')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration anatomy loss')
-    plt.savefig('anatomy_reg_losses.png')
+    plt.savefig(os.path.join(result_reg_path,'anatomy_reg_losses.png'))
 
     plot_against_epoch_numbers(
         similarity_loss, label='similarity loss', color='orange')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration similarity loss')
-    plt.savefig('similarity_reg_losses.png')
+    plt.savefig(os.path.join(result_reg_path,'similarity_reg_losses.png'))
 
     plot_against_epoch_numbers(training_losses_seg, label="training")
     #plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation loss')
-    plt.savefig('seg_net_losses.png')
+    plt.savefig(os.path.join(result_seg_path,'seg_net_losses.png'))
 
     plot_against_epoch_numbers(
         supervised_loss, label='supervised loss', color='red')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation supervised loss')
-    plt.savefig('supervised_seg_losses.png')
+    plt.savefig(os.path.join(result_seg_path,'supervised_seg_losses.png'))
 
     plot_against_epoch_numbers(
         anatomy_loss_seg, label='anatomy loss', color='green')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation anatomy loss')
-    plt.savefig('anatomy_seg_losses.png')
+    plt.savefig(os.path.join(result_seg_path,'anatomy_seg_losses.png'))

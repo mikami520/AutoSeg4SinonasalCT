@@ -3,7 +3,7 @@ import torch
 import itk
 import numpy as np
 import matplotlib.pyplot as plt
-import os.path
+import os
 import nibabel as nib
 import sys
 import json
@@ -119,9 +119,11 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
     headers, affines, ids = get_nii_info(raw_data, reg=False)
     seg_net.load_state_dict(torch.load(model_path))
     seg_net.to(device)
+    seg_net.eval()
     dice_loss = dice_loss_func2()
     data = load_seg_dataset(raw_data)
     k = 0
+    eval_losses = []
     for i in data:
         header = headers[k]
         affine = affines[k]
@@ -129,12 +131,12 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
         data_item = i
         test_input = data_item['img']
         test_gt = data_item['seg']
-        seg_net.eval()
         with torch.no_grad():
             test_seg_predicted = seg_net(test_input.unsqueeze(0).cuda()).cpu()
             loss = dice_loss(test_seg_predicted, test_gt.unsqueeze(0)).item()
         
-        print(f"Scan ID: {id}, dice loss: {loss}")
+        eval_loss = f"Scan ID: {id}, dice loss: {loss}"
+        eval_losses.append(eval_loss)
         prediction = torch.argmax(torch.softmax(test_seg_predicted, dim=1), dim=1, keepdim=True)[0, 0]
         k += 1
         pred_np = prediction.detach().cpu().numpy()
@@ -144,12 +146,18 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
         nii.to_filename(os.path.join(output_path, id + '.nii.gz'))
 
         del test_seg_predicted
+    
+    with open(os.path.join(output_path, 'seg_losses.txt'), 'w') as f:
+        for s in eval_losses:
+            f.write(s + '\n')
+    
     torch.cuda.empty_cache()
 
 def reg_inference(reg_net, device, model_path, json_path, output_path):
     # Run this cell to try out reg net on a random validation pair
     reg_net.load_state_dict(torch.load(model_path))
     reg_net.to(device)
+    reg_net.eval()
     json_file = load_json(json_path)
     raw_data = json_file['total_test']
     data_list = take_data_pairs(raw_data)
@@ -160,8 +168,9 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
     lncc_loss = lncc_loss_func()
     k = 0
     datasets = subvided_dataset['11']
-    for i in range(1):
-        reg_net.eval()
+    eval_losses = []
+    half_len = int(len(datasets) / 2)
+    for i in range(half_len):
         data_item = datasets[i]
         img12 = data_item['img12'].unsqueeze(0).to(device)
         id = ids[k]
@@ -205,10 +214,14 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
                   output=output_path
         )
         loss = lncc_loss(example_warped_image, img12[:, [0], :, :, :]).item()
-        print(f"Warped {id_moving_img} to {id_target_img}, Similarity loss: {loss}")
-        print(f"number of folds: {(det<=0).sum()}")
+        eval_loss = f"Warped {id_moving_img} to {id_target_img}, similarity loss: {loss}, number of folds: {(det<=0).sum()}"
+        eval_losses.append(eval_loss)
         k += 1
         del reg_net_example_output, img12, example_warped_image
+    
+    with open(os.path.join(output_path, "reg_losses.txt"), 'w') as f:
+        for s in eval_losses:
+            f.write(s + '\n')
     
     torch.cuda.empty_cache()
 

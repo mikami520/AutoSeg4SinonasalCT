@@ -118,6 +118,9 @@ def main():
     imageTr_dir = os.path.join(task, 'imageTr')
     imageTs_dir = os.path.join(task, 'imageTs')
     labelTr_dir = os.path.join(task, 'labelTr')
+    result_path = os.path.join(task, 'results')
+    result_seg_path = os.path.join(result_path, 'SegNet')
+    result_reg_path = os.path.join(result_path, 'RegNet')
     #output_path = os.path.join(task, args.op) 
     num_seg = args.ns
     spatial_dim = args.sd
@@ -145,13 +148,25 @@ def main():
     except:
         print('---'*10)
         print(f'{task} is already existed !!!')
-    '''
+    
     try:
-        os.mkdir(output_path)
+        os.mkdir(result_path)
     except:
         print('---'*10)
-        print(f'{output_path} is already existed !!!')
-    '''
+        print(f'{result_path} is already existed !!!')
+
+    try:
+        os.mkdir(result_seg_path)
+    except:
+        print('---'*10)
+        print(f'{result_seg_path} is already existed !!!')
+    
+    try:
+        os.mkdir(result_reg_path)
+    except:
+        print('---'*10)
+        print(f'{result_reg_path} is already existed !!!')
+    
     try:
         os.mkdir(imageTr_dir)
     except:
@@ -326,7 +341,10 @@ def main():
                   lam_a,
                   lam_sp,
                   max_epoch,
-                  val_step)
+                  val_step,
+                  result_seg_path,
+                  result_reg_path
+                  )
 
 
 if __name__ == '__main__':
