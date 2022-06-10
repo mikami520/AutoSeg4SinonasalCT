@@ -11,7 +11,7 @@ import deep_atlas_train
 sys.path.insert(0, '/home/ameen/DeepAtlas/test')
 
 from test import (
-    seg_inference, load_json
+    seg_inference, load_json, reg_inference
 )
 
 
@@ -22,8 +22,10 @@ def parse_command_line():
         description='pipeline for deep atlas test')
     parser.add_argument('-jp', metavar='path to the dataset.json file', type=str,
                         help="absolute path of the dataset.json file")
-    parser.add_argument('-mp', metavar='path to the saved best model', type=str,
-                        help="absolute path of the saved best model")
+    parser.add_argument('-sm', metavar='path to the best segmentation model', type=str,
+                        help="absolute path to the best segmentation model")
+    parser.add_argument('-rm', metavar='path to the best registration model', type=str,
+                        help="absolute path to the best registration model")
     parser.add_argument('-gpu', metavar='id of gpu', type=str, default='0',
                         help='id of gpu device to use')
     parser.add_argument('-op', metavar='prediction result output path', type=str, default='prediction',
@@ -48,7 +50,8 @@ def main():
     ROOT_DIR = str(Path(os.getcwd()).parent.absolute())
     args = parse_command_line()
     json_path = args.jp
-    model_path = args.mp
+    seg_model_path = args.sm
+    reg_model_path = args.rm
     gpu = args.gpu
     output_path = args.op
     task = args.ti
@@ -63,16 +66,28 @@ def main():
     device = torch.device("cuda:" + gpu)
 
     output_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset', task, output_path)
-    
+    seg_path = os.path.join(output_path, 'SegNet')
+    reg_path = os.path.join(output_path, 'RegNet')
     try:
         os.mkdir(output_path)
     except:
         print(f'{output_path} is already existed !!!')
 
+    try:
+        os.mkdir(seg_path)
+    except:
+        print(f'{seg_path} is already existed !!!')
+
+    try:
+        os.mkdir(reg_path)
+    except:
+        print(f'{reg_path} is already existed !!!')
+    
+
     seg_net = deep_atlas_train.get_seg_net(spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
-
-    seg_inference(seg_net, device, model_path, json_path, output_path)
-
+    reg_net = deep_atlas_train.get_reg_net(spatial_dim, spatial_dim, dropout, activation_type, normalization_type, num_res)
+    seg_inference(seg_net, device, seg_model_path, json_path, seg_path)
+    reg_inference(reg_net, device, reg_model_path, json_path, reg_path)
 
 if __name__ == '__main__':
     monai.utils.set_determinism(seed=2938649572)

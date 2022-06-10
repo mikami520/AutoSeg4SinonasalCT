@@ -13,6 +13,7 @@ def preview_image(image_array, normalize_by="volume", cmap=None, figsize=(12, 12
     If a number is provided for threshold, then pixels for which the value
     is below the threshold will be shown in red
     """
+    plt.figure()
     if normalize_by == "slice":
         vmin = None
         vmax = None
@@ -39,7 +40,7 @@ def preview_image(image_array, normalize_by="volume", cmap=None, figsize=(12, 12
             red[im <= threshold] = [1, 0, 0, 1]
             ax.imshow(red, origin='lower')
 
-    plt.show()
+    plt.savefig('test.png')
 
 
 def plot_2D_vector_field(vector_field, downsampling):

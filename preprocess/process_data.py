@@ -60,12 +60,11 @@ def load_seg_dataset(train, valid):
     transform_seg_available = monai.transforms.Compose(
         transforms=[
             monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True),
-            monai.transforms.TransposeD(
-                keys=['img', 'seg'], indices=(2, 1, 0)),
+            #monai.transforms.TransposeD(
+                #keys=['img', 'seg'], indices=(2, 1, 0)),
             monai.transforms.AddChannelD(keys=['img', 'seg']),
-            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
-                1., 1., 1.), mode=('trilinear', 'nearest')),
-            monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
+            #monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
+                #1., 1., 1.), mode=('trilinear', 'nearest')),
             monai.transforms.ToTensorD(keys=['img', 'seg'])
         ]
     )
@@ -91,17 +90,17 @@ def load_reg_dataset(train, valid):
         transforms=[
             monai.transforms.LoadImageD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], image_only=True, allow_missing_keys=True),
-            monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(
-                2, 1, 0), allow_missing_keys=True),
+            #monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(
+                #2, 1, 0), allow_missing_keys=True),
             # if resize is not None else monai.transforms.Identity()
             monai.transforms.ToTensorD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
             monai.transforms.AddChannelD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
-            monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
-                'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
-            monai.transforms.OrientationD(
-                keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
+            #monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
+                #'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
+            #monai.transforms.OrientationD(
+                #keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
             monai.transforms.ConcatItemsD(
                 keys=['img1', 'img2'], name='img12', dim=0),
             monai.transforms.DeleteItemsD(keys=['img1', 'img2']),

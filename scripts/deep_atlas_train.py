@@ -94,10 +94,10 @@ def get_seg_net(spatial_dims, num_label, dropout, activation_type, normalization
 def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization_type, num_res):
     reg_net = regNet(
         spatial_dim=spatial_dims,  # spatial dims
-        in_channel=1,  # input channels
+        in_channel=2,  # input channels
         out_channel=num_label,  # output channels
-        channel=(8, 16, 16, 32, 32, 64, 64),  # channel sequence
-        stride=(1, 2, 1, 2, 1, 2),  # convolutional strides
+        channel=(16, 32, 32, 32, 32),  # channel sequence
+        stride=(1, 2, 2, 2),  # convolutional strides
         dropouts=dropout,
         acts=activation_type,
         norms=normalization_type,
