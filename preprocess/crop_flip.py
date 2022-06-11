@@ -5,6 +5,7 @@ import ants
 import nibabel as nib
 import os
 import argparse
+import sys
 
 
 def parse_command_line():
@@ -28,6 +29,9 @@ def pad(raw_image, bound_x, bound_y, bound_z, resize, seg=False):
     diff_x = resize[0] - (bound_x[1]-bound_x[0])
     diff_y = resize[1] - (bound_y[1]-bound_y[0])
     diff_z = resize[2] - (bound_z[1]-bound_z[0])
+    if diff_x < 0 or diff_y < 0 or diff_z < 0:
+        sys.exit(
+            'the dimension of ROI is larger than the resizing dimension, please choose a different padding dimension')
     left_y, right_y = split(diff_y)
     left_z, right_z = split(diff_z)
     left_x, right_x = split(diff_x)
