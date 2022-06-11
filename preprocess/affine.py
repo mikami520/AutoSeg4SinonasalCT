@@ -10,8 +10,6 @@ import argparse
 
 
 def parse_command_line():
-    print('---'*10)
-    print('Parsing Command Line Arguments')
     parser = argparse.ArgumentParser(
         description='pipeline for dataset co-alignment')
     parser.add_argument('-bp', metavar='base path', type=str,
@@ -54,7 +52,6 @@ def correct_affine(scan, base, images_path, seg_path, fomat):
 
     segment_nii.to_filename(segmentation_output)
     image.to_filename(images_output)
-    print('Affine correction complete')
 
 
 def convert_to_one_hot(data, header, segment_indices=None):
@@ -257,7 +254,7 @@ def main():
         for i in range(0, len(label_list), 2):
             if not label_list[i].isdigit():
                 print(
-                    "Wrong order of input argument for pairwising label value and its name !!!")
+                    "Wrong order of input argument for pair-wising label value and its name !!!")
                 return
             else:
                 value = label_list[i]
@@ -267,7 +264,7 @@ def main():
                     paired_list.append(ele)
                 else:
                     print(
-                        "Wrong input argument for pairwising label value and its name !!!")
+                        "Wrong input argument for pair-wising label value and its name !!!")
                     return
 
             # print(new_segmentation)
