@@ -282,7 +282,7 @@ def main():
     dataloader_train_reg = {
         seg_availability: monai.data.DataLoader(
             dataset,
-            batch_size=8,
+            batch_size=4,
             num_workers=4,
             shuffle=True
         )
@@ -293,7 +293,7 @@ def main():
     dataloader_valid_reg = {
         seg_availability: monai.data.DataLoader(
             dataset,
-            batch_size=16,
+            batch_size=8,
             num_workers=4,
             shuffle=True  # Shuffle validation data because we will only take a sample for validation each time
         )

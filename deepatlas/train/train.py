@@ -83,10 +83,10 @@ def train_network(dataloader_train_reg,
     lambda_r = 7.5 * (image_scale / 96)**2
 
     max_epochs = max_epoch
-    reg_phase_training_batches_per_epoch = 10
+    reg_phase_training_batches_per_epoch = 5
     # Fewer batches needed, because seg_net converges more quickly
-    seg_phase_training_batches_per_epoch = 5
-    reg_phase_num_validation_batches_to_use = 10
+    seg_phase_training_batches_per_epoch = 10
+    reg_phase_num_validation_batches_to_use = 5
     val_interval = val_step
 
     training_losses_reg = []
