@@ -1,3 +1,12 @@
+from process_data import (
+    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
+)
+from network import (
+    regNet, segNet
+)
+from train import (
+    train_network
+)
 import monai
 import torch
 import itk
@@ -15,15 +24,6 @@ sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/preprocess')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/network')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/train')
 
-from process_data import (
-    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
-)
-from network import (
-    regNet, segNet
-)
-from train import (
-    train_network
-)
 
 def parse_command_line():
     parser = argparse.ArgumentParser(
@@ -34,8 +34,8 @@ def parse_command_line():
                         help="Relative path of the image directory")
     parser.add_argument('-sp', metavar='segmentation path', type=str,
                         help="Relative path of the image directory")
-    #parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='preprocessing',
-                        #help='Relative path of the preprocessing result directory')
+    # parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='preprocessing',
+    # help='Relative path of the preprocessing result directory')
     parser.add_argument('-sl', metavar='segmentation information list', type=str, nargs='+',
                         help='a list of label name and corresponding value')
     parser.add_argument('-ns', metavar='number of segmentations', type=int, default=3,
@@ -68,7 +68,7 @@ def parse_command_line():
                         help='maximum number of training epochs. Defaults to 100.')
     parser.add_argument('-vs', metavar='validation steps per epoch', type=int, default=5,
                         help='validation steps per epoch. Defaults to 5.')
-    parser.add_argument('-ti', metavar='task id and name', type=str, 
+    parser.add_argument('-ti', metavar='task id and name', type=str,
                         help='task name and id')
     argv = parser.parse_args()
     return argv
@@ -88,13 +88,15 @@ def get_seg_net(spatial_dims, num_label, dropout, activation_type, normalization
     )
     return seg_net
 
+
 def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization_type, num_res):
     reg_net = regNet(
         spatial_dim=spatial_dims,  # spatial dims
         in_channel=2,  # input channels
         out_channel=num_label,  # output channels
-        channel=(16, 32, 32, 32, 32),  # channel sequence
-        stride=(1, 2, 2, 2),  # convolutional strides
+        channel=(16, 32, 32, 32, 32, 32, 32, 32,
+                 32, 16, 16),  # channel sequence
+        stride=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),  # convolutional strides
         dropouts=dropout,
         acts=activation_type,
         norms=normalization_type,
@@ -115,7 +117,7 @@ def main():
     result_path = os.path.join(task, 'results')
     result_seg_path = os.path.join(result_path, 'SegNet')
     result_reg_path = os.path.join(result_path, 'RegNet')
-    #output_path = os.path.join(task, args.op) 
+    #output_path = os.path.join(task, args.op)
     num_seg = args.ns
     spatial_dim = args.sd
     dropout = args.dr
@@ -142,7 +144,7 @@ def main():
     except:
         print('---'*10)
         print(f'{task} is already existed !!!')
-    
+
     try:
         os.mkdir(result_path)
     except:
@@ -154,13 +156,12 @@ def main():
     except:
         print('---'*10)
         print(f'{result_seg_path} is already existed !!!')
-    
+
     try:
         os.mkdir(result_reg_path)
     except:
         print('---'*10)
         print(f'{result_reg_path} is already existed !!!')
-    
 
     print('---'*10)
     print('split dataset into train and test')
@@ -183,7 +184,7 @@ def main():
         json_dict['labels'].update({
             seg_list[i]: seg_list[i + 1]
         })
-    
+
     train, test, num_train, num_test = split_data(img_path, seg_path, num_seg)
     json_dict['total_numScanTraining'] = num_train
     json_dict['total_numLabelTraining'] = num_seg
@@ -205,7 +206,8 @@ def main():
     num_label = len(torch.unique(data_item['seg']))
     print('---'*10)
     print('prepare segmentation network')
-    seg_net = get_seg_net(spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
+    seg_net = get_seg_net(spatial_dim, num_label, dropout,
+                          activation_type, normalization_type, num_res)
     print(seg_net)
     '''
     print('---'*10)
@@ -249,7 +251,8 @@ def main():
         data_pairs_train_subdivided, data_pairs_valid_subdivided)
     print('---'*10)
     print('prepare registration network')
-    reg_net = get_reg_net(spatial_dim, spatial_dim, dropout, activation_type, normalization_type, num_res)
+    reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
+                          activation_type, normalization_type, num_res)
     print(reg_net)
     datasets = list(dataset_pairs_train_subdivided.values())
     datasets_combined = sum(datasets[1:], datasets[0])
