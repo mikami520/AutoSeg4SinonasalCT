@@ -1,12 +1,3 @@
-from process_data import (
-    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
-)
-from network import (
-    regNet, segNet
-)
-from train import (
-    train_network
-)
 import monai
 import torch
 import itk
@@ -23,7 +14,15 @@ from pathlib import Path
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/preprocess')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/network')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/train')
-
+from process_data import (
+    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
+)
+from network import (
+    regNet, segNet
+)
+from train import (
+    train_network
+)
 
 def parse_command_line():
     parser = argparse.ArgumentParser(
