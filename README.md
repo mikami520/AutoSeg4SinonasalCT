@@ -20,7 +20,7 @@ pip3 install -r requirements.txt
 ### Step 2.1: Co-align the data (make sure scan and segmentation are co-aligned)
 Activate scripting environment
 ```
-cd <path to repo>/preprocessing
+cd <path to repo>/deepatlas/preprocessing
 ```
 Co-align the scans and segmentations
 ```
