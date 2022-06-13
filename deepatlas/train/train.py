@@ -1,3 +1,10 @@
+from utils import (
+    preview_image, preview_3D_vector_field, preview_3D_deformation,
+    jacobian_determinant, plot_against_epoch_numbers
+)
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
+)
 import generators
 import monai
 import torch
@@ -5,17 +12,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import sys
-
+from pathlib import Path
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/utils')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/loss_function')
 
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
-)
-from utils import (
-    preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
-)
 
 def swap_training(network_to_train, network_to_not_train):
     """
@@ -52,6 +52,7 @@ def train_network(dataloader_train_reg,
                   ):
     # Training cell
     # (if already done then you may skip this and uncomment the loading checkpoint cell below)
+    ROOT_DIR = str(Path(result_reg_path).parent.absolute())
     seg_availabilities = ['00', '01', '10', '11']
     batch_generator_train_reg = generators.create_batch_generator(
         dataloader_train_reg)
@@ -98,19 +99,21 @@ def train_network(dataloader_train_reg,
     similarity_loss_reg = []
     supervised_loss_seg = []
     anatomy_loss_seg = []
-
     best_seg_validation_loss = float('inf')
     best_reg_validation_loss = float('inf')
+    with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'w') as f:
+        f.write('Deep Atlas Training Log\n')
 
     for epoch_number in range(max_epochs):
 
         print(f"Epoch {epoch_number+1}/{max_epochs}:")
+        with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+            f.write(f"Epoch {epoch_number+1}/{max_epochs}:\n")
+            # ------------------------------------------------
+            #         reg_net training, with seg_net frozen
+            # ------------------------------------------------
 
-        # ------------------------------------------------
-        #         reg_net training, with seg_net frozen
-        # ------------------------------------------------
-
-        # Keep computational graph in memory for reg_net, but not for seg_net, and do reg_net.train()
+            # Keep computational graph in memory for reg_net, but not for seg_net, and do reg_net.train()
         swap_training(reg_net, seg_net)
 
         losses = []
@@ -136,6 +139,8 @@ def train_network(dataloader_train_reg,
         anatomy_loss_reg.append([epoch_number, np.mean(anatomy_loss)])
         print(f"\treg training loss: {training_loss}")
         training_losses_reg.append([epoch_number, training_loss])
+        with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+            f.write(f"\treg training loss: {training_loss}\n")
 
         if epoch_number % val_interval == 0:
             reg_net.eval()
@@ -150,10 +155,13 @@ def train_network(dataloader_train_reg,
             validation_loss = np.mean(losses)
             print(f"\treg validation loss: {validation_loss}")
             validation_losses_reg.append([epoch_number, validation_loss])
+            with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+                f.write(f"\treg validation loss: {validation_loss}\n")
 
             if validation_loss < best_reg_validation_loss:
                 best_reg_validation_loss = validation_loss
-                torch.save(reg_net.state_dict(), os.path.join(result_reg_path, 'reg_net_best.pth'))
+                torch.save(reg_net.state_dict(), os.path.join(
+                    result_reg_path, 'reg_net_best.pth'))
 
         # Free up memory
         del loss, loss_sim, loss_reg, loss_ana
@@ -236,6 +244,8 @@ def train_network(dataloader_train_reg,
         anatomy_loss_seg.append([epoch_number, np.mean(anatomy_loss)])
         print(f"\tseg training loss: {training_loss}")
         training_losses_seg.append([epoch_number, training_loss])
+        with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+            f.write(f"\tseg training loss: {training_loss}\n")
 
         if epoch_number % val_interval == 0:
             # The following validation loop would not do anything in the case
@@ -254,10 +264,13 @@ def train_network(dataloader_train_reg,
             validation_loss = np.mean(losses)
             print(f"\tseg validation loss: {validation_loss}")
             validation_losses_seg.append([epoch_number, validation_loss])
+            with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+                f.write(f"\tseg validation loss: {validation_loss}\n")
 
             if validation_loss < best_seg_validation_loss:
                 best_seg_validation_loss = validation_loss
-                torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'seg_net_best.pth'))
+                torch.save(seg_net.state_dict(), os.path.join(
+                    result_seg_path, 'seg_net_best.pth'))
 
         # Free up memory
         del loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\
@@ -266,6 +279,10 @@ def train_network(dataloader_train_reg,
 
     print(f"\n\nBest reg_net validation loss: {best_reg_validation_loss}")
     print(f"Best seg_net validation loss: {best_seg_validation_loss}")
+    with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+        f.write(
+            f"\n\nBest reg_net validation loss: {best_reg_validation_loss}\n")
+        f.write(f"Best seg_net validation loss: {best_seg_validation_loss}")
 
     plot_fig(training_losses_reg,
              validation_losses_reg,
@@ -311,45 +328,57 @@ def plot_fig(
 ):
     # Plot the training and validation losses
     plot_against_epoch_numbers(training_losses_reg, label="training")
-    #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
+    #
     plt.ylabel('loss')
-    plt.title('Alternating training: registration loss')
-    plt.savefig(os.path.join(result_reg_path, 'reg_net_losses.png'))
+    plt.title('Alternating training: registration training loss')
+    plt.savefig(os.path.join(result_reg_path, 'reg_net_training_losses.png'))
 
     plot_against_epoch_numbers(
-        regularization_loss, label='regularization loss', color='red')
+        validation_losses_reg, label="validation")
+    plt.ylabel('loss')
+    plt.title('Alternating training: registration validation loss')
+    plt.savefig(os.path.join(result_reg_path, 'reg_net_validation_losses.png'))
+
+    plot_against_epoch_numbers(
+        regularization_loss, label='regularization loss')
     plt.ylabel('loss')
     plt.title('Alternating training: registration regularization loss')
-    plt.savefig(os.path.join(result_reg_path,'regularization_reg_losses.png'))
+    plt.savefig(os.path.join(result_reg_path, 'regularization_reg_losses.png'))
 
     plot_against_epoch_numbers(
-        anatomy_loss_reg, label='anatomy loss', color='green')
+        anatomy_loss_reg, label='anatomy loss')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration anatomy loss')
-    plt.savefig(os.path.join(result_reg_path,'anatomy_reg_losses.png'))
+    plt.savefig(os.path.join(result_reg_path, 'anatomy_reg_losses.png'))
 
     plot_against_epoch_numbers(
-        similarity_loss, label='similarity loss', color='orange')
+        similarity_loss, label='similarity loss')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration similarity loss')
-    plt.savefig(os.path.join(result_reg_path,'similarity_reg_losses.png'))
+    plt.savefig(os.path.join(result_reg_path, 'similarity_reg_losses.png'))
 
     plot_against_epoch_numbers(training_losses_seg, label="training")
     #plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
     plt.ylabel('loss')
-    plt.title('Alternating training: segmentation loss')
-    plt.savefig(os.path.join(result_seg_path,'seg_net_losses.png'))
+    plt.title('Alternating training: segmentation training loss')
+    plt.savefig(os.path.join(result_seg_path, 'seg_net_training_losses.png'))
 
     plot_against_epoch_numbers(
-        supervised_loss, label='supervised loss', color='red')
+        validation_losses_seg, label="validation")
+    plt.ylabel('loss')
+    plt.title('Alternating training: segmentation validation loss')
+    plt.savefig(os.path.join(result_seg_path, 'seg_net_validation_losses.png'))
+
+    plot_against_epoch_numbers(
+        supervised_loss, label='supervised loss')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation supervised loss')
-    plt.savefig(os.path.join(result_seg_path,'supervised_seg_losses.png'))
+    plt.savefig(os.path.join(result_seg_path, 'supervised_seg_losses.png'))
 
     plot_against_epoch_numbers(
-        anatomy_loss_seg, label='anatomy loss', color='green')
+        anatomy_loss_seg, label='anatomy loss')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation anatomy loss')
-    plt.savefig(os.path.join(result_seg_path,'anatomy_seg_losses.png'))
+    plt.savefig(os.path.join(result_seg_path, 'anatomy_seg_losses.png'))
