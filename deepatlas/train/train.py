@@ -1,10 +1,3 @@
-from utils import (
-    preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
-)
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
-)
 import generators
 import monai
 import torch
@@ -15,7 +8,13 @@ import sys
 from pathlib import Path
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/utils')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/loss_function')
-
+from utils import (
+    preview_image, preview_3D_vector_field, preview_3D_deformation,
+    jacobian_determinant, plot_against_epoch_numbers
+)
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
+)
 
 def swap_training(network_to_train, network_to_not_train):
     """
