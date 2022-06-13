@@ -102,6 +102,7 @@ def crop_and_flip(nib_img, nib_seg, ants_img, ants_seg, resize):
     low_z = min(list(gem.loc[:, 'BoundingBoxLower_z']))
     upp_z = max(list(gem.loc[:, 'BoundingBoxUpper_z']))
 
+    img = normalization(img)
     # Compute mid point
     mid_x = int((low_x + upp_x) / 2)
 
@@ -117,6 +118,13 @@ def crop_and_flip(nib_img, nib_seg, ants_img, ants_seg, resize):
     flipped_right_seg = np.flip(right_seg, axis=0)
 
     return left_img, left_seg, flipped_right_img, flipped_right_seg
+
+
+def normalization(scan):
+    lb = np.amin(scan)
+    ub = np.amax(scan)
+    scan = (scan - lb) / (ub - lb)
+    return scan
 
 
 def load_data(img_path, seg_path):
