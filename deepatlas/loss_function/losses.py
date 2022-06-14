@@ -18,7 +18,7 @@ def lncc_loss_func():
         kernel_type='rectangular',
         reduction="mean",
         smooth_nr=1e-5,
-        smooth_dr=1e-1,
+        smooth_dr=1e-5,
     )
     return lncc_loss
 

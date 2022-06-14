@@ -12,7 +12,7 @@ sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/utils')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/loss_function')
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/preprocess')
 from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func2
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func2, dice_loss_func
 )
 from utils import (
     plot_2D_vector_field, jacobian_determinant, plot_2D_deformation
@@ -90,6 +90,7 @@ def get_nii_info(data, reg=False):
             item = data[i]
             id = os.path.basename(item['seg']).split('.')[0]
             seg = nib.load(item['seg'])
+            num_labels = len(np.unique(seg.get_fdata()))
             headers.append(seg.header)
             affines.append(seg.affine)
             ids.append(id)
@@ -106,17 +107,19 @@ def get_nii_info(data, reg=False):
                 header[key] = ele.header
                 affine[key] = ele.affine
                 id[key] = idd
+                if key == 'seg2':
+                    num_labels = len(np.unique(ele.get_fdata())) 
             
             headers.append(header)
             affines.append(affine)
             ids.append(id)
     
-    return headers, affines, ids
+    return headers, affines, ids, num_labels
 
 def seg_inference(seg_net, device, model_path, json_path, output_path):
     json_file = load_json(json_path)
     raw_data = json_file['total_test']
-    headers, affines, ids = get_nii_info(raw_data, reg=False)
+    headers, affines, ids, num_labels = get_nii_info(raw_data, reg=False)
     seg_net.load_state_dict(torch.load(model_path))
     seg_net.to(device)
     seg_net.eval()
@@ -161,18 +164,24 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
     json_file = load_json(json_path)
     raw_data = json_file['total_test']
     data_list = take_data_pairs(raw_data)
-    headers, affines, ids = get_nii_info(data_list, reg=True)
+    headers, affines, ids, num_labels = get_nii_info(data_list, reg=True)
     subvided_data_list = subdivide_list_of_data_pairs(data_list)
     subvided_dataset = load_reg_dataset(subvided_data_list)
     warp = warp_func()
+    warp_nearest = warp_nearest_func()
     lncc_loss = lncc_loss_func()
     k = 0
     datasets = subvided_dataset['11']
-    eval_losses = []
+    eval_losses_img = []
+    eval_losses_seg = []
     half_len = int(len(datasets) / 2)
     for i in range(half_len):
         data_item = datasets[i]
         img12 = data_item['img12'].unsqueeze(0).to(device)
+        gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)
+        moving_raw_seg = data_item['seg2'].unsqueeze(0).to(device)
+        moving_seg = monai.networks.one_hot(moving_raw_seg, num_labels)
+        gt_seg = monai.networks.one_hot(gt_raw_seg, num_labels)
         id = ids[k]
         affine = affines[k]
         header = headers[k]
@@ -183,6 +192,10 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
             img12[:, [1], :, :, :],  # moving image
             reg_net_example_output  # warping
         )
+        example_warped_seg = warp_nearest(
+            moving_seg,
+            reg_net_example_output
+        )
         moving_img = img12[0, 1, :, :, :]
         target_img = img12[0, 0, :, :, :]
         id_target_img = id['img1']
@@ -191,9 +204,17 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
         head_target_seg = header['seg1']
         aff_target_img = affine['img1']
         aff_target_seg = affine['seg1']
+        dice_loss = dice_loss_func()
+        loss = dice_loss(example_warped_seg, gt_seg).item()
+        eval_loss_seg = f"Scan {id_moving_img} to {id_target_img}, dice loss: {loss}"
+        eval_losses_seg.append(eval_loss_seg)
+        prediction = torch.argmax(torch.softmax(example_warped_seg, dim=1), dim=1, keepdim=True)[0, 0]
         warped_img_np = example_warped_image[0, 0].detach().cpu().numpy()
+        warped_seg_np = prediction.detach().cpu().numpy()
+        nii_seg = nib.Nifti1Image(warped_seg_np, affine=aff_target_seg, header=head_target_seg)
         nii = nib.Nifti1Image(warped_img_np, affine=aff_target_img, header=head_target_img)
         nii.to_filename(os.path.join(output_path, id_moving_img + '_to_' + id_target_img + '.nii.gz'))
+        nii_seg.to_filename(os.path.join(output_path, id_moving_img + '_to_' + id_target_img + '_seg.nii.gz'))
         grid_spacing = 5
         det = jacobian_determinant(reg_net_example_output.cpu().detach()[0])
         visualize(target_img.cpu(),
@@ -214,13 +235,17 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
                   output=output_path
         )
         loss = lncc_loss(example_warped_image, img12[:, [0], :, :, :]).item()
-        eval_loss = f"Warped {id_moving_img} to {id_target_img}, similarity loss: {loss}, number of folds: {(det<=0).sum()}"
-        eval_losses.append(eval_loss)
+        eval_loss_img = f"Warped {id_moving_img} to {id_target_img}, similarity loss: {loss}, number of folds: {(det<=0).sum()}"
+        eval_losses_img.append(eval_loss_img)
         k += 1
         del reg_net_example_output, img12, example_warped_image
     
-    with open(os.path.join(output_path, "reg_losses.txt"), 'w') as f:
-        for s in eval_losses:
+    with open(os.path.join(output_path, "reg_img_losses.txt"), 'w') as f:
+        for s in eval_losses_img:
+            f.write(s + '\n')
+    
+    with open(os.path.join(output_path, "reg_seg_losses.txt"), 'w') as f:
+        for s in eval_losses_seg:
             f.write(s + '\n')
     
     torch.cuda.empty_cache()

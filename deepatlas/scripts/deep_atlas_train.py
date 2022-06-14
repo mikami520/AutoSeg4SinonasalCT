@@ -23,7 +23,6 @@ from network import (
 from train import (
     train_network
 )
-
 def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for deep atlas train')
@@ -33,8 +32,6 @@ def parse_command_line():
                         help="Relative path of the image directory")
     parser.add_argument('-sp', metavar='segmentation path', type=str,
                         help="Relative path of the image directory")
-    # parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='preprocessing',
-    # help='Relative path of the preprocessing result directory')
     parser.add_argument('-sl', metavar='segmentation information list', type=str, nargs='+',
                         help='a list of label name and corresponding value')
     parser.add_argument('-ns', metavar='number of segmentations', type=int, default=3,
@@ -93,9 +90,8 @@ def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization
         spatial_dim=spatial_dims,  # spatial dims
         in_channel=2,  # input channels
         out_channel=num_label,  # output channels
-        channel=(16, 32, 32, 32, 32, 32, 32, 32,
-                 32, 16, 16),  # channel sequence
-        stride=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),  # convolutional strides
+        channel=(16, 32, 32, 32, 32),  # channel sequence
+        stride=(1, 2, 2, 2),  # convolutional strides
         dropouts=dropout,
         acts=activation_type,
         norms=normalization_type,
@@ -116,7 +112,6 @@ def main():
     result_path = os.path.join(task, 'results')
     result_seg_path = os.path.join(result_path, 'SegNet')
     result_reg_path = os.path.join(result_path, 'RegNet')
-    #output_path = os.path.join(task, args.op)
     num_seg = args.ns
     spatial_dim = args.sd
     dropout = args.dr
@@ -208,14 +203,7 @@ def main():
     seg_net = get_seg_net(spatial_dim, num_label, dropout,
                           activation_type, normalization_type, num_res)
     print(seg_net)
-    '''
-    print('---'*10)
-    print('check foward pass for segmentation network')
-    seg_net_example_output = seg_net(data_item['img'].unsqueeze(0))
-    print(f"Segmentation classes: {torch.unique(data_item['seg'])}")
-    print(f"Shape of ground truth label: {data_item['seg'].unsqueeze(0).shape}")
-    print(f"Shape of seg_net output: {seg_net_example_output.shape}")
-    '''
+
     # prepare registration dataset
     print('---'*10)
     print('prepare registration dataset')
@@ -258,17 +246,7 @@ def main():
     data_item = random.choice(datasets_combined)
     reg_net_example_input = data_item['img12'].unsqueeze(0)
     image_scale = reg_net_example_input.shape[-1]
-    '''
-    print('---'*10)
-    print('check foward pass for segmentation network')
-    datasets = list(dataset_pairs_train_subdivided.values())
-    datasets_combined = sum(datasets[1:], datasets[0])
-    data_item = random.choice(datasets_combined)
-    reg_net_example_input = data_item['img12'].unsqueeze(0)
-    reg_net_example_output = reg_net(reg_net_example_input)
-    print(f"Shape of reg_net input: {reg_net_example_input.shape}")
-    print(f"Shape of reg_net output: {reg_net_example_output.shape}")
-    '''
+
     dataloader_train_seg = monai.data.DataLoader(
         dataset_seg_available_train,
         batch_size=4,

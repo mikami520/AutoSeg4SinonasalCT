@@ -83,10 +83,10 @@ def train_network(dataloader_train_reg,
     lambda_r = 7.5 * (image_scale / 96)**2
 
     max_epochs = max_epoch
-    reg_phase_training_batches_per_epoch = 5
+    reg_phase_training_batches_per_epoch = 10
     # Fewer batches needed, because seg_net converges more quickly
-    seg_phase_training_batches_per_epoch = 10
-    reg_phase_num_validation_batches_to_use = 5
+    seg_phase_training_batches_per_epoch = 5
+    reg_phase_num_validation_batches_to_use = 10
     val_interval = val_step
 
     training_losses_reg = []
@@ -326,58 +326,50 @@ def plot_fig(
     supervised_loss=None
 ):
     # Plot the training and validation losses
-    plot_against_epoch_numbers(training_losses_reg, label="training")
+    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_reg, validation_epoch_and_value_pairs=validation_losses_reg, train_label="training", val_label='validation')
     #
+    plt.legend()
     plt.ylabel('loss')
     plt.title('Alternating training: registration training loss')
     plt.savefig(os.path.join(result_reg_path, 'reg_net_training_losses.png'))
 
-    plot_against_epoch_numbers(
-        validation_losses_reg, label="validation")
-    plt.ylabel('loss')
-    plt.title('Alternating training: registration validation loss')
-    plt.savefig(os.path.join(result_reg_path, 'reg_net_validation_losses.png'))
 
     plot_against_epoch_numbers(
-        regularization_loss, label='regularization loss')
+        train_epoch_and_value_pairs=regularization_loss, train_label='regularization loss')
     plt.ylabel('loss')
     plt.title('Alternating training: registration regularization loss')
     plt.savefig(os.path.join(result_reg_path, 'regularization_reg_losses.png'))
 
     plot_against_epoch_numbers(
-        anatomy_loss_reg, label='anatomy loss')
+        train_epoch_and_value_pairs=anatomy_loss_reg, train_label='anatomy loss')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration anatomy loss')
     plt.savefig(os.path.join(result_reg_path, 'anatomy_reg_losses.png'))
 
     plot_against_epoch_numbers(
-        similarity_loss, label='similarity loss')
+        train_epoch_and_value_pairs=similarity_loss, train_label='similarity loss')
     #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration similarity loss')
     plt.savefig(os.path.join(result_reg_path, 'similarity_reg_losses.png'))
 
-    plot_against_epoch_numbers(training_losses_seg, label="training")
+    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_seg, validation_epoch_and_value_pairs=validation_losses_seg, train_label="training", val_label='validaiton')
     #plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
+    plt.legend()
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation training loss')
     plt.savefig(os.path.join(result_seg_path, 'seg_net_training_losses.png'))
 
-    plot_against_epoch_numbers(
-        validation_losses_seg, label="validation")
-    plt.ylabel('loss')
-    plt.title('Alternating training: segmentation validation loss')
-    plt.savefig(os.path.join(result_seg_path, 'seg_net_validation_losses.png'))
 
     plot_against_epoch_numbers(
-        supervised_loss, label='supervised loss')
+        train_epoch_and_value_pairs=supervised_loss, train_label='supervised loss')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation supervised loss')
     plt.savefig(os.path.join(result_seg_path, 'supervised_seg_losses.png'))
 
     plot_against_epoch_numbers(
-        anatomy_loss_seg, label='anatomy loss')
+        train_epoch_and_value_pairs=anatomy_loss_seg, train_label='anatomy loss')
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation anatomy loss')
     plt.savefig(os.path.join(result_seg_path, 'anatomy_seg_losses.png'))

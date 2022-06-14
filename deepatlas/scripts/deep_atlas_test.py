@@ -9,21 +9,13 @@ from pathlib import Path
 import deep_atlas_train
 
 sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/test')
-
 from test import (
     seg_inference, load_json, reg_inference
 )
 
-
 def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for deep atlas test')
-    parser.add_argument('-jp', metavar='path to the dataset.json file', type=str,
-                        help="absolute path of the dataset.json file")
-    parser.add_argument('-sm', metavar='path to the best segmentation model', type=str,
-                        help="absolute path to the best segmentation model")
-    parser.add_argument('-rm', metavar='path to the best registration model', type=str,
-                        help="absolute path to the best registration model")
     parser.add_argument('-gpu', metavar='id of gpu', type=str, default='0',
                         help='id of gpu device to use')
     parser.add_argument('-op', metavar='prediction result output path', type=str, default='prediction',
@@ -40,16 +32,13 @@ def parse_command_line():
                         help='feature normalization type and arguments. Defaults to instance norm.')
     parser.add_argument('-nr', metavar='number of residual units', type=int, default=0,
                         help='number of residual units. Defaults to 0.')
-    
+
     argv = parser.parse_args()
     return argv
 
 def main():
     ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
     args = parse_command_line()
-    json_path = args.jp
-    seg_model_path = args.sm
-    reg_model_path = args.rm
     gpu = args.gpu
     output_path = args.op
     task = args.ti
@@ -58,6 +47,10 @@ def main():
     activation_type = args.at
     normalization_type = args.nm
     num_res = args.nr
+
+    json_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset', task, 'dataset.json')
+    seg_model_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset', task, 'results', 'SegNet', 'seg_net_best.pth')
+    reg_model_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset', task, 'results', 'RegNet', 'reg_net_best.pth')
     json_file = load_json(json_path)
     labels = json_file['labels']
     num_label = len(labels.keys())
