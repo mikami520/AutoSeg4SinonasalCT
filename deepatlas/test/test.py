@@ -7,6 +7,7 @@ import os
 import nibabel as nib
 import sys
 import json
+from pathlib import Path
 
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
@@ -183,7 +184,7 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
     eval_losses_img = []
     eval_losses_seg = []
     half_len = int(len(datasets) / 2)
-    for i in range(half_len):
+    for i in range(1):
         data_item = datasets[i]
         img12 = data_item['img12'].unsqueeze(0).to(device)
         gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)
@@ -196,6 +197,13 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
         with torch.no_grad():
             reg_net_example_output = reg_net(img12)
 
+        print(reg_net_example_output.cpu().detach()[0].shape)
+        aa = reg_net_example_output.cpu().detach()[0][0].numpy()
+        bb = reg_net_example_output.cpu().detach()[0][1].numpy()
+        cc = reg_net_example_output.cpu().detach()[0][2].numpy()
+        np.savetxt('/home/ameen/vfx.txt', aa)
+        np.savetxt('/home/ameen/vfy.txt', bb)
+        np.savetxt('/home/ameen/vfz.txt', cc)
         example_warped_image = warp(
             img12[:, [1], :, :, :],  # moving image
             reg_net_example_output  # warping
@@ -243,7 +251,7 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
                   threshold=None,
                   linewidth=1,
                   color='darkblue',
-                  downsampling=None,
+                  downsampling=2,
                   threshold_det=0,
                   output=output_path
                   )
