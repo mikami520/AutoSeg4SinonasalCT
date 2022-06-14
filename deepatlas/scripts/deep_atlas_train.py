@@ -1,7 +1,14 @@
+from train import (
+    train_network
+)
+from network import (
+    regNet, segNet
+)
+from process_data import (
+    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
+)
 import monai
 import torch
-import itk
-import numpy as np
 import matplotlib.pyplot as plt
 import random
 import glob
@@ -11,18 +18,13 @@ import sys
 import json
 from collections import OrderedDict
 from pathlib import Path
-sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/preprocess')
-sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/network')
-sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/train')
-from process_data import (
-    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
-)
-from network import (
-    regNet, segNet
-)
-from train import (
-    train_network
-)
+
+ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/network'))
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/train'))
+
+
 def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for deep atlas train')
@@ -102,7 +104,6 @@ def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization
 
 def main():
     args = parse_command_line()
-    ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
     data_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset')
     base_path = args.bp
     seg_list = args.sl
@@ -246,7 +247,7 @@ def main():
     data_item = random.choice(datasets_combined)
     reg_net_example_input = data_item['img12'].unsqueeze(0)
     image_scale = reg_net_example_input.shape[-1]
-    
+
     dataloader_train_seg = monai.data.DataLoader(
         dataset_seg_available_train,
         batch_size=4,

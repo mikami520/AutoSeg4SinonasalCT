@@ -1,3 +1,10 @@
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
+)
+from utils import (
+    preview_image, preview_3D_vector_field, preview_3D_deformation,
+    jacobian_determinant, plot_against_epoch_numbers
+)
 import generators
 import monai
 import torch
@@ -6,15 +13,11 @@ import matplotlib.pyplot as plt
 import os
 import sys
 from pathlib import Path
-sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/utils')
-sys.path.insert(0, '/home/ameen/DeepAtlas/deepatlas/loss_function')
-from utils import (
-    preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
-)
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
-)
+
+ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
+
 
 def swap_training(network_to_train, network_to_not_train):
     """
@@ -326,13 +329,13 @@ def plot_fig(
     supervised_loss=None
 ):
     # Plot the training and validation losses
-    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_reg, validation_epoch_and_value_pairs=validation_losses_reg, train_label="training", val_label='validation')
+    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_reg,
+                               validation_epoch_and_value_pairs=validation_losses_reg, train_label="training", val_label='validation')
     #
     plt.legend()
     plt.ylabel('loss')
     plt.title('Alternating training: registration training loss')
     plt.savefig(os.path.join(result_reg_path, 'reg_net_training_losses.png'))
-
 
     plot_against_epoch_numbers(
         train_epoch_and_value_pairs=regularization_loss, train_label='regularization loss')
@@ -354,13 +357,13 @@ def plot_fig(
     plt.title('Alternating training: registration similarity loss')
     plt.savefig(os.path.join(result_reg_path, 'similarity_reg_losses.png'))
 
-    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_seg, validation_epoch_and_value_pairs=validation_losses_seg, train_label="training", val_label='validaiton')
+    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_seg,
+                               validation_epoch_and_value_pairs=validation_losses_seg, train_label="training", val_label='validaiton')
     #plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
     plt.legend()
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation training loss')
     plt.savefig(os.path.join(result_seg_path, 'seg_net_training_losses.png'))
-
 
     plot_against_epoch_numbers(
         train_epoch_and_value_pairs=supervised_loss, train_label='supervised loss')

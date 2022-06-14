@@ -3,13 +3,17 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def warp_func():
     warp = monai.networks.blocks.Warp(mode="bilinear", padding_mode="border")
     return warp
 
+
 def warp_nearest_func():
-    warp_nearest = monai.networks.blocks.Warp(mode="nearest", padding_mode="border")
+    warp_nearest = monai.networks.blocks.Warp(
+        mode="nearest", padding_mode="border")
     return warp_nearest
+
 
 def lncc_loss_func():
     lncc_loss = monai.losses.LocalNormalizedCrossCorrelationLoss(
@@ -22,6 +26,7 @@ def lncc_loss_func():
     )
     return lncc_loss
 
+
 def similarity_loss(displacement_field, image_pair):
     warp = warp_func()
     lncc_loss = lncc_loss_func()
@@ -33,8 +38,10 @@ def similarity_loss(displacement_field, image_pair):
         image_pair[:, [0], :, :, :]  # target
     )
 
+
 def regularization_loss_func():
     return monai.losses.BendingEnergyLoss()
+
 
 def dice_loss_func():
     dice_loss = monai.losses.DiceLoss(
@@ -45,6 +52,7 @@ def dice_loss_func():
     )
     return dice_loss
 
+
 def dice_loss_func2():
     dice_loss = monai.losses.DiceLoss(
         include_background=True,
@@ -53,6 +61,7 @@ def dice_loss_func2():
         reduction="mean"
     )
     return dice_loss
+
 
 def anatomy_loss(displacement_field, image_pair, seg_net, gt_seg1=None, gt_seg2=None, num_segmentation_classes=None):
     """
@@ -92,6 +101,7 @@ def anatomy_loss(displacement_field, image_pair, seg_net, gt_seg1=None, gt_seg2=
         seg1  # target image segmentation
     )
 
+
 def reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes):
     img12 = batch['img12'].to(device)
     displacement_field12 = reg_net(img12)
@@ -102,9 +112,7 @@ def reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes):
 
     gt_seg1 = batch['seg1'].to(device) if 'seg1' in batch.keys() else None
     gt_seg2 = batch['seg2'].to(device) if 'seg2' in batch.keys() else None
-    loss_ana = anatomy_loss(displacement_field12, img12, seg_net, gt_seg1, gt_seg2, num_segmentation_classes)
+    loss_ana = anatomy_loss(displacement_field12, img12,
+                            seg_net, gt_seg1, gt_seg2, num_segmentation_classes)
 
     return loss_sim, loss_reg, loss_ana
-
-
-
