@@ -1,6 +1,3 @@
-from test import (
-    seg_inference, load_json, reg_inference
-)
 import monai
 import torch
 import itk
@@ -14,6 +11,9 @@ import deep_atlas_train
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/test'))
 
+from test import (
+    seg_inference, load_json, reg_inference
+)
 
 def parse_command_line():
     parser = argparse.ArgumentParser(
