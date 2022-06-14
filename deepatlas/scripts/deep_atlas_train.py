@@ -246,7 +246,7 @@ def main():
     data_item = random.choice(datasets_combined)
     reg_net_example_input = data_item['img12'].unsqueeze(0)
     image_scale = reg_net_example_input.shape[-1]
-
+    
     dataloader_train_seg = monai.data.DataLoader(
         dataset_seg_available_train,
         batch_size=4,
