@@ -1,12 +1,3 @@
-from train import (
-    train_network
-)
-from network import (
-    regNet, segNet
-)
-from process_data import (
-    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
-)
 import monai
 import torch
 import matplotlib.pyplot as plt
@@ -24,6 +15,15 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/network'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/train'))
 
+from train import (
+    train_network
+)
+from network import (
+    regNet, segNet
+)
+from process_data import (
+    split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
+)
 
 def parse_command_line():
     parser = argparse.ArgumentParser(
