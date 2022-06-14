@@ -1,12 +1,3 @@
-from process_data import (
-    take_data_pairs, subdivide_list_of_data_pairs
-)
-from utils import (
-    plot_2D_vector_field, jacobian_determinant, plot_2D_deformation
-)
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func2, dice_loss_func
-)
 import monai
 import torch
 import itk
@@ -22,6 +13,15 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
 
+from process_data import (
+    take_data_pairs, subdivide_list_of_data_pairs
+)
+from utils import (
+    plot_2D_vector_field, jacobian_determinant, plot_2D_deformation
+)
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func2, dice_loss_func
+)
 
 def load_seg_dataset(data_list):
     transform_seg_available = monai.transforms.Compose(
