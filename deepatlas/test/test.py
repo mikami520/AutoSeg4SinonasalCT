@@ -197,13 +197,6 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
         with torch.no_grad():
             reg_net_example_output = reg_net(img12)
 
-        print(reg_net_example_output.cpu().detach()[0].shape)
-        aa = reg_net_example_output.cpu().detach()[0][0].numpy()
-        bb = reg_net_example_output.cpu().detach()[0][1].numpy()
-        cc = reg_net_example_output.cpu().detach()[0][2].numpy()
-        np.savetxt('/home/ameen/vfx.txt', aa)
-        np.savetxt('/home/ameen/vfy.txt', bb)
-        np.savetxt('/home/ameen/vfz.txt', cc)
         example_warped_image = warp(
             img12[:, [1], :, :, :],  # moving image
             reg_net_example_output  # warping
