@@ -1,3 +1,10 @@
+from utils import (
+    preview_image, preview_3D_vector_field, preview_3D_deformation,
+    jacobian_determinant, plot_against_epoch_numbers
+)
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
+)
 import generators
 import monai
 import torch
@@ -11,13 +18,6 @@ ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
 
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
-)
-from utils import (
-    preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
-)
 
 def swap_training(network_to_train, network_to_not_train):
     """
@@ -83,7 +83,7 @@ def train_network(dataloader_train_reg,
     # This often requires some careful tuning. Here we suggest a value, which unfortunately needs to
     # depend on image scale. This is because the bending energy loss is not scale-invariant.
     # 7.5 worked well with the above hyperparameters for images of size 128x128x128.
-    lambda_r = 7.5 * (image_scale / 96)**2
+    lambda_r = 7.5 * (image_scale / 128)**2
 
     max_epochs = max_epoch
     reg_phase_training_batches_per_epoch = 10

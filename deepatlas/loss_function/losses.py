@@ -40,7 +40,7 @@ def similarity_loss(displacement_field, image_pair):
 
 
 def regularization_loss_func():
-    return monai.losses.BendingEnergyLoss()
+    return monai.losses.BendingEnergyLoss(normalize=True, reduction='mean')
 
 
 def dice_loss_func():
