@@ -85,7 +85,7 @@ def main():
         spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
     reg_net = deep_atlas_train.get_reg_net(
         spatial_dim, spatial_dim, dropout, activation_type, normalization_type, num_res)
-    #seg_inference(seg_net, device, seg_model_path, json_path, seg_path)
+    seg_inference(seg_net, device, seg_model_path, json_path, seg_path)
     reg_inference(reg_net, device, reg_model_path, json_path, reg_path)
 
 
