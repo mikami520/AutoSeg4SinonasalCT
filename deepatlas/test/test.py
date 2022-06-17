@@ -3,12 +3,13 @@ import torch
 import itk
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import os
 import nibabel as nib
 import sys
 import json
 from pathlib import Path
-
+mpl.rc('figure', max_open_warning = 0)
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
@@ -31,9 +32,9 @@ def load_seg_dataset(data_list):
             monai.transforms.AddChannelD(keys=['img', 'seg']),
             # monai.transforms.TransposeD(
             # keys=['img', 'seg'], indices=(2, 1, 0)),
-            # monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
-            # 1., 1., 1.), mode=('trilinear', 'nearest')),
-            #monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
+            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
+                1., 1., 1.), mode=('trilinear', 'nearest')),
+            monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
             monai.transforms.ToTensorD(keys=['img', 'seg'])
         ]
     )
@@ -59,10 +60,10 @@ def load_reg_dataset(data_list):
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
             monai.transforms.AddChannelD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
-            # monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
-            # 'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
-            # monai.transforms.OrientationD(
-            # keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
+            monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
+                'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
+            monai.transforms.OrientationD(
+                keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
             monai.transforms.ConcatItemsD(
                 keys=['img1', 'img2'], name='img12', dim=0),
             monai.transforms.DeleteItemsD(keys=['img1', 'img2']),
@@ -135,8 +136,8 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
     k = 0
     eval_losses = []
     for i in data:
-        header = headers[k]
-        affine = affines[k]
+        header1 = headers[k]
+        affine1 = affines[k]
         id = ids[k]
         data_item = i
         test_input = data_item['img']
@@ -151,10 +152,12 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
             test_seg_predicted, dim=1), dim=1, keepdim=True)[0, 0]
         k += 1
         pred_np = prediction.detach().cpu().numpy()
-        # print(np.unique(pred_np))
-        nii = nib.Nifti1Image(pred_np, affine=affine, header=header)
+        pred_np = pred_np.astype('int16')
+        print(f'{id}: {np.unique(pred_np)}')
+        nii = nib.Nifti1Image(pred_np, affine=affine1, header=header1)
+        nii.header.get_xyzt_units()
         #preview_image(prediction, normalize_by='slice')
-        nii.to_filename(os.path.join(output_path, id + '.nii.gz'))
+        nib.save(nii, (os.path.join(output_path, id + '.nii.gz')))
 
         del test_seg_predicted
 
@@ -184,7 +187,7 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
     eval_losses_img = []
     eval_losses_seg = []
     half_len = int(len(datasets) / 2)
-    for i in range(half_len):
+    for i in range(10):
         data_item = datasets[i]
         img12 = data_item['img12'].unsqueeze(0).to(device)
         gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)

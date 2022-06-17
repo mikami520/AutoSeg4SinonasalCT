@@ -40,6 +40,7 @@ def similarity_loss(displacement_field, image_pair):
 
 
 def regularization_loss_func():
+    # normalize=True, reduction='mean'
     return monai.losses.BendingEnergyLoss(normalize=True, reduction='mean')
 
 
@@ -115,4 +116,4 @@ def reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes):
     loss_ana = anatomy_loss(displacement_field12, img12,
                             seg_net, gt_seg1, gt_seg2, num_segmentation_classes)
 
-    return loss_sim, loss_reg, loss_ana
+    return loss_sim, loss_reg, loss_ana, displacement_field12

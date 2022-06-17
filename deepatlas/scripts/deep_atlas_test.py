@@ -1,3 +1,4 @@
+from pkg_resources import add_activation_listener
 import monai
 import torch
 import itk
@@ -24,17 +25,6 @@ def parse_command_line():
                         help='relative path of the prediction result directory')
     parser.add_argument('-ti', metavar='task id and name', type=str,
                         help='task name and id')
-    parser.add_argument('-sd', metavar='spatial dimension', type=int, default=3,
-                        help='spatial dimension of dataset')
-    parser.add_argument('-dr', metavar='value of dropout', type=float, default=0.0,
-                        help='dropout ratio. Defaults to no dropout.')
-    parser.add_argument('-at', metavar='activation type and arguments', type=str, default='prelu',
-                        help='activation type and arguments. Defaults to PReLU.')
-    parser.add_argument('-nm', metavar='feature normalization type and arguments', type=str, default='instance',
-                        help='feature normalization type and arguments. Defaults to instance norm.')
-    parser.add_argument('-nr', metavar='number of residual units', type=int, default=0,
-                        help='number of residual units. Defaults to 0.')
-
     argv = parser.parse_args()
     return argv
 
@@ -45,12 +35,6 @@ def main():
     gpu = args.gpu
     output_path = args.op
     task = args.ti
-    spatial_dim = args.sd
-    dropout = args.dr
-    activation_type = args.at
-    normalization_type = args.nm
-    num_res = args.nr
-
     json_path = os.path.join(
         ROOT_DIR, 'DeepAtlas_dataset', task, 'dataset.json')
     seg_model_path = os.path.join(
@@ -60,6 +44,12 @@ def main():
     json_file = load_json(json_path)
     labels = json_file['labels']
     num_label = len(labels.keys())
+    network_info = json_file['network']
+    spatial_dim = network_info['spatial_dim']
+    dropout = network_info['dropout']
+    activation_type = network_info['activation_type']
+    normalization_type = network_info['normalization_type']
+    num_res = network_info['num_res']
     device = torch.device("cuda:" + gpu)
 
     output_path = os.path.join(

@@ -1,10 +1,3 @@
-from utils import (
-    preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
-)
-from losses import (
-    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
-)
 import generators
 import monai
 import torch
@@ -17,7 +10,13 @@ from pathlib import Path
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
-
+from utils import (
+    preview_image, preview_3D_vector_field, preview_3D_deformation,
+    jacobian_determinant, plot_against_epoch_numbers
+)
+from losses import (
+    warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
+)
 
 def swap_training(network_to_train, network_to_not_train):
     """
@@ -47,6 +46,7 @@ def train_network(dataloader_train_reg,
                   lr_seg,
                   lam_a,
                   lam_sp,
+                  lam_re,
                   max_epoch,
                   val_step,
                   result_seg_path,
@@ -83,7 +83,7 @@ def train_network(dataloader_train_reg,
     # This often requires some careful tuning. Here we suggest a value, which unfortunately needs to
     # depend on image scale. This is because the bending energy loss is not scale-invariant.
     # 7.5 worked well with the above hyperparameters for images of size 128x128x128.
-    lambda_r = 7.5 * (image_scale / 128)**2
+    lambda_r = lam_re
 
     max_epochs = max_epoch
     reg_phase_training_batches_per_epoch = 10
@@ -124,7 +124,7 @@ def train_network(dataloader_train_reg,
         anatomy_loss = []
         for batch in batch_generator_train_reg(reg_phase_training_batches_per_epoch):
             optimizer_reg.zero_grad()
-            loss_sim, loss_reg, loss_ana = reg_losses(
+            loss_sim, loss_reg, loss_ana, df = reg_losses(
                 batch, device, reg_net, seg_net, num_segmentation_classes)
             loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
             loss.backward()
@@ -133,6 +133,8 @@ def train_network(dataloader_train_reg,
             regularization_loss.append(loss_reg.item())
             similarity_loss.append(loss_sim.item())
             anatomy_loss.append(loss_ana.item())
+        
+        #preview_3D_vector_field(df.cpu().detach()[0], ep=epoch_number, path=result_reg_path)
 
         training_loss = np.mean(losses)
         regularization_loss_reg.append(
@@ -149,11 +151,11 @@ def train_network(dataloader_train_reg,
             losses = []
             with torch.no_grad():
                 for batch in batch_generator_valid_reg(reg_phase_num_validation_batches_to_use):
-                    loss_sim, loss_reg, loss_ana = reg_losses(
+                    loss_sim, loss_reg, loss_ana, dv = reg_losses(
                         batch, device, reg_net, seg_net, num_segmentation_classes)
                     loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
                     losses.append(loss.item())
-
+            
             validation_loss = np.mean(losses)
             print(f"\treg validation loss: {validation_loss}")
             validation_losses_reg.append([epoch_number, validation_loss])
@@ -175,7 +177,6 @@ def train_network(dataloader_train_reg,
 
         # Keep computational graph in memory for seg_net, but not for reg_net, and do seg_net.train()
         swap_training(seg_net, reg_net)
-
         losses = []
         supervised_loss = []
         anatomy_loss = []

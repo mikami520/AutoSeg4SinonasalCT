@@ -12,6 +12,13 @@
         "0": "background",
         "1": "ET"
     },
+    "network": {
+        "spatial_dim": 3,
+        "dropout": 0.2,
+        "activation_type": "leakyrelu",
+        "normalization_type": "batch",
+        "num_res": 0
+    },
     "total_numScanTraining": 43,
     "total_numLabelTraining": 14,
     "total_numTest": 19,

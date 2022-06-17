@@ -1,0 +1,10 @@
+Warped right_IR_139 to right_IR_149, similarity loss: -0.7977956533432007, number of folds: 5
+Warped right_IR_178 to right_IR_149, similarity loss: -0.6260316371917725, number of folds: 162493
+Warped right_IR_189 to right_IR_149, similarity loss: -0.7541584968566895, number of folds: 90
+Warped left_IR_187 to right_IR_149, similarity loss: -0.6409853100776672, number of folds: 173814
+Warped right_IR_185 to right_IR_149, similarity loss: -0.9422121047973633, number of folds: 672
+Warped left_IR_169 to right_IR_149, similarity loss: -0.9295772314071655, number of folds: 739
+Warped left_IR_171 to right_IR_149, similarity loss: -0.6555839776992798, number of folds: 178890
+Warped right_IR_184 to right_IR_149, similarity loss: -0.6327521800994873, number of folds: 168204
+Warped left_IR_186 to right_IR_149, similarity loss: -0.6365898251533508, number of folds: 98195
+Warped left_IR_178 to right_IR_149, similarity loss: -0.6178848147392273, number of folds: 169430

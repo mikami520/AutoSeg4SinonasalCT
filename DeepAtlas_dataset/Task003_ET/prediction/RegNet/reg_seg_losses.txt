@@ -1,0 +1,10 @@
+Scan right_IR_139 to right_IR_149, dice loss: 0.47969621419906616
+Scan right_IR_178 to right_IR_149, dice loss: 0.4885416328907013
+Scan right_IR_189 to right_IR_149, dice loss: 0.5001422166824341
+Scan left_IR_187 to right_IR_149, dice loss: 0.5007545351982117
+Scan right_IR_185 to right_IR_149, dice loss: 0.5008838772773743
+Scan left_IR_169 to right_IR_149, dice loss: 0.5006909370422363
+Scan left_IR_171 to right_IR_149, dice loss: 0.4769327640533447
+Scan right_IR_184 to right_IR_149, dice loss: 0.5011047124862671
+Scan left_IR_186 to right_IR_149, dice loss: 0.5008851289749146
+Scan left_IR_178 to right_IR_149, dice loss: 0.5013206601142883

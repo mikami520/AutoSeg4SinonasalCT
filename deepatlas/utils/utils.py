@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import monai
 import torch
+import os
 
 
 def preview_image(image_array, normalize_by="volume", cmap=None, figsize=(12, 12), threshold=None):
@@ -62,7 +63,7 @@ def plot_2D_vector_field(vector_field, downsampling):
     )
 
 
-def preview_3D_vector_field(vector_field, downsampling=None):
+def preview_3D_vector_field(vector_field, downsampling=None, ep=None, path=None):
     """
     Display three orthogonal slices of the given 3D vector field.
 
@@ -87,7 +88,7 @@ def preview_3D_vector_field(vector_field, downsampling=None):
     plt.subplot(1, 3, 3)
     plt.axis('off')
     plot_2D_vector_field(vector_field[[0, 1], :, :, z], downsampling)
-    plt.show()
+    plt.savefig(os.path.join(path, f'df_{ep}.png'))
 
 
 def plot_2D_deformation(vector_field, grid_spacing, **kwargs):

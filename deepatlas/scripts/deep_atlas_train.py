@@ -9,6 +9,7 @@ import sys
 import json
 from collections import OrderedDict
 from pathlib import Path
+import seg_train
 
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
@@ -18,6 +19,7 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/train'))
 from train import (
     train_network
 )
+
 from network import (
     regNet, segNet
 )
@@ -58,6 +60,8 @@ def parse_command_line():
                         help='learning rate of registration network. Defaults to 0.01.')
     parser.add_argument('-ls', metavar='learning rate of segmentation network', type=float, default=0.01,
                         help='learning rate of segmentation network. Defaults to 0.01.')
+    parser.add_argument('-lg', metavar='learning rate of regularization loss', type=float, default=5e-6,
+                        help='learning rate of segmentation network. Defaults to 5e-6.')
     parser.add_argument('-ba', metavar='anatomy loss weight', type=float, default=1.0,
                         help='anatomy loss weight. Defaults to 1.0.')
     parser.add_argument('-bs', metavar='supervised segmentation loss weight', type=float, default=1.0,
@@ -124,6 +128,7 @@ def main():
     lr_seg = args.ls
     lam_a = args.ba
     lam_sp = args.bs
+    lam_re = args.lg
     max_epoch = args.me
     val_step = args.vs
     device = torch.device("cuda:" + gpu)
@@ -179,7 +184,13 @@ def main():
         json_dict['labels'].update({
             seg_list[i]: seg_list[i + 1]
         })
-
+    json_dict['network'] = {
+        'spatial_dim': spatial_dim, 
+        'dropout': dropout,
+        'activation_type': activation_type,
+        'normalization_type': normalization_type,
+        'num_res': num_res
+    }
     train, test, num_train, num_test = split_data(img_path, seg_path, num_seg)
     json_dict['total_numScanTraining'] = num_train
     json_dict['total_numLabelTraining'] = num_seg
@@ -199,6 +210,7 @@ def main():
         data_seg_available_train, data_seg_available_valid)
     data_item = random.choice(dataset_seg_available_train)
     num_label = len(torch.unique(data_item['seg']))
+    print(num_label)
     print('---'*10)
     print('prepare segmentation network')
     seg_net = get_seg_net(spatial_dim, num_label, dropout,
@@ -250,13 +262,13 @@ def main():
 
     dataloader_train_seg = monai.data.DataLoader(
         dataset_seg_available_train,
-        batch_size=4,
+        batch_size=8,
         num_workers=4,
         shuffle=True
     )
     dataloader_valid_seg = monai.data.DataLoader(
         dataset_seg_available_valid,
-        batch_size=8,
+        batch_size=16,
         num_workers=4,
         shuffle=False
     )
@@ -296,12 +308,24 @@ def main():
                   lr_seg,
                   lam_a,
                   lam_sp,
+                  lam_re,
                   max_epoch,
                   val_step,
                   result_seg_path,
                   result_reg_path
                   )
-
+    '''
+    seg_train.train_seg(
+        dataloader_train_seg,
+        dataloader_valid_seg,
+        device,
+        seg_net,
+        lr_seg,
+        max_epoch,
+        val_step,
+        result_seg_path
+    )
+    '''
 
 if __name__ == '__main__':
     # Set deterministic training for reproducibility
