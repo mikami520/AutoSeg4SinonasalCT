@@ -314,6 +314,7 @@ def main():
                   result_seg_path,
                   result_reg_path
                   )
+    
     '''
     seg_train.train_seg(
         dataloader_train_seg,
