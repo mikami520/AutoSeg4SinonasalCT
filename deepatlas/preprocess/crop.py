@@ -90,7 +90,7 @@ def split(distance):
     return left, right
 
 
-def crop_and_flip(nib_img, nib_seg, ants_img, ants_seg, resize):
+def crop(nib_img, nib_seg, ants_img, ants_seg, resize):
     img = nib_img.get_fdata()
     seg = nib_seg.get_fdata()
     gem = ants.label_geometry_measures(ants_seg, ants_img)
@@ -102,22 +102,15 @@ def crop_and_flip(nib_img, nib_seg, ants_img, ants_seg, resize):
     upp_z = max(list(gem.loc[:, 'BoundingBoxUpper_z']))
 
     #img = MinMax_normalization(img)
-    img = MinMax_normalization(img)
-    # Compute mid point
-    mid_x = int((low_x + upp_x) / 2)
+    img = Zscore_normalization(img)
 
-    tuple_x_left = tuple([low_x, mid_x])
-    tuple_x_right = tuple([mid_x, upp_x])
+    tuple_x = tuple([low_x, upp_x])
     tuple_y = tuple([low_y, upp_y])
     tuple_z = tuple([low_z, upp_z])
-    left_img = pad(img, tuple_x_left, tuple_y, tuple_z, resize, seg=False)
-    left_seg = pad(seg, tuple_x_left, tuple_y, tuple_z, resize, seg=True)
-    right_img = pad(img, tuple_x_right, tuple_y, tuple_z, resize, seg=False)
-    right_seg = pad(seg, tuple_x_right, tuple_y, tuple_z, resize, seg=True)
-    flipped_right_img = np.flip(right_img, axis=0)
-    flipped_right_seg = np.flip(right_seg, axis=0)
+    img = pad(img, tuple_x, tuple_y, tuple_z, resize, seg=False)
+    seg = pad(seg, tuple_x, tuple_y, tuple_z, resize, seg=True)
 
-    return left_img, left_seg, flipped_right_img, flipped_right_seg
+    return img, seg
 
 
 def MinMax_normalization(scan):
@@ -145,23 +138,15 @@ def load_data(img_path, seg_path):
     return nib_img, nib_seg, ants_img, ants_seg
 
 
-def save_file(left_img, left_seg, flipped_right_img, flipped_right_seg, nib_img, nib_seg, output_img, output_seg, scan_id):
+def save_file(left_img, left_seg, nib_img, nib_seg, output_img, output_seg, scan_id):
     left_img_nii = nib.Nifti1Image(
         left_img, affine=nib_img.affine, header=nib_img.header)
     left_seg_nii = nib.Nifti1Image(
         left_seg, affine=nib_seg.affine, header=nib_seg.header)
-    right_img_nii = nib.Nifti1Image(
-        flipped_right_img, affine=nib_img.affine, header=nib_img.header)
-    right_seg_nii = nib.Nifti1Image(
-        flipped_right_seg, affine=nib_seg.affine, header=nib_seg.header)
     left_img_nii.to_filename(os.path.join(
-        output_img, 'right_' + scan_id + '.nii.gz'))
+        output_img, scan_id + '.nii.gz'))
     left_seg_nii.to_filename(os.path.join(
-        output_seg, 'right_' + scan_id + '.nii.gz'))
-    right_img_nii.to_filename(os.path.join(
-        output_img, 'left_' + scan_id + '.nii.gz'))
-    right_seg_nii.to_filename(os.path.join(
-        output_seg, 'left_' + scan_id + '.nii.gz'))
+        output_seg, scan_id + '.nii.gz'))
 
 
 def main():
@@ -192,12 +177,12 @@ def main():
         id = os.path.basename(i).split('.')[0]
         label_path = os.path.join(seg_path, id + '.nii.gz')
         nib_img, nib_seg, ants_img, ants_seg = load_data(i, label_path)
-        left_img, left_seg, flipped_right_img, flipped_right_seg = crop_and_flip(
+        left_img, left_seg = crop(
             nib_img, nib_seg, ants_img, ants_seg, resize_shape)
         print(
-            'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding: {left_img.shape} and {flipped_right_img.shape}')
-        save_file(left_img, left_seg, flipped_right_img, flipped_right_seg,
-                  nib_img, nib_seg, output_img, output_seg, id)
+            'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding: {left_img.shape}')
+        save_file(left_img, left_seg, nib_img,
+                  nib_seg, output_img, output_seg, id)
 
 
 if __name__ == '__main__':
