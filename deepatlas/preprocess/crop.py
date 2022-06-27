@@ -28,6 +28,7 @@ def pad(raw_image, bound_x, bound_y, bound_z, resize, seg=False):
     diff_x = resize[0] - (bound_x[1]-bound_x[0])
     diff_y = resize[1] - (bound_y[1]-bound_y[0])
     diff_z = resize[2] - (bound_z[1]-bound_z[0])
+    print(diff_x, diff_y, diff_z)
     if diff_x < 0 or diff_y < 0 or diff_z < 0:
         sys.exit(
             'the dimension of ROI is larger than the resizing dimension, please choose a different padding dimension')
@@ -113,6 +114,34 @@ def crop(nib_img, nib_seg, ants_img, ants_seg, resize):
     return img, seg
 
 
+def get_geometry_info(seg_path, img_path):
+    template = (glob.glob(seg_path + '/*nii.gz'))[0]
+    template_id = os.path.basename(template).split('.')[0]
+    img = ants.image_read(os.path.join(img_path, template_id + '.nii.gz'))
+    seg = ants.image_read(template)
+    gem = ants.label_geometry_measures(seg, img)
+    low_x = min(list(gem.loc[:, 'BoundingBoxLower_x']))
+    upp_x = max(list(gem.loc[:, 'BoundingBoxUpper_x']))
+    low_y = min(list(gem.loc[:, 'BoundingBoxLower_y']))
+    upp_y = max(list(gem.loc[:, 'BoundingBoxUpper_y']))
+    low_z = min(list(gem.loc[:, 'BoundingBoxLower_z']))
+    upp_z = max(list(gem.loc[:, 'BoundingBoxUpper_z']))
+    tuple_x = tuple([low_x, upp_x])
+    tuple_y = tuple([low_y, upp_y])
+    tuple_z = tuple([low_z, upp_z])
+    return [tuple_x, tuple_y, tuple_z]
+
+
+def cropV2(nib_img, ants_img, resize, geo_info):
+    img = nib_img.get_fdata()
+    img = Zscore_normalization(img)
+    tuple_x = geo_info[0]
+    tuple_y = geo_info[1]
+    tuple_z = geo_info[2]
+    img = pad(img, tuple_x, tuple_y, tuple_z, resize, seg=False)
+    return img
+
+
 def MinMax_normalization(scan):
     lb = np.amin(scan)
     ub = np.amax(scan)
@@ -138,6 +167,14 @@ def load_data(img_path, seg_path):
     return nib_img, nib_seg, ants_img, ants_seg
 
 
+def path_to_id(path):
+    ids = []
+    for i in glob.glob(path + '/*nii.gz'):
+        id = os.path.basename(i).split('.')[0]
+        ids.append(id)
+    return ids
+
+
 def save_file(left_img, left_seg, nib_img, nib_seg, output_img, output_seg, scan_id):
     left_img_nii = nib.Nifti1Image(
         left_img, affine=nib_img.affine, header=nib_img.header)
@@ -149,6 +186,13 @@ def save_file(left_img, left_seg, nib_img, nib_seg, output_img, output_seg, scan
         output_seg, scan_id + '.nii.gz'))
 
 
+def save_fileV2(left_img, nib_img, output_img, scan_id):
+    left_img_nii = nib.Nifti1Image(
+        left_img, affine=nib_img.affine, header=nib_img.header)
+    left_img_nii.to_filename(os.path.join(
+        output_img, scan_id + '.nii.gz'))
+
+
 def main():
     args = parse_command_line()
     base_path = args.bp
@@ -158,6 +202,8 @@ def main():
     resize_shape = args.rs
     output_img = os.path.join(output_path, 'images')
     output_seg = os.path.join(output_path, 'labels')
+    label_list = path_to_id(seg_path)
+    geo_info = get_geometry_info(seg_path, image_path)
     try:
         os.mkdir(output_path)
     except:
@@ -175,14 +221,22 @@ def main():
 
     for i in sorted(glob.glob(image_path + '/*nii.gz')):
         id = os.path.basename(i).split('.')[0]
-        label_path = os.path.join(seg_path, id + '.nii.gz')
-        nib_img, nib_seg, ants_img, ants_seg = load_data(i, label_path)
-        left_img, left_seg = crop(
-            nib_img, nib_seg, ants_img, ants_seg, resize_shape)
-        print(
-            'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding: {left_img.shape}')
-        save_file(left_img, left_seg, nib_img,
-                  nib_seg, output_img, output_seg, id)
+        if id in label_list:
+            label_path = os.path.join(seg_path, id + '.nii.gz')
+            nib_img, nib_seg, ants_img, ants_seg = load_data(i, label_path)
+            left_img, left_seg = crop(
+                nib_img, nib_seg, ants_img, ants_seg, resize_shape)
+            print(
+                'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding the image and seg: {left_img.shape}')
+            # save_file(left_img, left_seg, nib_img,
+            # nib_seg, output_img, output_seg, id)
+        else:
+            nib_img = nib.load(i)
+            ant_img = ants.image_read(i)
+            outImg = cropV2(nib_img, ant_img, resize_shape, geo_info)
+            print(
+                'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding the image: {outImg.shape}')
+            #save_fileV2(outImg, nib_img, output_img, id)
 
 
 if __name__ == '__main__':
