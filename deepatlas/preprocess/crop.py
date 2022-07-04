@@ -28,7 +28,7 @@ def pad(raw_image, bound_x, bound_y, bound_z, resize, seg=False):
     diff_x = resize[0] - (bound_x[1]-bound_x[0])
     diff_y = resize[1] - (bound_y[1]-bound_y[0])
     diff_z = resize[2] - (bound_z[1]-bound_z[0])
-    print(diff_x, diff_y, diff_z)
+    #print(diff_x, diff_y, diff_z)
     if diff_x < 0 or diff_y < 0 or diff_z < 0:
         sys.exit(
             'the dimension of ROI is larger than the resizing dimension, please choose a different padding dimension')
@@ -228,15 +228,15 @@ def main():
                 nib_img, nib_seg, ants_img, ants_seg, resize_shape)
             print(
                 'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding the image and seg: {left_img.shape}')
-            # save_file(left_img, left_seg, nib_img,
-            # nib_seg, output_img, output_seg, id)
+            save_file(left_img, left_seg, nib_img,
+                     nib_seg, output_img, output_seg, id)
         else:
             nib_img = nib.load(i)
             ant_img = ants.image_read(i)
             outImg = cropV2(nib_img, ant_img, resize_shape, geo_info)
             print(
                 'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding the image: {outImg.shape}')
-            #save_fileV2(outImg, nib_img, output_img, id)
+            save_fileV2(outImg, nib_img, output_img, id)
 
 
 if __name__ == '__main__':

@@ -28,6 +28,7 @@ def pad(raw_image, bound_x, bound_y, bound_z, resize, seg=False):
     diff_x = resize[0] - (bound_x[1]-bound_x[0])
     diff_y = resize[1] - (bound_y[1]-bound_y[0])
     diff_z = resize[2] - (bound_z[1]-bound_z[0])
+    #print(diff_x, diff_y, diff_z)
     if diff_x < 0 or diff_y < 0 or diff_z < 0:
         sys.exit(
             'the dimension of ROI is larger than the resizing dimension, please choose a different padding dimension')
@@ -101,8 +102,8 @@ def crop_and_flip(nib_img, nib_seg, ants_img, ants_seg, resize):
     low_z = min(list(gem.loc[:, 'BoundingBoxLower_z']))
     upp_z = max(list(gem.loc[:, 'BoundingBoxUpper_z']))
 
+    img = Zscore_normalization(img)
     #img = MinMax_normalization(img)
-    img = MinMax_normalization(img)
     # Compute mid point
     mid_x = int((low_x + upp_x) / 2)
 
