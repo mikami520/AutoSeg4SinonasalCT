@@ -29,12 +29,11 @@ def load_seg_dataset(data_list):
     transform_seg_available = monai.transforms.Compose(
         transforms=[
             monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True),
+            #monai.transforms.TransposeD(
+                #keys=['img', 'seg'], indices=(2, 1, 0)),
             monai.transforms.AddChannelD(keys=['img', 'seg']),
-            # monai.transforms.TransposeD(
-            # keys=['img', 'seg'], indices=(2, 1, 0)),
-            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
-                1., 1., 1.), mode=('trilinear', 'nearest')),
-            monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
+            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest')),
+            #monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
             monai.transforms.ToTensorD(keys=['img', 'seg'])
         ]
     )
@@ -53,8 +52,7 @@ def load_reg_dataset(data_list):
         transforms=[
             monai.transforms.LoadImageD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], image_only=True, allow_missing_keys=True),
-            # monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(
-            # 2, 1, 0), allow_missing_keys=True),
+            #monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(2, 1, 0), allow_missing_keys=True),
             # if resize is not None else monai.transforms.Identity()
             monai.transforms.ToTensorD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
@@ -62,8 +60,8 @@ def load_reg_dataset(data_list):
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
             monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
                 'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
-            monai.transforms.OrientationD(
-                keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
+            #monai.transforms.OrientationD(
+                #keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
             monai.transforms.ConcatItemsD(
                 keys=['img1', 'img2'], name='img12', dim=0),
             monai.transforms.DeleteItemsD(keys=['img1', 'img2']),
@@ -130,11 +128,11 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
     headers, affines, ids, num_labels = get_nii_info(raw_data, reg=False)
     seg_net.load_state_dict(torch.load(model_path))
     seg_net.to(device)
-    seg_net.eval()
-    dice_loss = dice_loss_func2()
+    dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
     data = load_seg_dataset(raw_data)
     k = 0
     eval_losses = []
+    eval_los = []
     for i in data:
         header1 = headers[k]
         affine1 = affines[k]
@@ -142,29 +140,38 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
         data_item = i
         test_input = data_item['img']
         test_gt = data_item['seg']
+        seg_net.eval()
         with torch.no_grad():
             test_seg_predicted = seg_net(test_input.unsqueeze(0).cuda()).cpu()
-            loss = dice_loss(test_seg_predicted, test_gt.unsqueeze(0)).item()
 
-        eval_loss = f"Scan ID: {id}, dice loss: {loss}"
-        eval_losses.append(eval_loss)
         prediction = torch.argmax(torch.softmax(
             test_seg_predicted, dim=1), dim=1, keepdim=True)[0, 0]
-        k += 1
+        prediction1 = torch.argmax(torch.softmax(
+            test_seg_predicted, dim=1), dim=1, keepdim=True)
+        
+        onehot_pred = monai.networks.one_hot(prediction1, num_labels)
+        onehot_gt = monai.networks.one_hot(test_gt.unsqueeze(0), num_labels)
+        dsc = dice_metric(onehot_pred, onehot_gt).numpy()
+        eval_los.append(dsc)
+        eval_loss = f"Scan ID: {id}, dice score: {dsc}"
+        eval_losses.append(eval_loss)
         pred_np = prediction.detach().cpu().numpy()
-        pred_np = pred_np.astype('int16')
         print(f'{id}: {np.unique(pred_np)}')
+
+        pred_np = pred_np.astype('int16')
         nii = nib.Nifti1Image(pred_np, affine=affine1, header=header1)
         nii.header.get_xyzt_units()
-        #preview_image(prediction, normalize_by='slice')
         nib.save(nii, (os.path.join(output_path, id + '.nii.gz')))
+        k += 1
 
         del test_seg_predicted
 
+    average = np.mean(eval_los, 0)
+   
     with open(os.path.join(output_path, 'seg_losses.txt'), 'w') as f:
         for s in eval_losses:
             f.write(s + '\n')
-
+        f.write('\n\nAverage Dice Score: ' + str(average))
     torch.cuda.empty_cache()
 
 
@@ -186,8 +193,9 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
     datasets = subvided_dataset['11']
     eval_losses_img = []
     eval_losses_seg = []
+    eval_los = []
     half_len = int(len(datasets) / 2)
-    for i in range(10):
+    for i in range(len(datasets)):
         data_item = datasets[i]
         img12 = data_item['img12'].unsqueeze(0).to(device)
         gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)
@@ -216,14 +224,20 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
         head_target_seg = header['seg1']
         aff_target_img = affine['img1']
         aff_target_seg = affine['seg1']
-        dice_loss = dice_loss_func()
-        loss = dice_loss(example_warped_seg, gt_seg).item()
-        eval_loss_seg = f"Scan {id_moving_img} to {id_target_img}, dice loss: {loss}"
-        eval_losses_seg.append(eval_loss_seg)
+        dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
         prediction = torch.argmax(torch.softmax(
             example_warped_seg, dim=1), dim=1, keepdim=True)[0, 0]
+        prediction1 = torch.argmax(torch.softmax(
+            example_warped_seg, dim=1), dim=1, keepdim=True)
+        onehot_pred = monai.networks.one_hot(prediction1, num_labels)
+        dsc = dice_metric(onehot_pred, gt_seg).detach().cpu().numpy()
+        eval_los.append(dsc)
+        eval_loss_seg = f"Scan {id_moving_img} to {id_target_img}, dice score: {dsc}"
+        eval_losses_seg.append(eval_loss_seg)
         warped_img_np = example_warped_image[0, 0].detach().cpu().numpy()
+        #warped_img_np = np.transpose(warped_img_np, (2, 1, 0))
         warped_seg_np = prediction.detach().cpu().numpy()
+        #warped_seg_np = np.transpose(warped_seg_np, (2, 1, 0))
         nii_seg = nib.Nifti1Image(
             warped_seg_np, affine=aff_target_seg, header=head_target_seg)
         nii = nib.Nifti1Image(
@@ -261,10 +275,11 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
         for s in eval_losses_img:
             f.write(s + '\n')
 
+    average = np.mean(eval_los, 0)
     with open(os.path.join(output_path, "reg_seg_losses.txt"), 'w') as f:
         for s in eval_losses_seg:
             f.write(s + '\n')
-
+        f.write('\n\nAverage Dice Score: ' + str(average))
     torch.cuda.empty_cache()
 
 
