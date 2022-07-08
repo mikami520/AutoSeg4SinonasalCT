@@ -288,6 +288,7 @@ def train_network(dataloader_train_reg,
 
     print(f"\n\nBest reg_net validation loss: {best_reg_validation_loss}")
     if len(validation_losses_seg) == 0:
+        print('Only one label is used for training, no need to do validation. Replace best validation loss with training loss !!!')
         print(f'Best seg_net validation loss: {training_loss}')
     else:
         print(f"Best seg_net validation loss: {best_seg_validation_loss}")
@@ -295,6 +296,7 @@ def train_network(dataloader_train_reg,
         f.write(
             f"\n\nBest reg_net validation loss: {best_reg_validation_loss}\n")
         if len(validation_losses_seg) == 0:
+            f.write('Only one label is used for training, no need to do validation. Replace best validation loss with training loss !!!')
             f.write(f"Best seg_net validation loss: {training_loss}")
         else:
             f.write(f"Best seg_net validation loss: {best_seg_validation_loss}")
