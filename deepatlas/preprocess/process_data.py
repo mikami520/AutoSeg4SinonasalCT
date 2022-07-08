@@ -20,31 +20,35 @@ def split_data(img_path, seg_path, num_seg):
         total_seg_paths.append(j)
 
     np.random.shuffle(total_img_paths)
-    num_train = int(round(len(total_img_paths)*0.7))
-    num_test = len(total_img_paths) - num_train
-    img_train = total_img_paths[:num_train]
-    img_test = total_img_paths[num_train:]
-    seg_train = []
-    seg_test = []
+    num_train = int(round(len(total_seg_paths)*0.8))
+    num_test = len(total_seg_paths) - num_train
+    seg_train = total_seg_paths[:num_train]
+    seg_test = total_seg_paths[num_train:]
+    img_train = []
+    img_test = []
     test = []
     train = []
-    seg_ids = list(map(path_to_id, total_seg_paths))
-    img_ids_test = map(path_to_id, img_test)
-    img_ids_train = map(path_to_id, img_train)
-    for img_index, img_id in enumerate(img_ids_test):
-        data_item = {'img': img_test[img_index]}
-        if img_id in seg_ids:
-            seg_test.append(total_seg_paths[seg_ids.index(img_id)])
-            data_item['seg'] = total_seg_paths[seg_ids.index(img_id)]
-
+    img_ids = list(map(path_to_id, total_img_paths))
+    img_ids1 = img_ids
+    total_img_paths1 = total_img_paths
+    seg_ids_test = map(path_to_id, seg_test)
+    seg_ids_train = map(path_to_id, seg_train)
+    for seg_index, seg_id in enumerate(seg_ids_test):
+        data_item = {}
+        if seg_id in img_ids:
+            img_test.append(total_img_paths[img_ids.index(seg_id)])
+            data_item['img'] = total_img_paths[img_ids.index(seg_id)]
+            total_img_paths1.pop(img_ids1.index(seg_id))
+            img_ids1.pop(img_ids1.index(seg_id))
+        data_item['seg'] = seg_test[seg_index]
         test.append(data_item)
 
-    for img_index, img_id in enumerate(img_ids_train):
-        if img_id in seg_ids:
-            seg_train.append(total_seg_paths[seg_ids.index(img_id)])
-
+    img_train = total_img_paths1
     np.random.shuffle(seg_train)
-    seg_train_available = seg_train[:num_seg]
+    if num_seg < len(seg_train):    
+        seg_train_available = seg_train[:num_seg]
+    else:
+        seg_train_available = seg_train
     seg_ids = list(map(path_to_id, seg_train_available))
     img_ids = map(path_to_id, img_train)
     for img_index, img_id in enumerate(img_ids):
@@ -53,6 +57,7 @@ def split_data(img_path, seg_path, num_seg):
             data_item['seg'] = seg_train_available[seg_ids.index(img_id)]
         train.append(data_item)
 
+    num_train = len(img_train)
     return train, test, num_train, num_test
 
 
@@ -60,13 +65,8 @@ def load_seg_dataset(train, valid):
     transform_seg_available = monai.transforms.Compose(
         transforms=[
             monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True),
-            #monai.transforms.TransposeD(
-                #keys=['img', 'seg'], indices=(2, 1, 0)),
             monai.transforms.AddChannelD(keys=['img', 'seg']),
             monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest')),
-            monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
-            #monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(
-                #1., 1., 1.), mode=('trilinear', 'nearest')),
             monai.transforms.ToTensorD(keys=['img', 'seg'])
         ]
     )
@@ -92,20 +92,15 @@ def load_reg_dataset(train, valid):
         transforms=[
             monai.transforms.LoadImageD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], image_only=True, allow_missing_keys=True),
-            #monai.transforms.TransposeD(keys=['img1', 'seg1', 'img2', 'seg2'], indices=(
-                #2, 1, 0), allow_missing_keys=True),
-            # if resize is not None else monai.transforms.Identity()
             monai.transforms.ToTensorD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
             monai.transforms.AddChannelD(
                 keys=['img1', 'seg1', 'img2', 'seg2'], allow_missing_keys=True),
             monai.transforms.SpacingD(keys=['img1', 'seg1', 'img2', 'seg2'], pixdim=(1., 1., 1.), mode=(
                 'trilinear', 'nearest', 'trilinear', 'nearest'), allow_missing_keys=True),
-            monai.transforms.OrientationD(
-                keys=['img1', 'seg1', 'img2', 'seg2'], axcodes='RAS', allow_missing_keys=True),
             monai.transforms.ConcatItemsD(
                 keys=['img1', 'img2'], name='img12', dim=0),
-            monai.transforms.DeleteItemsD(keys=['img1', 'img2']),
+            monai.transforms.DeleteItemsD(keys=['img1', 'img2'])
         ]
     )
     dataset_pairs_train_subdivided = {

@@ -1,15 +1,15 @@
-import monai
-import torch
-import matplotlib.pyplot as plt
-import random
-import glob
-import os.path
-import argparse
-import sys
-import json
-from collections import OrderedDict
-from pathlib import Path
 import seg_train
+from pathlib import Path
+from collections import OrderedDict
+import json
+import sys
+import argparse
+import os.path
+import glob
+import random
+import matplotlib.pyplot as plt
+import torch
+import monai
 
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
@@ -19,14 +19,12 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/train'))
 from train import (
     train_network
 )
-
 from network import (
     regNet, segNet
 )
 from process_data import (
     split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
 )
-
 def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for deep atlas train')
@@ -108,6 +106,7 @@ def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization
 
 def main():
     args = parse_command_line()
+    #monai.utils.set_determinism(seed=2938649572)
     data_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset')
     base_path = args.bp
     seg_list = args.sl
@@ -132,7 +131,6 @@ def main():
     max_epoch = args.me
     val_step = args.vs
     device = torch.device("cuda:" + gpu)
-
     try:
         os.mkdir(data_path)
     except:
@@ -185,7 +183,7 @@ def main():
             seg_list[i]: seg_list[i + 1]
         })
     json_dict['network'] = {
-        'spatial_dim': spatial_dim, 
+        'spatial_dim': spatial_dim,
         'dropout': dropout,
         'activation_type': activation_type,
         'normalization_type': normalization_type,
@@ -195,7 +193,7 @@ def main():
     json_dict['total_numScanTraining'] = num_train
     json_dict['total_numLabelTraining'] = num_seg
     json_dict['total_numTest'] = num_test
-    json_dict['toal_train'] = train
+    json_dict['total_train'] = train
     json_dict['total_test'] = test
     # prepare segmentation dataset
     print('---'*10)
@@ -210,7 +208,6 @@ def main():
         data_seg_available_train, data_seg_available_valid)
     data_item = random.choice(dataset_seg_available_train)
     num_label = len(torch.unique(data_item['seg']))
-    print(num_label)
     print('---'*10)
     print('prepare segmentation network')
     seg_net = get_seg_net(spatial_dim, num_label, dropout,
@@ -254,28 +251,23 @@ def main():
     reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
                           activation_type, normalization_type, num_res)
     print(reg_net)
-    datasets = list(dataset_pairs_train_subdivided.values())
-    datasets_combined = sum(datasets[1:], datasets[0])
-    data_item = random.choice(datasets_combined)
-    reg_net_example_input = data_item['img12'].unsqueeze(0)
-    image_scale = reg_net_example_input.shape[-1]
 
     dataloader_train_seg = monai.data.DataLoader(
         dataset_seg_available_train,
-        batch_size=8,
+        batch_size=2,
         num_workers=4,
         shuffle=True
     )
     dataloader_valid_seg = monai.data.DataLoader(
         dataset_seg_available_valid,
-        batch_size=16,
+        batch_size=4,
         num_workers=4,
         shuffle=False
     )
     dataloader_train_reg = {
         seg_availability: monai.data.DataLoader(
             dataset,
-            batch_size=4,
+            batch_size=1,
             num_workers=4,
             shuffle=True
         )
@@ -286,7 +278,7 @@ def main():
     dataloader_valid_reg = {
         seg_availability: monai.data.DataLoader(
             dataset,
-            batch_size=8,
+            batch_size=2,
             num_workers=4,
             shuffle=True  # Shuffle validation data because we will only take a sample for validation each time
         )
@@ -294,7 +286,6 @@ def main():
         if len(dataset) > 0 else []
         for seg_availability, dataset in dataset_pairs_valid_subdivided.items()
     }
-
     train_network(dataloader_train_reg,
                   dataloader_valid_reg,
                   dataloader_train_seg,
@@ -302,7 +293,6 @@ def main():
                   device,
                   seg_net,
                   reg_net,
-                  image_scale,
                   num_label,
                   lr_reg,
                   lr_seg,
@@ -314,7 +304,6 @@ def main():
                   result_seg_path,
                   result_reg_path
                   )
-    
     '''
     seg_train.train_seg(
         dataloader_train_seg,
@@ -329,6 +318,5 @@ def main():
     '''
 
 if __name__ == '__main__':
-    # Set deterministic training for reproducibility
-    monai.utils.set_determinism(seed=2938649572)
+    torch.cuda.empty_cache()
     main()

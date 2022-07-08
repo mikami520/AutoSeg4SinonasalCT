@@ -32,10 +32,10 @@ def train_seg(dataloader_train_seg,
 
     seg_net.to(device)
 
-    learning_rate = 0.001
+    learning_rate = 1e-3
     optimizer = torch.optim.Adam(seg_net.parameters(), learning_rate)
 
-    max_epochs = 50
+    max_epochs = 300
     training_losses = []
     validation_losses = []
     val_interval = 5
@@ -77,7 +77,7 @@ def train_seg(dataloader_train_seg,
             print(f"\tvalidation loss: {validation_loss}")
             validation_losses.append([epoch_number, validation_loss])
     
-    torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'seg_net_best.pth'))
     # Free up some memory
     del loss, predicted_segs, true_segs, imgs
     torch.cuda.empty_cache()
+    torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'seg_net_best.pth'))

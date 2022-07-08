@@ -168,7 +168,7 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
 
     average = np.mean(eval_los, 0)
    
-    with open(os.path.join(output_path, 'seg_losses.txt'), 'w') as f:
+    with open(os.path.join(output_path, 'seg_dsc.txt'), 'w') as f:
         for s in eval_losses:
             f.write(s + '\n')
         f.write('\n\nAverage Dice Score: ' + str(average))
@@ -276,7 +276,7 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
             f.write(s + '\n')
 
     average = np.mean(eval_los, 0)
-    with open(os.path.join(output_path, "reg_seg_losses.txt"), 'w') as f:
+    with open(os.path.join(output_path, "reg_seg_dsc.txt"), 'w') as f:
         for s in eval_losses_seg:
             f.write(s + '\n')
         f.write('\n\nAverage Dice Score: ' + str(average))

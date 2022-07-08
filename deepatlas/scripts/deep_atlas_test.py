@@ -80,5 +80,4 @@ def main():
 
 
 if __name__ == '__main__':
-    monai.utils.set_determinism(seed=2938649572)
     main()

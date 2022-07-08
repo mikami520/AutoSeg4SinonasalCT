@@ -106,7 +106,6 @@ def anatomy_loss(displacement_field, image_pair, seg_net, gt_seg1=None, gt_seg2=
 def reg_losses(batch, device, reg_net, seg_net, num_segmentation_classes):
     img12 = batch['img12'].to(device)
     displacement_field12 = reg_net(img12)
-
     loss_sim = similarity_loss(displacement_field12, img12)
     regularization_loss = regularization_loss_func()
     loss_reg = regularization_loss(displacement_field12)
