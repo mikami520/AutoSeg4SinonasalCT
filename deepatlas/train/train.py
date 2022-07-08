@@ -79,9 +79,8 @@ def train_network(dataloader_train_reg,
     lambda_sp = lam_sp  # supervised segmentation loss weight
 
     # regularization loss weight
-    # This often requires some careful tuning. Here we suggest a value, which unfortunately needs to
-    # depend on image scale. This is because the bending energy loss is not scale-invariant.
-    # 7.5 worked well with the above hyperparameters for images of size 128x128x128.
+    # monai has provided normalized bending energy loss
+    # no need to modify the weight according to the image size
     lambda_r = lam_re
 
     max_epochs = max_epoch
@@ -166,7 +165,7 @@ def train_network(dataloader_train_reg,
                 torch.save(reg_net.state_dict(), os.path.join(
                     result_reg_path, 'reg_net_best.pth'))
         
-        #scheduler_reg.step()
+        # scheduler_reg.step()
         # Free up memory
         del loss, loss_sim, loss_reg, loss_ana
         torch.cuda.empty_cache()
@@ -280,7 +279,7 @@ def train_network(dataloader_train_reg,
                     torch.save(seg_net.state_dict(), os.path.join(
                         result_seg_path, 'seg_net_best.pth'))
             
-        #scheduler_seg.step()
+        # scheduler_seg.step()
         # Free up memory
         del loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\
             seg1_predicted, seg2_predicted
