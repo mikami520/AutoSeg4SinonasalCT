@@ -40,7 +40,6 @@ def train_network(dataloader_train_reg,
                   device,
                   seg_net,
                   reg_net,
-                  image_scale,
                   num_segmentation_classes,
                   lr_reg,
                   lr_seg,
@@ -72,10 +71,10 @@ def train_network(dataloader_train_reg,
 
     learning_rate_reg = lr_reg
     optimizer_reg = torch.optim.Adam(reg_net.parameters(), learning_rate_reg)
-
+    scheduler_reg = torch.optim.lr_scheduler.StepLR(optimizer_reg, step_size=70, gamma=0.2, verbose=True)
     learning_rate_seg = lr_seg
     optimizer_seg = torch.optim.Adam(seg_net.parameters(), learning_rate_seg)
-
+    scheduler_seg = torch.optim.lr_scheduler.StepLR(optimizer_seg, step_size=50, gamma=0.2, verbose=True)
     lambda_a = lam_a  # anatomy loss weight
     lambda_sp = lam_sp  # supervised segmentation loss weight
 
@@ -166,7 +165,8 @@ def train_network(dataloader_train_reg,
                 best_reg_validation_loss = validation_loss
                 torch.save(reg_net.state_dict(), os.path.join(
                     result_reg_path, 'reg_net_best.pth'))
-
+        
+        #scheduler_reg.step()
         # Free up memory
         del loss, loss_sim, loss_reg, loss_ana
         torch.cuda.empty_cache()
@@ -181,6 +181,7 @@ def train_network(dataloader_train_reg,
         supervised_loss = []
         anatomy_loss = []
         dice_loss = dice_loss_func()
+        warp = warp_func()
         warp_nearest = warp_nearest_func()
         dice_loss2 = dice_loss_func2()
         for batch in batch_generator_train_seg(seg_phase_training_batches_per_epoch):
@@ -203,7 +204,7 @@ def train_network(dataloader_train_reg,
                 seg2 = monai.networks.one_hot(
                     batch['seg2'].to(device), num_segmentation_classes)
                 loss_metric = dice_loss(seg2_predicted, seg2)
-                loss_supervised = loss_metric
+                loss_supervised = loss_metric + dice_loss(seg1_predicted, seg1)
                 # The above supervised loss looks a bit different from the one in the paper
                 # in that it includes predictions for both images in the current image pair;
                 # we might as well do this, since we have gone to the trouble of loading
@@ -250,43 +251,54 @@ def train_network(dataloader_train_reg,
         with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
             f.write(f"\tseg training loss: {training_loss}\n")
 
-        if epoch_number % val_interval == 0:
-            # The following validation loop would not do anything in the case
-            # where there is just one segmentation available,
-            # because data_seg_available_valid would be empty.
-            seg_net.eval()
-            losses = []
-            with torch.no_grad():
-                for batch in dataloader_valid_seg:
-                    imgs = batch['img'].to(device)
-                    true_segs = batch['seg'].to(device)
-                    predicted_segs = seg_net(imgs)
-                    loss = dice_loss2(predicted_segs, true_segs)
-                    losses.append(loss.item())
-
-            validation_loss = np.mean(losses)
-            print(f"\tseg validation loss: {validation_loss}")
-            validation_losses_seg.append([epoch_number, validation_loss])
-            with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-                f.write(f"\tseg validation loss: {validation_loss}\n")
-
-            if validation_loss < best_seg_validation_loss:
-                best_seg_validation_loss = validation_loss
-                torch.save(seg_net.state_dict(), os.path.join(
+        if len(dataloader_valid_seg) == 0:
+            torch.save(seg_net.state_dict(), os.path.join(
                     result_seg_path, 'seg_net_best.pth'))
+        else:
+            if epoch_number % val_interval == 0:
+                # The following validation loop would not do anything in the case
+                # where there is just one segmentation available,
+                # because data_seg_available_valid would be empty.
+                seg_net.eval()
+                losses = []
+                with torch.no_grad():
+                    for batch in dataloader_valid_seg:
+                        imgs = batch['img'].to(device)
+                        true_segs = batch['seg'].to(device)
+                        predicted_segs = seg_net(imgs)
+                        loss = dice_loss2(predicted_segs, true_segs)
+                        losses.append(loss.item())
 
+                validation_loss = np.mean(losses)
+                print(f"\tseg validation loss: {validation_loss}")
+                validation_losses_seg.append([epoch_number, validation_loss])
+                with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
+                    f.write(f"\tseg validation loss: {validation_loss}\n")
+
+                if validation_loss < best_seg_validation_loss:
+                    best_seg_validation_loss = validation_loss
+                    torch.save(seg_net.state_dict(), os.path.join(
+                        result_seg_path, 'seg_net_best.pth'))
+            
+        #scheduler_seg.step()
         # Free up memory
         del loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\
             seg1_predicted, seg2_predicted
         torch.cuda.empty_cache()
 
     print(f"\n\nBest reg_net validation loss: {best_reg_validation_loss}")
-    print(f"Best seg_net validation loss: {best_seg_validation_loss}")
+    if len(validation_losses_seg) == 0:
+        print(f'Best seg_net validation loss: {training_loss}')
+    else:
+        print(f"Best seg_net validation loss: {best_seg_validation_loss}")
     with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
         f.write(
             f"\n\nBest reg_net validation loss: {best_reg_validation_loss}\n")
-        f.write(f"Best seg_net validation loss: {best_seg_validation_loss}")
-
+        if len(validation_losses_seg) == 0:
+            f.write(f"Best seg_net validation loss: {training_loss}")
+        else:
+            f.write(f"Best seg_net validation loss: {best_seg_validation_loss}")
+    
     plot_fig(training_losses_reg,
              validation_losses_reg,
              training_losses_seg,
@@ -332,7 +344,6 @@ def plot_fig(
     # Plot the training and validation losses
     plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_reg,
                                validation_epoch_and_value_pairs=validation_losses_reg, train_label="training", val_label='validation')
-    #
     plt.legend()
     plt.ylabel('loss')
     plt.title('Alternating training: registration training loss')
@@ -346,26 +357,31 @@ def plot_fig(
 
     plot_against_epoch_numbers(
         train_epoch_and_value_pairs=anatomy_loss_reg, train_label='anatomy loss')
-    #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration anatomy loss')
     plt.savefig(os.path.join(result_reg_path, 'anatomy_reg_losses.png'))
 
     plot_against_epoch_numbers(
         train_epoch_and_value_pairs=similarity_loss, train_label='similarity loss')
-    #plot_against_epoch_numbers(validation_losses_reg, label="validation", color='orange')
     plt.ylabel('loss')
     plt.title('Alternating training: registration similarity loss')
     plt.savefig(os.path.join(result_reg_path, 'similarity_reg_losses.png'))
 
-    plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_seg,
-                               validation_epoch_and_value_pairs=validation_losses_seg, train_label="training", val_label='validaiton')
-    #plot_against_epoch_numbers(validation_losses_seg, label="validation", color='orange')
-    plt.legend()
-    plt.ylabel('loss')
-    plt.title('Alternating training: segmentation training loss')
-    plt.savefig(os.path.join(result_seg_path, 'seg_net_training_losses.png'))
-
+    if len(validation_losses_seg) == 0:
+        plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_seg,
+                                validation_epoch_and_value_pairs=None, train_label="training", val_label=None)
+        plt.legend()
+        plt.ylabel('loss')
+        plt.title('Alternating training: segmentation training loss')
+        plt.savefig(os.path.join(result_seg_path, 'seg_net_training_losses.png'))
+    else:
+        plot_against_epoch_numbers(train_epoch_and_value_pairs=training_losses_seg,
+                                validation_epoch_and_value_pairs=validation_losses_seg, train_label="training", val_label='validaiton')
+        plt.legend()
+        plt.ylabel('loss')
+        plt.title('Alternating training: segmentation training loss')
+        plt.savefig(os.path.join(result_seg_path, 'seg_net_training_losses.png'))
+    
     plot_against_epoch_numbers(
         train_epoch_and_value_pairs=supervised_loss, train_label='supervised loss')
     plt.ylabel('loss')
