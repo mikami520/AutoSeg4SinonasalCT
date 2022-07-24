@@ -22,9 +22,9 @@ Activate scripting environment
 ```
 cd <path to repo>/deepatlas/preprocessing
 ```
-Co-align the scans and segmentations
+Co-align the scans and segmentations (recommendation: Similarity registration)
 ```
-python3 affine.py 
+python3 registration.py 
 -bp <full path of base dir> 
 -ip <relative path to nifti images dir> 
 -sp <relative path to segmentations dir> 
@@ -41,8 +41,8 @@ Final output of registered images and segmentations will be saved in
 ```
 base_dir/imagesRS/ && base_dir/labelsRS/
 ```
-### Step 2.2: Crop and Flip Data
-Crop and flip data to extract region of interest (ROI). **Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1**
+### Step 2.2: Crop Normalize and Flip Data (if needed)
+Crop normalize and flip data to extract region of interest (ROI). **Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1**
 ```
 python3 crop_flip.py 
 -bp <full path of base dir> 
@@ -50,9 +50,25 @@ python3 crop_flip.py
 -sp <relative path to segmentations dir> 
 -op <relative path to output dir> 
 -rs <customized resized shape>
+``` 
+or **only crop and no need to flip**
 ```
-**Pay attention to the resized dimension which should not smaller than cropped dimension**
+python3 crop.py 
+-bp <full path of base dir> 
+-ip <relative path to nifti images dir> 
+-sp <relative path to segmentations dir> 
+-op <relative path to output dir> 
+-rs <customized resized shape>
+```
+**Pay attention to the resized dimension which should not smaller than cropped dimension**\
 Final output of ROI will be saved in
 ```
 base_dir/output/images/ && base_dir/output/labels
 ```
+## Step 3: Training
+Activate scripting environment
+```
+cd <path to repo>/deepatlas/scripts
+```
+```
+python3 deep_atlas_train 
