@@ -60,7 +60,7 @@ python3 crop.py
 -op <relative path to output dir> 
 -rs <customized resized shape>
 ```
-**Pay attention to the resized dimension which should not smaller than cropped dimension**\
+**Pay attention to the resized dimension which should not be smaller than cropped dimension**\
 Final output of ROI will be saved in
 ```
 base_dir/output/images/ && base_dir/output/labels
@@ -126,8 +126,7 @@ python3 deep_atlas_test.py
 -op <relative path of the prediction result directory>
 -ti <task id and name>
 ```
-The final prediction results will be saved in the ```DeepAtlas_dataset/Task_id_and_Name``` directory
-For example,
+The final prediction results will be saved in the ```DeepAtlas_dataset/Task_id_and_Name``` directory. For example,
 ```
 DeepAtlas/DeepAtlas_dataset/
     ├── Task001_ET
