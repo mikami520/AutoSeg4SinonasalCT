@@ -71,12 +71,12 @@ Activate scripting environment
 ```
 cd <path to repo>/deepatlas/scripts
 ```
-Start training
+Start training, **Note: please use the outputs of Step 2.2**
 ```
 python3 deep_atlas_train.py
 -bp <full path of base dir> 
--ip <relative path to nifti images dir> 
--sp <relative path to segmentations dir>
+-ip <relative path to preprocessed nifti images dir> 
+-sp <relative path to preprocessed segmentations dir>
 -ns <number of segmentations used for training>
 -sd <spatial dimension of dataset>
 -dr <dropout ratio of the network>
@@ -94,9 +94,9 @@ python3 deep_atlas_train.py
 -ti <task id and name>
 ```
 **For detailed information, use ```-h``` to see more instructions**
-Before training, a folder named ```DeepAtlas_dataset``` is created under the repository directory. All training results are stored in this folder. A clear structure is shown below:
+Before training, a folder named ```DeepAtlas_dataset``` is created automatically under the repository directory. All training results are stored in this folder. A clear structure is shown below:
 ```
-DeepAtlas_dataset/
+DeepAtlas/DeepAtlas_dataset/
     ├── Task001_ET
     |   └── results
     |       └── RegNet
@@ -129,7 +129,7 @@ python3 deep_atlas_test.py
 The final prediction results will be saved in the ```DeepAtlas_dataset/Task_id_and_Name``` directory
 For example,
 ```
-DeepAtlas_dataset/
+DeepAtlas/DeepAtlas_dataset/
     ├── Task001_ET
     |   └── results
     |       └── RegNet

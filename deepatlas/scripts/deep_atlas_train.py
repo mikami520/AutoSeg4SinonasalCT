@@ -58,8 +58,8 @@ def parse_command_line():
                         help='learning rate of registration network. Defaults to 0.01.')
     parser.add_argument('-ls', metavar='learning rate of segmentation network', type=float, default=0.01,
                         help='learning rate of segmentation network. Defaults to 0.01.')
-    parser.add_argument('-lg', metavar='learning rate of regularization loss', type=float, default=5e-6,
-                        help='learning rate of segmentation network. Defaults to 5e-6.')
+    parser.add_argument('-bg', metavar='regularization loss weight', type=float, default=5e-6,
+                        help='regularization loss weight. Defaults to 5e-6.')
     parser.add_argument('-ba', metavar='anatomy loss weight', type=float, default=1.0,
                         help='anatomy loss weight. Defaults to 1.0.')
     parser.add_argument('-bs', metavar='supervised segmentation loss weight', type=float, default=1.0,
