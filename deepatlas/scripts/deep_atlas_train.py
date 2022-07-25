@@ -127,7 +127,7 @@ def main():
     lr_seg = args.ls
     lam_a = args.ba
     lam_sp = args.bs
-    lam_re = args.lg
+    lam_re = args.bg
     max_epoch = args.me
     val_step = args.vs
     device = torch.device("cuda:" + gpu)
