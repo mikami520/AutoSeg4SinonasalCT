@@ -319,7 +319,6 @@ def main():
 
     avg_DSC = average_DSC / k
     avg_HD = average_HD / k
-    print(avg_DSC)
     with open(os.path.join(base, save_path, "metric.txt"), 'w') as f:
         f.write("Label Value  Label Name  Average Dice Score  Average Mean HD\n")
         for i in range(len(avg_DSC)):
