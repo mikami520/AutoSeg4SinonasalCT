@@ -42,7 +42,7 @@ Final output of registered images and segmentations will be saved in
 base_dir/imagesRS/ && base_dir/labelsRS/
 ```
 ### Step 2.2: Crop Normalize and Flip Data (if needed)
-Crop normalize and flip data to extract region of interest (ROI). **Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1**
+Crop，normalize and flip data to extract region of interest (ROI). **Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1**
 ```
 python3 crop_flip.py 
 -bp <full path of base dir> 
