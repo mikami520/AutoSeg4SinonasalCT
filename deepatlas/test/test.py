@@ -195,7 +195,7 @@ def reg_inference(reg_net, device, model_path, json_path, output_path):
     eval_losses_seg = []
     eval_los = []
     half_len = int(len(datasets) / 2)
-    for i in range(len(datasets)):
+    for i in range(half_len):
         data_item = datasets[i]
         img12 = data_item['img12'].unsqueeze(0).to(device)
         gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)

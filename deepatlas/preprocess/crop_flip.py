@@ -28,7 +28,6 @@ def pad(raw_image, bound_x, bound_y, bound_z, resize, seg=False):
     diff_x = resize[0] - (bound_x[1]-bound_x[0])
     diff_y = resize[1] - (bound_y[1]-bound_y[0])
     diff_z = resize[2] - (bound_z[1]-bound_z[0])
-    #print(diff_x, diff_y, diff_z)
     if diff_x < 0 or diff_y < 0 or diff_z < 0:
         sys.exit(
             'the dimension of ROI is larger than the resizing dimension, please choose a different padding dimension')
