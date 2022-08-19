@@ -21,17 +21,21 @@ def parse_command_line():
                         help="Relative path of the image directory")
     parser.add_argument('-sl', metavar='segmentation information list', type=str, nargs='+',
                         help='a list of label name and corresponding value')
+    parser.add_argument('-ti', metavar='task id and name', type=str,
+                        help='task name and id')
+    parser.add_argument('-dp', metavar='path to the DeepAtlas folder', type=str,
+                        help='relative path of the preprocessing result directory') 
     argv = parser.parse_args()
     return argv
 
 
-def split_and_registration(template, target, base, images_path, seg_path, fomat, checked=False, has_label=False):
+def split_and_registration(template, target, base, images_path, seg_path, img_out_path, seg_out_path, fomat, checked=False, has_label=False):
     print('---'*10)
     print('Creating file paths')
     # Define the path for template, target, and segmentations (from template)
     fixed_path = os.path.join(base, images_path, template + '.' + fomat)
     moving_path = os.path.join(base, images_path, target + '.' + fomat)
-    images_output = os.path.join(base, 'imagesRS/', target + '.nii.gz')
+    images_output = os.path.join(img_out_path, target + '.nii.gz')
     print('---'*10)
     print('Reading in the template and target image')
     # Read the template and target image
@@ -45,7 +49,7 @@ def split_and_registration(template, target, base, images_path, seg_path, fomat,
         segmentation_path = os.path.join(
             base, seg_path, target + '.nii.gz')
         segmentation_output = os.path.join(
-            base, 'labelsRS/', target + '.nii.gz')
+            seg_out_path, target + '.nii.gz')
         print('---'*10)
         print('Reading in the segmentation')
         # Split segmentations into individual components
@@ -276,8 +280,12 @@ def main():
     images_path = args.ip
     segmentation = args.sp
     label_list = args.sl
-    images_output = os.path.join(base, 'imagesRS')
-    labels_output = os.path.join(base, 'labelsRS')
+    task_id = args.ti
+    deepatlas_path = args.dp
+    raw_data_path = os.path.join(deepatlas_path, 'deepatlas_raw_data_base')
+    task_path = os.path.join(deepatlas_path, 'deepatlas_raw_data_base', task_id)
+    images_output = os.path.join(deepatlas_path, 'deepatlas_raw_data_base', task_id, 'images')
+    labels_output = os.path.join(deepatlas_path, 'deepatlas_raw_data_base', task_id, 'labels')
     fomat = checkFormat(base, images_path)
     fomat_seg = checkFormat(base, segmentation)
     template = find_template(base, images_path, fomat)
@@ -288,6 +296,16 @@ def main():
             os.mkdir(matched_output)
         except:
             print(f"{matched_output} already exists")
+
+    try:
+        os.mkdir(raw_data_path)
+    except:
+        print(f"{raw_data_path} already exists")
+    
+    try:
+        os.mkdir(task_path)
+    except:
+        print(f"{task_path} already exists")
 
     try:
         os.mkdir(images_output)
@@ -328,22 +346,22 @@ def main():
                 target = id
                 if id in label_lists:
                     split_and_registration(
-                        template, target, base, images_path, seg_output_path, fomat, checked=True, has_label=True)
+                        template, target, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=True, has_label=True)
                 else:
                     split_and_registration(
-                        template, target, base, images_path, seg_output_path, fomat, checked=True, has_label=False)
+                        template, target, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=True, has_label=False)
 
         image = ants.image_read(os.path.join(
             base, images_path, template + '.' + fomat))
         image.to_file(os.path.join(base, images_output, template + '.nii.gz'))
         fomat = 'nii.gz'
-        images_path = os.path.join(base, 'imagesRS/')
+        images_path = os.path.join(deepatlas_path, 'deepatlas_raw_data_base', task_id, 'images')
         if template in label_lists:
             split_and_registration(
-                target, template, base, images_path, seg_output_path, fomat, checked=True, has_label=True)
+                target, template, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=True, has_label=True)
         else:
             split_and_registration(
-                target, template, base, images_path, seg_output_path, fomat, checked=True, has_label=False)
+                target, template, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=True, has_label=False)
 
     else:
         seg_output_path = checkSegFormat(
@@ -357,23 +375,23 @@ def main():
                 target = id
                 if id in label_lists:
                     split_and_registration(
-                        template, target, base, images_path, seg_output_path, fomat, checked=False, has_label=True)
+                        template, target, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=False, has_label=True)
                 else:
                     split_and_registration(
-                        template, target, base, images_path, seg_output_path, fomat, checked=False, has_label=False)
+                        template, target, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=False, has_label=False)
 
         image = ants.image_read(os.path.join(
             base, images_path, template + '.' + fomat))
         image.to_file(os.path.join(base, images_output, template + '.nii.gz'))
 
-        images_path = os.path.join(base, 'imagesRS/')
+        images_path = images_path = os.path.join(deepatlas_path, 'deepatlas_raw_data_base', task_id, 'images')
         fomat = 'nii.gz'
         if template in label_lists:
             split_and_registration(
-                target, template, base, images_path, seg_output_path, fomat, checked=True, has_label=True)
+                target, template, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=True, has_label=True)
         else:
             split_and_registration(
-                target, template, base, images_path, seg_output_path, fomat, checked=True, has_label=False)
+                target, template, base, images_path, seg_output_path, images_output, labels_output, fomat, checked=True, has_label=False)
 
 
 if __name__ == '__main__':

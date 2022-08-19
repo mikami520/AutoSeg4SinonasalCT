@@ -107,13 +107,13 @@ def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization
 def main():
     args = parse_command_line()
     #monai.utils.set_determinism(seed=2938649572)
-    data_path = os.path.join(ROOT_DIR, 'DeepAtlas_dataset')
+    data_path = os.path.join(ROOT_DIR, 'deepatlas_results')
     base_path = args.bp
     seg_list = args.sl
     img_path = os.path.join(base_path, args.ip)
     seg_path = os.path.join(base_path, args.sp)
     task = os.path.join(data_path, args.ti)
-    result_path = os.path.join(task, 'results')
+    result_path = os.path.join(task, 'training_results')
     result_seg_path = os.path.join(result_path, 'SegNet')
     result_reg_path = os.path.join(result_path, 'RegNet')
     num_seg = args.ns

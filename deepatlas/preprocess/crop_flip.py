@@ -5,7 +5,7 @@ import nibabel as nib
 import os
 import argparse
 import sys
-
+from crop import crop
 
 def parse_command_line():
     parser = argparse.ArgumentParser(
@@ -16,10 +16,14 @@ def parse_command_line():
                         help="relative path of the image directory")
     parser.add_argument('-sp', metavar='segmentation path', type=str,
                         help="relative path of the image directory")
-    parser.add_argument('-op', metavar='preprocessing result output path', type=str, default='output',
-                        help='relative path of the preprocessing result directory')
+    parser.add_argument('-dp', metavar='path to the DeepAtlas folder', type=str,
+                        help='relative path of the preprocessing result directory')                    
     parser.add_argument('-rs', metavar='shape after resizing', type=int, nargs='+',
                         help='shape after resizing the image and segmentation. Expected to be 2^N')
+    parser.add_argument('-fp', action='store_true',
+                        help='check if need to flip the data')
+    parser.add_argument('-ti', metavar='task id and name', type=str,
+                        help='task name and id')
     argv = parser.parse_args()
     return argv
 
@@ -169,10 +173,25 @@ def main():
     base_path = args.bp
     image_path = os.path.join(base_path, args.ip)
     seg_path = os.path.join(base_path, args.sp)
-    output_path = os.path.join(base_path, args.op)
     resize_shape = args.rs
-    output_img = os.path.join(output_path, 'images')
-    output_seg = os.path.join(output_path, 'labels')
+    flipped = args.fp
+    deepatlas_path = args.dp
+    task_id = args.ti
+    output_path = os.path.join(deepatlas_path, 'deepatlas_preprocessed')
+    task_path = os.path.join(deepatlas_path, 'deepatlas_preprocessed', task_id)
+    output_img = os.path.join(deepatlas_path, 'deepatlas_preprocessed', task_id, 'images')
+    output_seg = os.path.join(deepatlas_path, 'deepatlas_preprocessed', task_id, 'labels')
+    
+    try:
+        os.mkdir(output_path)
+    except:
+        print(f'{output_path} is already existed')
+
+    try:
+        os.mkdir(task_path)
+    except:
+        print(f'{task_path} is already existed')
+    
     try:
         os.mkdir(output_path)
     except:
@@ -192,12 +211,20 @@ def main():
         id = os.path.basename(i).split('.')[0]
         label_path = os.path.join(seg_path, id + '.nii.gz')
         nib_img, nib_seg, ants_img, ants_seg = load_data(i, label_path)
-        left_img, left_seg, flipped_right_img, flipped_right_seg = crop_and_flip(
-            nib_img, nib_seg, ants_img, ants_seg, resize_shape)
-        print(
-            'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding: {left_img.shape} and {flipped_right_img.shape}')
-        save_file(left_img, left_seg, flipped_right_img, flipped_right_seg,
-                  nib_img, nib_seg, output_img, output_seg, id)
+        if flipped:
+            left_img, left_seg, flipped_right_img, flipped_right_seg = crop_and_flip(
+                nib_img, nib_seg, ants_img, ants_seg, resize_shape)
+            print(
+                'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding: {left_img.shape} and {flipped_right_img.shape}')
+            save_file(left_img, left_seg, flipped_right_img, flipped_right_seg,
+                    nib_img, nib_seg, output_img, output_seg, id)
+        else:
+            left_img, left_seg = crop(
+                nib_img, nib_seg, ants_img, ants_seg, resize_shape)
+            print(
+                'Scan ID: ' + id + f', before cropping: {nib_img.get_fdata().shape}, after cropping and padding the image and seg: {left_img.shape}')
+            save_file(left_img, left_seg, nib_img,
+                     nib_seg, output_img, output_seg, id)
 
 
 if __name__ == '__main__':

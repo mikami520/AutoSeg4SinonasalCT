@@ -21,8 +21,6 @@ def parse_command_line():
         description='pipeline for deep atlas test')
     parser.add_argument('-gpu', metavar='id of gpu', type=str, default='0',
                         help='id of gpu device to use')
-    parser.add_argument('-op', metavar='prediction result output path', type=str, default='prediction',
-                        help='relative path of the prediction result directory')
     parser.add_argument('-ti', metavar='task id and name', type=str,
                         help='task name and id')
     argv = parser.parse_args()
@@ -33,14 +31,14 @@ def main():
     ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
     args = parse_command_line()
     gpu = args.gpu
-    output_path = args.op
     task = args.ti
+    output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, 'predicted_results')
     json_path = os.path.join(
-        ROOT_DIR, 'DeepAtlas_dataset', task, 'dataset.json')
+        ROOT_DIR, 'deepatlas_results', task, 'dataset.json')
     seg_model_path = os.path.join(
-        ROOT_DIR, 'DeepAtlas_dataset', task, 'results', 'SegNet', 'seg_net_best.pth')
+        ROOT_DIR, 'deepatlas_results', task, 'training_results', 'SegNet', 'seg_net_best.pth')
     reg_model_path = os.path.join(
-        ROOT_DIR, 'DeepAtlas_dataset', task, 'results', 'RegNet', 'reg_net_best.pth')
+        ROOT_DIR, 'deepatlas_results', task, 'training_results', 'RegNet', 'reg_net_best.pth')
     json_file = load_json(json_path)
     labels = json_file['labels']
     num_label = len(labels.keys())
@@ -51,9 +49,6 @@ def main():
     normalization_type = network_info['normalization_type']
     num_res = network_info['num_res']
     device = torch.device("cuda:" + gpu)
-
-    output_path = os.path.join(
-        ROOT_DIR, 'DeepAtlas_dataset', task, output_path)
     seg_path = os.path.join(output_path, 'SegNet')
     reg_path = os.path.join(output_path, 'RegNet')
     try:
