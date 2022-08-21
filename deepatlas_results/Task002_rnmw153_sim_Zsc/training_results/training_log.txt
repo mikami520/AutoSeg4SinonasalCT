@@ -1,0 +1,515 @@
+Deep Atlas Training Log
+Epoch 1/150:
+	reg training loss: 4.7686481952667235
+	reg validation loss: 10.761622428894043
+	seg training loss: 0.8673096179962159
+	seg validation loss: 0.8539321422576904
+Epoch 2/150:
+	reg training loss: 4.440142178535462
+	seg training loss: 0.7938556432723999
+Epoch 3/150:
+	reg training loss: 4.576620316505432
+	seg training loss: 0.7535318613052369
+Epoch 4/150:
+	reg training loss: 4.510968661308288
+	seg training loss: 0.7162851691246033
+Epoch 5/150:
+	reg training loss: 3.9539534568786623
+	seg training loss: 0.6908728837966919
+Epoch 6/150:
+	reg training loss: 4.039778637886047
+	reg validation loss: 9.18710708618164
+	seg training loss: 0.6406762003898621
+	seg validation loss: 0.6347227096557617
+Epoch 7/150:
+	reg training loss: 3.7184645175933837
+	seg training loss: 0.6085501194000245
+Epoch 8/150:
+	reg training loss: 3.935744595527649
+	seg training loss: 0.5736919283866883
+Epoch 9/150:
+	reg training loss: 4.056983923912048
+	seg training loss: 0.5408016562461853
+Epoch 10/150:
+	reg training loss: 3.8200072050094604
+	seg training loss: 0.514945924282074
+Epoch 11/150:
+	reg training loss: 4.281972050666809
+	reg validation loss: 8.052876472473145
+	seg training loss: 0.49536322355270385
+	seg validation loss: 0.5146540403366089
+Epoch 12/150:
+	reg training loss: 3.855319881439209
+	seg training loss: 0.469755756855011
+Epoch 13/150:
+	reg training loss: 3.840291428565979
+	seg training loss: 0.42938312888145447
+Epoch 14/150:
+	reg training loss: 3.583286929130554
+	seg training loss: 0.4022633254528046
+Epoch 15/150:
+	reg training loss: 3.728816819190979
+	seg training loss: 0.35690702199935914
+Epoch 16/150:
+	reg training loss: 3.199250864982605
+	reg validation loss: 7.420182704925537
+	seg training loss: 0.3086260259151459
+	seg validation loss: 0.3790477514266968
+Epoch 17/150:
+	reg training loss: 3.4572808742523193
+	seg training loss: 0.2525585561990738
+Epoch 18/150:
+	reg training loss: 3.419553208351135
+	seg training loss: 0.25260117650032043
+Epoch 19/150:
+	reg training loss: 3.5318825006484986
+	seg training loss: 0.2083510458469391
+Epoch 20/150:
+	reg training loss: 3.3581162214279177
+	seg training loss: 0.19577946960926057
+Epoch 21/150:
+	reg training loss: 3.4845890760421754
+	reg validation loss: 6.422091484069824
+	seg training loss: 0.1768558830022812
+	seg validation loss: 0.27210915088653564
+Epoch 22/150:
+	reg training loss: 3.116759204864502
+	seg training loss: 0.173543781042099
+Epoch 23/150:
+	reg training loss: 2.9422287225723265
+	seg training loss: 0.15092406868934632
+Epoch 24/150:
+	reg training loss: 3.36854088306427
+	seg training loss: 0.13847693502902986
+Epoch 25/150:
+	reg training loss: 2.9736003637313844
+	seg training loss: 0.12616726756095886
+Epoch 26/150:
+	reg training loss: 3.2114731550216673
+	reg validation loss: 5.498345851898193
+	seg training loss: 0.12545039653778076
+	seg validation loss: 0.18503624200820923
+Epoch 27/150:
+	reg training loss: 3.0050987243652343
+	seg training loss: 0.10894768834114074
+Epoch 28/150:
+	reg training loss: 2.9660191535949707
+	seg training loss: 0.11309540569782257
+Epoch 29/150:
+	reg training loss: 3.056342911720276
+	seg training loss: 0.09028413593769073
+Epoch 30/150:
+	reg training loss: 2.84787540435791
+	seg training loss: 0.0988813042640686
+Epoch 31/150:
+	reg training loss: 2.8773739337921143
+	reg validation loss: 4.607907295227051
+	seg training loss: 0.08548430800437927
+	seg validation loss: 0.15550243854522705
+Epoch 32/150:
+	reg training loss: 2.5162493228912353
+	seg training loss: 0.09200616478919983
+Epoch 33/150:
+	reg training loss: 2.9851715087890627
+	seg training loss: 0.08785836696624756
+Epoch 34/150:
+	reg training loss: 2.868598449230194
+	seg training loss: 0.07595799565315246
+Epoch 35/150:
+	reg training loss: 2.72953519821167
+	seg training loss: 0.07890819311141968
+Epoch 36/150:
+	reg training loss: 2.823525643348694
+	reg validation loss: 4.391824245452881
+	seg training loss: 0.07334268689155579
+	seg validation loss: 0.12950095534324646
+Epoch 37/150:
+	reg training loss: 2.5901314973831178
+	seg training loss: 0.077168008685112
+Epoch 38/150:
+	reg training loss: 2.7292463064193724
+	seg training loss: 0.07764174640178681
+Epoch 39/150:
+	reg training loss: 2.2696269154548645
+	seg training loss: 0.07477926909923553
+Epoch 40/150:
+	reg training loss: 2.641170156002045
+	seg training loss: 0.061516857147216795
+Epoch 41/150:
+	reg training loss: 2.665408182144165
+	reg validation loss: 4.314706802368164
+	seg training loss: 0.06822904944419861
+	seg validation loss: 0.12480152398347855
+Epoch 42/150:
+	reg training loss: 2.373495626449585
+	seg training loss: 0.06400893926620484
+Epoch 43/150:
+	reg training loss: 2.5231226563453673
+	seg training loss: 0.06552021205425262
+Epoch 44/150:
+	reg training loss: 2.610878252983093
+	seg training loss: 0.05810818076133728
+Epoch 45/150:
+	reg training loss: 2.256824862957001
+	seg training loss: 0.06144440770149231
+Epoch 46/150:
+	reg training loss: 2.1527690529823302
+	reg validation loss: 3.9034616947174072
+	seg training loss: 0.06828641891479492
+	seg validation loss: 0.130331888794899
+Epoch 47/150:
+	reg training loss: 2.4612895011901856
+	seg training loss: 0.06633291244506836
+Epoch 48/150:
+	reg training loss: 2.3212251901626586
+	seg training loss: 0.061132407188415526
+Epoch 49/150:
+	reg training loss: 2.3259034633636473
+	seg training loss: 0.05672590732574463
+Epoch 50/150:
+	reg training loss: 2.3421448111534118
+	seg training loss: 0.06588823199272156
+Epoch 51/150:
+	reg training loss: 2.237171542644501
+	reg validation loss: 4.078887939453125
+	seg training loss: 0.050005200505256656
+	seg validation loss: 0.1283894181251526
+Epoch 52/150:
+	reg training loss: 2.351637578010559
+	seg training loss: 0.06055374145507812
+Epoch 53/150:
+	reg training loss: 2.1713146924972535
+	seg training loss: 0.05193628370761871
+Epoch 54/150:
+	reg training loss: 2.2294365763664246
+	seg training loss: 0.0519787073135376
+Epoch 55/150:
+	reg training loss: 2.107238698005676
+	seg training loss: 0.060818183422088626
+Epoch 56/150:
+	reg training loss: 2.159134030342102
+	reg validation loss: 3.430917263031006
+	seg training loss: 0.05758752822875977
+	seg validation loss: 0.1234513595700264
+Epoch 57/150:
+	reg training loss: 2.136767840385437
+	seg training loss: 0.060886308550834656
+Epoch 58/150:
+	reg training loss: 2.056178319454193
+	seg training loss: 0.059524261951446535
+Epoch 59/150:
+	reg training loss: 2.1131672978401186
+	seg training loss: 0.05477309226989746
+Epoch 60/150:
+	reg training loss: 2.0785787463188172
+	seg training loss: 0.05750834941864014
+Epoch 61/150:
+	reg training loss: 1.9642852187156676
+	reg validation loss: 3.592482089996338
+	seg training loss: 0.053974205255508424
+	seg validation loss: 0.12239720672369003
+Epoch 62/150:
+	reg training loss: 2.1245671629905702
+	seg training loss: 0.049260133504867555
+Epoch 63/150:
+	reg training loss: 1.9742623448371888
+	seg training loss: 0.05120005905628204
+Epoch 64/150:
+	reg training loss: 1.8237436056137084
+	seg training loss: 0.05164272785186767
+Epoch 65/150:
+	reg training loss: 1.8780404806137085
+	seg training loss: 0.04497153162956238
+Epoch 66/150:
+	reg training loss: 1.8446750402450562
+	reg validation loss: 3.5688796043395996
+	seg training loss: 0.05031183362007141
+	seg validation loss: 0.11342131346464157
+Epoch 67/150:
+	reg training loss: 2.089728665351868
+	seg training loss: 0.04955594837665558
+Epoch 68/150:
+	reg training loss: 1.8650356769561767
+	seg training loss: 0.05126414000988007
+Epoch 69/150:
+	reg training loss: 1.8945781350135804
+	seg training loss: 0.05113123655319214
+Epoch 70/150:
+	reg training loss: 1.824099862575531
+	seg training loss: 0.050078588724136355
+Epoch 71/150:
+	reg training loss: 2.132909834384918
+	reg validation loss: 3.5110559463500977
+	seg training loss: 0.05057660043239594
+	seg validation loss: 0.11465368419885635
+Epoch 72/150:
+	reg training loss: 1.7633860468864442
+	seg training loss: 0.04853618741035461
+Epoch 73/150:
+	reg training loss: 1.9421926975250243
+	seg training loss: 0.048684078454971316
+Epoch 74/150:
+	reg training loss: 1.770769429206848
+	seg training loss: 0.0517791211605072
+Epoch 75/150:
+	reg training loss: 1.7527392029762268
+	seg training loss: 0.049894532561302184
+Epoch 76/150:
+	reg training loss: 1.8100290656089784
+	reg validation loss: 3.362490653991699
+	seg training loss: 0.03936699628829956
+	seg validation loss: 0.11438566446304321
+Epoch 77/150:
+	reg training loss: 1.8304568886756898
+	seg training loss: 0.04833044111728668
+Epoch 78/150:
+	reg training loss: 1.7759044528007508
+	seg training loss: 0.05147920846939087
+Epoch 79/150:
+	reg training loss: 1.7250861644744873
+	seg training loss: 0.048552751541137695
+Epoch 80/150:
+	reg training loss: 1.5575646996498107
+	seg training loss: 0.04389434158802032
+Epoch 81/150:
+	reg training loss: 1.879893720149994
+	reg validation loss: 3.3051137924194336
+	seg training loss: 0.0443111389875412
+	seg validation loss: 0.12079031765460968
+Epoch 82/150:
+	reg training loss: 1.8457049012184144
+	seg training loss: 0.04815846085548401
+Epoch 83/150:
+	reg training loss: 1.7818867683410644
+	seg training loss: 0.048137256503105165
+Epoch 84/150:
+	reg training loss: 1.6136236906051635
+	seg training loss: 0.0441769927740097
+Epoch 85/150:
+	reg training loss: 1.5971672058105468
+	seg training loss: 0.05148882269859314
+Epoch 86/150:
+	reg training loss: 1.6388625502586365
+	reg validation loss: 3.5887608528137207
+	seg training loss: 0.040018555521965024
+	seg validation loss: 0.12744276225566864
+Epoch 87/150:
+	reg training loss: 1.6481032490730285
+	seg training loss: 0.04862010776996613
+Epoch 88/150:
+	reg training loss: 1.6571676015853882
+	seg training loss: 0.04402497112751007
+Epoch 89/150:
+	reg training loss: 1.7385945796966553
+	seg training loss: 0.04975014328956604
+Epoch 90/150:
+	reg training loss: 1.4554160475730895
+	seg training loss: 0.04796398878097534
+Epoch 91/150:
+	reg training loss: 1.6244391560554505
+	reg validation loss: 3.2644922733306885
+	seg training loss: 0.03874439895153046
+	seg validation loss: 0.11166677623987198
+Epoch 92/150:
+	reg training loss: 1.475834959745407
+	seg training loss: 0.04821090996265411
+Epoch 93/150:
+	reg training loss: 1.8129208445549012
+	seg training loss: 0.04149874150753021
+Epoch 94/150:
+	reg training loss: 1.582091224193573
+	seg training loss: 0.04493129253387451
+Epoch 95/150:
+	reg training loss: 1.648519515991211
+	seg training loss: 0.044540634751319884
+Epoch 96/150:
+	reg training loss: 1.530086386203766
+	reg validation loss: 3.317974090576172
+	seg training loss: 0.0466022789478302
+	seg validation loss: 0.13395804166793823
+Epoch 97/150:
+	reg training loss: 1.514226257801056
+	seg training loss: 0.03777629733085632
+Epoch 98/150:
+	reg training loss: 1.5128494262695313
+	seg training loss: 0.04635457992553711
+Epoch 99/150:
+	reg training loss: 1.4876845955848694
+	seg training loss: 0.041973233222961426
+Epoch 100/150:
+	reg training loss: 1.5425513625144958
+	seg training loss: 0.043033072352409364
+Epoch 101/150:
+	reg training loss: 1.4795127868652345
+	reg validation loss: 3.278428554534912
+	seg training loss: 0.04391896724700928
+	seg validation loss: 0.10932398587465286
+Epoch 102/150:
+	reg training loss: 1.3456117391586304
+	seg training loss: 0.0463683158159256
+Epoch 103/150:
+	reg training loss: 1.5337165355682374
+	seg training loss: 0.04557084739208221
+Epoch 104/150:
+	reg training loss: 1.4175154209136962
+	seg training loss: 0.041203317046165464
+Epoch 105/150:
+	reg training loss: 1.491098737716675
+	seg training loss: 0.04438801407814026
+Epoch 106/150:
+	reg training loss: 1.637062907218933
+	reg validation loss: 3.325711250305176
+	seg training loss: 0.039811649918556215
+	seg validation loss: 0.11083932965993881
+Epoch 107/150:
+	reg training loss: 1.4294653177261352
+	seg training loss: 0.040769177675247195
+Epoch 108/150:
+	reg training loss: 1.2746424674987793
+	seg training loss: 0.039609703421592715
+Epoch 109/150:
+	reg training loss: 1.465555238723755
+	seg training loss: 0.04165233075618744
+Epoch 110/150:
+	reg training loss: 1.5138072729110719
+	seg training loss: 0.0392852783203125
+Epoch 111/150:
+	reg training loss: 1.4285594701766968
+	reg validation loss: 3.0637738704681396
+	seg training loss: 0.04050336182117462
+	seg validation loss: 0.10757420212030411
+Epoch 112/150:
+	reg training loss: 1.4796598553657532
+	seg training loss: 0.04065462350845337
+Epoch 113/150:
+	reg training loss: 1.36372629404068
+	seg training loss: 0.040871036052703855
+Epoch 114/150:
+	reg training loss: 1.4361500144004822
+	seg training loss: 0.04593601524829864
+Epoch 115/150:
+	reg training loss: 1.4456260681152344
+	seg training loss: 0.04071014523506165
+Epoch 116/150:
+	reg training loss: 1.4020459055900574
+	reg validation loss: 3.108996868133545
+	seg training loss: 0.04369308948516846
+	seg validation loss: 0.11938655376434326
+Epoch 117/150:
+	reg training loss: 1.3788525223731996
+	seg training loss: 0.04722652137279511
+Epoch 118/150:
+	reg training loss: 1.3215387344360352
+	seg training loss: 0.04317383766174317
+Epoch 119/150:
+	reg training loss: 1.3698723673820496
+	seg training loss: 0.03398588299751282
+Epoch 120/150:
+	reg training loss: 1.2778821647167207
+	seg training loss: 0.04034335613250732
+Epoch 121/150:
+	reg training loss: 1.3698755979537964
+	reg validation loss: 2.9927785396575928
+	seg training loss: 0.036156189441680905
+	seg validation loss: 0.11336451023817062
+Epoch 122/150:
+	reg training loss: 1.3979350209236145
+	seg training loss: 0.03906717300415039
+Epoch 123/150:
+	reg training loss: 1.2636346697807312
+	seg training loss: 0.04145587384700775
+Epoch 124/150:
+	reg training loss: 1.3199236750602723
+	seg training loss: 0.03506969213485718
+Epoch 125/150:
+	reg training loss: 1.3449559211730957
+	seg training loss: 0.038923582434654234
+Epoch 126/150:
+	reg training loss: 1.339024943113327
+	reg validation loss: 3.245039463043213
+	seg training loss: 0.03790881633758545
+	seg validation loss: 0.1098380908370018
+Epoch 127/150:
+	reg training loss: 1.260996562242508
+	seg training loss: 0.03813325166702271
+Epoch 128/150:
+	reg training loss: 1.3546002149581908
+	seg training loss: 0.03687379956245422
+Epoch 129/150:
+	reg training loss: 1.252830719947815
+	seg training loss: 0.040056157112121585
+Epoch 130/150:
+	reg training loss: 1.1125893533229827
+	seg training loss: 0.0403405487537384
+Epoch 131/150:
+	reg training loss: 1.2271615982055664
+	reg validation loss: 2.9399733543395996
+	seg training loss: 0.03758984208106995
+	seg validation loss: 0.10584234446287155
+Epoch 132/150:
+	reg training loss: 1.3109357595443725
+	seg training loss: 0.046701446175575256
+Epoch 133/150:
+	reg training loss: 1.3082359910011292
+	seg training loss: 0.04108454883098602
+Epoch 134/150:
+	reg training loss: 1.4175715327262879
+	seg training loss: 0.03957531452178955
+Epoch 135/150:
+	reg training loss: 1.2930214643478393
+	seg training loss: 0.036753672361373904
+Epoch 136/150:
+	reg training loss: 1.2290011167526245
+	reg validation loss: 3.009814500808716
+	seg training loss: 0.03787890374660492
+	seg validation loss: 0.11481118947267532
+Epoch 137/150:
+	reg training loss: 1.2510305166244506
+	seg training loss: 0.03525933623313904
+Epoch 138/150:
+	reg training loss: 1.3841961979866029
+	seg training loss: 0.045733338594436644
+Epoch 139/150:
+	reg training loss: 1.1904977083206176
+	seg training loss: 0.041322562098503116
+Epoch 140/150:
+	reg training loss: 1.1987750947475433
+	seg training loss: 0.03969658315181732
+Epoch 141/150:
+	reg training loss: 1.2858553409576416
+	reg validation loss: 3.063588857650757
+	seg training loss: 0.03913751244544983
+	seg validation loss: 0.1053217351436615
+Epoch 142/150:
+	reg training loss: 1.234222173690796
+	seg training loss: 0.04026820361614227
+Epoch 143/150:
+	reg training loss: 1.1718730866909026
+	seg training loss: 0.03998347520828247
+Epoch 144/150:
+	reg training loss: 1.1990990936756134
+	seg training loss: 0.03557175695896149
+Epoch 145/150:
+	reg training loss: 1.157021552324295
+	seg training loss: 0.03615144789218903
+Epoch 146/150:
+	reg training loss: 1.2255614519119262
+	reg validation loss: 3.1661453247070312
+	seg training loss: 0.0391613632440567
+	seg validation loss: 0.13170355558395386
+Epoch 147/150:
+	reg training loss: 1.1338848412036895
+	seg training loss: 0.03860030472278595
+Epoch 148/150:
+	reg training loss: 1.1530435025691985
+	seg training loss: 0.03843391835689545
+Epoch 149/150:
+	reg training loss: 1.19446240067482
+	seg training loss: 0.03256092071533203
+Epoch 150/150:
+	reg training loss: 1.175407838821411
+	seg training loss: 0.03730123043060303
+
+
+Best reg_net validation loss: 2.9399733543395996
+Best seg_net validation loss: 0.1053217351436615

@@ -1,0 +1,647 @@
+{
+    "name": "Task002",
+    "description": "rnmw153",
+    "tensorImageSize": "4D",
+    "reference": "MODIFY",
+    "licence": "MODIFY",
+    "release": "0.0",
+    "modality": {
+        "0": "CT"
+    },
+    "labels": {
+        "0": "background",
+        "1": "Septum",
+        "2": "IT",
+        "3": "MS"
+    },
+    "network": {
+        "spatial_dim": 3,
+        "dropout": 0.2,
+        "activation_type": "leakyrelu",
+        "normalization_type": "batch",
+        "num_res": 0
+    },
+    "total_numScanTraining": 12,
+    "total_numLabelTraining": 10,
+    "total_numTest": 5,
+    "total_train": [
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_171.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_171.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_191.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_191.nii.gz"
+        }
+    ],
+    "total_test": [
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_141.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_141.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_169.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_169.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_135.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_135.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_172.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_172.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_146.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_146.nii.gz"
+        }
+    ],
+    "seg_numTrain": 10,
+    "seg_train": [
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_171.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_171.nii.gz"
+        },
+        {
+            "img": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_191.nii.gz",
+            "seg": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_191.nii.gz"
+        }
+    ],
+    "reg_numTrain": 58,
+    "reg_train": [
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_181.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_175.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_190.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_190.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_174.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_174.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_140.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_140.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_192.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_192.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_194.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_194.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_138.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_138.nii.gz"
+        },
+        {
+            "img1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_170.nii.gz",
+            "img2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/images/IR_183.nii.gz",
+            "seg1": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_170.nii.gz",
+            "seg2": "/home/ameen/Nasal Cavity/similarity/output_Zscore/labels/IR_183.nii.gz"
+        }
+    ]
+}
