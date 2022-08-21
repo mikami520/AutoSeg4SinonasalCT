@@ -138,6 +138,7 @@ def cropV2(nib_img, ants_img, resize, geo_info):
     tuple_x = geo_info[0]
     tuple_y = geo_info[1]
     tuple_z = geo_info[2]
+    img = Zscore_normalization(img)
     img = pad(img, tuple_x, tuple_y, tuple_z, resize, seg=False)
     return img
 

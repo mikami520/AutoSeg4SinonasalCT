@@ -28,13 +28,13 @@ from losses import (
 def load_seg_dataset(data_list):
     transform_seg_available = monai.transforms.Compose(
         transforms=[
-            monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True),
+            monai.transforms.LoadImageD(keys=['img', 'seg'], image_only=True, allow_missing_keys=True),
             #monai.transforms.TransposeD(
                 #keys=['img', 'seg'], indices=(2, 1, 0)),
-            monai.transforms.AddChannelD(keys=['img', 'seg']),
-            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest')),
+            monai.transforms.AddChannelD(keys=['img', 'seg'], allow_missing_keys=True),
+            monai.transforms.SpacingD(keys=['img', 'seg'], pixdim=(1., 1., 1.), mode=('trilinear', 'nearest'), allow_missing_keys=True),
             #monai.transforms.OrientationD(keys=['img', 'seg'], axcodes='RAS'),
-            monai.transforms.ToTensorD(keys=['img', 'seg'])
+            monai.transforms.ToTensorD(keys=['img', 'seg'], allow_missing_keys=True)
         ]
     )
     itk.ProcessObject.SetGlobalWarningDisplay(False)
@@ -93,53 +93,103 @@ def get_nii_info(data, reg=False):
     if not reg:
         for i in range(len(data)):
             item = data[i]
-            id = os.path.basename(item['seg']).split('.')[0]
-            seg = nib.load(item['seg'])
-            num_labels = len(np.unique(seg.get_fdata()))
-            headers.append(seg.header)
-            affines.append(seg.affine)
-            ids.append(id)
+            if 'seg' in item.keys():
+                id = os.path.basename(item['seg']).split('.')[0]
+                seg = nib.load(item['seg'])
+                num_labels = len(np.unique(seg.get_fdata()))
+                headers.append(seg.header)
+                affines.append(seg.affine)
+                ids.append(id)
+            else:
+                id = os.path.basename(item['img']).split('.')[0]
+                img = nib.load(item['img'])
+                headers.append(img.header)
+                affines.append(img.affine)
+                ids.append(id)
     else:
+        headers = {'00': [], '01': [], '10': [], '11': []}
+        affines = {'00': [], '01': [], '10': [], '11': []}
+        ids = {'00': [], '01': [], '10': [], '11': []}
         for i in range(len(data)):
             header = {}
             affine = {}
             id = {}
             item = data[i]
             keys = item.keys()
-            for key in keys:
-                idd = os.path.basename(item[key]).split('.')[0]
-                ele = nib.load(item[key])
-                header[key] = ele.header
-                affine[key] = ele.affine
-                id[key] = idd
-                if key == 'seg2':
-                    num_labels = len(np.unique(ele.get_fdata()))
+            if 'seg1' in keys and 'seg2' in keys:
+                for key in keys:
+                    idd = os.path.basename(item[key]).split('.')[0]
+                    ele = nib.load(item[key])
+                    header[key] = ele.header
+                    affine[key] = ele.affine
+                    id[key] = idd
 
-            headers.append(header)
-            affines.append(affine)
-            ids.append(id)
+                headers['11'].append(header)
+                affines['11'].append(affine)
+                ids['11'].append(id)
+            elif 'seg1' in keys:
+                for key in keys:
+                    idd = os.path.basename(item[key]).split('.')[0]
+                    ele = nib.load(item[key])
+                    header[key] = ele.header
+                    affine[key] = ele.affine
+                    id[key] = idd
 
-    return headers, affines, ids, num_labels
+                headers['10'].append(header)
+                affines['10'].append(affine)
+                ids['10'].append(id)
+            elif 'seg2' in keys:
+                for key in keys:
+                    idd = os.path.basename(item[key]).split('.')[0]
+                    ele = nib.load(item[key])
+                    header[key] = ele.header
+                    affine[key] = ele.affine
+                    id[key] = idd
+
+                headers['01'].append(header)
+                affines['01'].append(affine)
+                ids['01'].append(id)
+            else:
+                for key in keys:
+                    idd = os.path.basename(item[key]).split('.')[0]
+                    ele = nib.load(item[key])
+                    header[key] = ele.header
+                    affine[key] = ele.affine
+                    id[key] = idd
+                
+                headers['00'].append(header)
+                affines['00'].append(affine)
+                ids['00'].append(id)
+
+    return headers, affines, ids
 
 
-def seg_inference(seg_net, device, model_path, json_path, output_path):
-    json_file = load_json(json_path)
-    raw_data = json_file['total_test']
-    headers, affines, ids, num_labels = get_nii_info(raw_data, reg=False)
+def seg_training_inference(seg_net, device, model_path, output_path, num_label, json_path=None, data=None):
+    if json_path is not None:
+        assert data is None
+        json_file = load_json(json_path)
+        raw_data = json_file['total_test']
+    else:
+        assert data is not None
+        raw_data = data
+    headers, affines, ids = get_nii_info(raw_data, reg=False)
     seg_net.load_state_dict(torch.load(model_path))
     seg_net.to(device)
     dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
-    data = load_seg_dataset(raw_data)
+    data_seg = load_seg_dataset(raw_data)
     k = 0
     eval_losses = []
     eval_los = []
-    for i in data:
+    for i in data_seg:
+        has_seg = False
         header1 = headers[k]
         affine1 = affines[k]
         id = ids[k]
         data_item = i
         test_input = data_item['img']
-        test_gt = data_item['seg']
+        if 'seg' in data_item.keys():
+            test_gt = data_item['seg']
+            has_seg = True
         seg_net.eval()
         with torch.no_grad():
             test_seg_predicted = seg_net(test_input.unsqueeze(0).cuda()).cpu()
@@ -149,12 +199,14 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
         prediction1 = torch.argmax(torch.softmax(
             test_seg_predicted, dim=1), dim=1, keepdim=True)
         
-        onehot_pred = monai.networks.one_hot(prediction1, num_labels)
-        onehot_gt = monai.networks.one_hot(test_gt.unsqueeze(0), num_labels)
-        dsc = dice_metric(onehot_pred, onehot_gt).numpy()
-        eval_los.append(dsc)
-        eval_loss = f"Scan ID: {id}, dice score: {dsc}"
-        eval_losses.append(eval_loss)
+        onehot_pred = monai.networks.one_hot(prediction1, num_label)
+        if has_seg:
+            onehot_gt = monai.networks.one_hot(test_gt.unsqueeze(0), num_label)
+            dsc = dice_metric(onehot_pred, onehot_gt).numpy()
+            eval_los.append(dsc)
+            eval_loss = f"Scan ID: {id}, dice score: {dsc}"
+            eval_losses.append(eval_loss)
+        
         pred_np = prediction.detach().cpu().numpy()
         print(f'{id}: {np.unique(pred_np)}')
 
@@ -175,113 +227,186 @@ def seg_inference(seg_net, device, model_path, json_path, output_path):
     torch.cuda.empty_cache()
 
 
-def reg_inference(reg_net, device, model_path, json_path, output_path):
+def reg_training_inference(reg_net, device, model_path, output_path, num_label, json_path=None, data=None):
+    if json_path is not None:
+        assert data is None
+        json_file = load_json(json_path)
+        raw_data = json_file['total_test']
+    else:
+        assert data is not None
+        raw_data = data
     # Run this cell to try out reg net on a random validation pair
     reg_net.load_state_dict(torch.load(model_path))
     reg_net.to(device)
     reg_net.eval()
-    json_file = load_json(json_path)
-    raw_data = json_file['total_test']
     data_list = take_data_pairs(raw_data)
-    headers, affines, ids, num_labels = get_nii_info(data_list, reg=True)
+    headers, affines, ids = get_nii_info(data_list, reg=True)
     subvided_data_list = subdivide_list_of_data_pairs(data_list)
     subvided_dataset = load_reg_dataset(subvided_data_list)
     warp = warp_func()
     warp_nearest = warp_nearest_func()
     lncc_loss = lncc_loss_func()
     k = 0
-    datasets = subvided_dataset['11']
-    eval_losses_img = []
-    eval_losses_seg = []
-    eval_los = []
-    half_len = int(len(datasets) / 2)
-    for i in range(half_len):
-        data_item = datasets[i]
-        img12 = data_item['img12'].unsqueeze(0).to(device)
-        gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)
-        moving_raw_seg = data_item['seg2'].unsqueeze(0).to(device)
-        moving_seg = monai.networks.one_hot(moving_raw_seg, num_labels)
-        gt_seg = monai.networks.one_hot(gt_raw_seg, num_labels)
-        id = ids[k]
-        affine = affines[k]
-        header = headers[k]
-        with torch.no_grad():
-            reg_net_example_output = reg_net(img12)
+    if len(subvided_data_list['01']) != 0:
+        dataset01 = subvided_dataset['01']
+        for j in range(int(len(dataset01)/2)):
+            data_item = dataset01[j]
+            img12 = data_item['img12'].unsqueeze(0).to(device)
+            moving_raw_seg = data_item['seg2'].unsqueeze(0).to(device)
+            moving_seg = monai.networks.one_hot(moving_raw_seg, num_label)
+            id = ids['01'][k]
+            affine = affines['01'][k]
+            header = headers['01'][k]
+            with torch.no_grad():
+                reg_net_example_output = reg_net(img12)
 
-        example_warped_image = warp(
-            img12[:, [1], :, :, :],  # moving image
-            reg_net_example_output  # warping
-        )
-        example_warped_seg = warp_nearest(
-            moving_seg,
-            reg_net_example_output
-        )
-        moving_img = img12[0, 1, :, :, :]
-        target_img = img12[0, 0, :, :, :]
-        id_target_img = id['img1']
-        id_moving_img = id['img2']
-        head_target_img = header['img1']
-        head_target_seg = header['seg1']
-        aff_target_img = affine['img1']
-        aff_target_seg = affine['seg1']
-        dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
-        prediction = torch.argmax(torch.softmax(
-            example_warped_seg, dim=1), dim=1, keepdim=True)[0, 0]
-        prediction1 = torch.argmax(torch.softmax(
-            example_warped_seg, dim=1), dim=1, keepdim=True)
-        onehot_pred = monai.networks.one_hot(prediction1, num_labels)
-        dsc = dice_metric(onehot_pred, gt_seg).detach().cpu().numpy()
-        eval_los.append(dsc)
-        eval_loss_seg = f"Scan {id_moving_img} to {id_target_img}, dice score: {dsc}"
-        eval_losses_seg.append(eval_loss_seg)
-        warped_img_np = example_warped_image[0, 0].detach().cpu().numpy()
-        #warped_img_np = np.transpose(warped_img_np, (2, 1, 0))
-        warped_seg_np = prediction.detach().cpu().numpy()
-        #warped_seg_np = np.transpose(warped_seg_np, (2, 1, 0))
-        nii_seg = nib.Nifti1Image(
-            warped_seg_np, affine=aff_target_seg, header=head_target_seg)
-        nii = nib.Nifti1Image(
-            warped_img_np, affine=aff_target_img, header=head_target_img)
-        nii.to_filename(os.path.join(
-            output_path, id_moving_img + '_to_' + id_target_img + '.nii.gz'))
-        nii_seg.to_filename(os.path.join(
-            output_path, id_moving_img + '_to_' + id_target_img + '_seg.nii.gz'))
-        grid_spacing = 5
-        det = jacobian_determinant(reg_net_example_output.cpu().detach()[0])
-        visualize(target_img.cpu(),
-                  id_target_img,
-                  moving_img.cpu(),
-                  id_moving_img,
-                  example_warped_image[0, 0].cpu(),
-                  reg_net_example_output.cpu().detach()[0],
-                  det,
-                  grid_spacing,
-                  normalize_by='slice',
-                  cmap='gray',
-                  threshold=None,
-                  linewidth=1,
-                  color='darkblue',
-                  downsampling=None,
-                  threshold_det=0,
-                  output=output_path
-                  )
-        loss = lncc_loss(example_warped_image, img12[:, [0], :, :, :]).item()
-        eval_loss_img = f"Warped {id_moving_img} to {id_target_img}, similarity loss: {loss}, number of folds: {(det<=0).sum()}"
-        eval_losses_img.append(eval_loss_img)
-        k += 1
-        del reg_net_example_output, img12, example_warped_image
+            example_warped_image = warp(
+                img12[:, [1], :, :, :],  # moving image
+                reg_net_example_output  # warping
+            )
+            example_warped_seg = warp_nearest(
+                moving_seg,
+                reg_net_example_output
+            )
+            moving_img = img12[0, 1, :, :, :]
+            target_img = img12[0, 0, :, :, :]
+            id_target_img = id['img1']
+            id_moving_img = id['img2']
+            head_target_img = header['img1']
+            head_target_seg = header['img1']
+            aff_target_img = affine['img1']
+            aff_target_seg = affine['img1']
+            prediction = torch.argmax(torch.softmax(
+                example_warped_seg, dim=1), dim=1, keepdim=True)[0, 0]
+            prediction1 = torch.argmax(torch.softmax(
+                example_warped_seg, dim=1), dim=1, keepdim=True)
+            warped_img_np = example_warped_image[0, 0].detach().cpu().numpy()
+            #warped_img_np = np.transpose(warped_img_np, (2, 1, 0))
+            warped_seg_np = prediction.detach().cpu().numpy()
+            #warped_seg_np = np.transpose(warped_seg_np, (2, 1, 0))
+            nii_seg = nib.Nifti1Image(
+                warped_seg_np, affine=aff_target_seg, header=head_target_seg)
+            nii = nib.Nifti1Image(
+                warped_img_np, affine=aff_target_img, header=head_target_img)
+            nii.to_filename(os.path.join(
+                output_path, id_moving_img + '_to_' + id_target_img + '.nii.gz'))
+            nii_seg.to_filename(os.path.join(
+                output_path, id_moving_img + '_to_' + id_target_img + '_seg.nii.gz'))
+            grid_spacing = 5
+            det = jacobian_determinant(reg_net_example_output.cpu().detach()[0])
+            visualize(target_img.cpu(),
+                        id_target_img,
+                        moving_img.cpu(),
+                        id_moving_img,
+                        example_warped_image[0, 0].cpu(),
+                        reg_net_example_output.cpu().detach()[0],
+                        det,
+                        grid_spacing,
+                        normalize_by='slice',
+                        cmap='gray',
+                        threshold=None,
+                        linewidth=1,
+                        color='darkblue',
+                        downsampling=None,
+                        threshold_det=0,
+                        output=output_path
+                        )
+            k += 1
+            del reg_net_example_output, img12, example_warped_image, example_warped_seg
+    
+    if len(subvided_data_list['11']) != 0:
+        dataset11 = subvided_dataset['11']
+        k = 0
+        eval_losses_img = []
+        eval_losses_seg = []
+        eval_los = []
+        half_len = int(len(dataset11) / 2)
+        for i in range(int(len(dataset11)/2)):
+            data_item = dataset11[i]
+            img12 = data_item['img12'].unsqueeze(0).to(device)
+            gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)
+            moving_raw_seg = data_item['seg2'].unsqueeze(0).to(device)
+            moving_seg = monai.networks.one_hot(moving_raw_seg, num_label)
+            gt_seg = monai.networks.one_hot(gt_raw_seg, num_label)
+            id = ids['11'][k]
+            affine = affines['11'][k]
+            header = headers['11'][k]
+            with torch.no_grad():
+                reg_net_example_output = reg_net(img12)
 
-    with open(os.path.join(output_path, "reg_img_losses.txt"), 'w') as f:
-        for s in eval_losses_img:
-            f.write(s + '\n')
+            example_warped_image = warp(
+                img12[:, [1], :, :, :],  # moving image
+                reg_net_example_output  # warping
+            )
+            example_warped_seg = warp_nearest(
+                moving_seg,
+                reg_net_example_output
+            )
+            moving_img = img12[0, 1, :, :, :]
+            target_img = img12[0, 0, :, :, :]
+            id_target_img = id['img1']
+            id_moving_img = id['img2']
+            head_target_img = header['img1']
+            head_target_seg = header['seg1']
+            aff_target_img = affine['img1']
+            aff_target_seg = affine['seg1']
+            dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
+            prediction = torch.argmax(torch.softmax(
+                example_warped_seg, dim=1), dim=1, keepdim=True)[0, 0]
+            prediction1 = torch.argmax(torch.softmax(
+                example_warped_seg, dim=1), dim=1, keepdim=True)
+            onehot_pred = monai.networks.one_hot(prediction1, num_label)
+            dsc = dice_metric(onehot_pred, gt_seg).detach().cpu().numpy()
+            eval_los.append(dsc)
+            eval_loss_seg = f"Scan {id_moving_img} to {id_target_img}, dice score: {dsc}"
+            eval_losses_seg.append(eval_loss_seg)
+            warped_img_np = example_warped_image[0, 0].detach().cpu().numpy()
+            #warped_img_np = np.transpose(warped_img_np, (2, 1, 0))
+            warped_seg_np = prediction.detach().cpu().numpy()
+            #warped_seg_np = np.transpose(warped_seg_np, (2, 1, 0))
+            nii_seg = nib.Nifti1Image(
+                warped_seg_np, affine=aff_target_seg, header=head_target_seg)
+            nii = nib.Nifti1Image(
+                warped_img_np, affine=aff_target_img, header=head_target_img)
+            nii.to_filename(os.path.join(
+                output_path, id_moving_img + '_to_' + id_target_img + '.nii.gz'))
+            nii_seg.to_filename(os.path.join(
+                output_path, id_moving_img + '_to_' + id_target_img + '_seg.nii.gz'))
+            grid_spacing = 5
+            det = jacobian_determinant(reg_net_example_output.cpu().detach()[0])
+            visualize(target_img.cpu(),
+                    id_target_img,
+                    moving_img.cpu(),
+                    id_moving_img,
+                    example_warped_image[0, 0].cpu(),
+                    reg_net_example_output.cpu().detach()[0],
+                    det,
+                    grid_spacing,
+                    normalize_by='slice',
+                    cmap='gray',
+                    threshold=None,
+                    linewidth=1,
+                    color='darkblue',
+                    downsampling=None,
+                    threshold_det=0,
+                    output=output_path
+                    )
+            loss = lncc_loss(example_warped_image, img12[:, [0], :, :, :]).item()
+            eval_loss_img = f"Warped {id_moving_img} to {id_target_img}, similarity loss: {loss}, number of folds: {(det<=0).sum()}"
+            eval_losses_img.append(eval_loss_img)
+            k += 1
+            del reg_net_example_output, img12, example_warped_image, example_warped_seg
 
-    average = np.mean(eval_los, 0)
-    with open(os.path.join(output_path, "reg_seg_dsc.txt"), 'w') as f:
-        for s in eval_losses_seg:
-            f.write(s + '\n')
-        f.write('\n\nAverage Dice Score: ' + str(average))
+        with open(os.path.join(output_path, "reg_img_losses.txt"), 'w') as f:
+            for s in eval_losses_img:
+                f.write(s + '\n')
+
+        average = np.mean(eval_los, 0)
+        with open(os.path.join(output_path, "reg_seg_dsc.txt"), 'w') as f:
+            for s in eval_losses_seg:
+                f.write(s + '\n')
+            f.write('\n\nAverage Dice Score: ' + str(average))
     torch.cuda.empty_cache()
-
 
 def visualize(target,
               target_id,

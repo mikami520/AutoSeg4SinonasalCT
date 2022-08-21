@@ -28,12 +28,6 @@ from process_data import (
 def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for deep atlas train')
-    parser.add_argument('-bp', metavar='base path', type=str,
-                        help="Absolute path of the base directory")
-    parser.add_argument('-ip', metavar='image path', type=str,
-                        help="Relative path of the image directory")
-    parser.add_argument('-sp', metavar='segmentation path', type=str,
-                        help="Relative path of the image directory")
     parser.add_argument('-sl', metavar='segmentation information list', type=str, nargs='+',
                         help='a list of label name and corresponding value')
     parser.add_argument('-ns', metavar='number of segmentations', type=int, default=3,
@@ -108,11 +102,11 @@ def main():
     args = parse_command_line()
     #monai.utils.set_determinism(seed=2938649572)
     data_path = os.path.join(ROOT_DIR, 'deepatlas_results')
-    base_path = args.bp
+    base_path = os.path.join(ROOT_DIR, 'deepatlas_preprocessed')
     seg_list = args.sl
-    img_path = os.path.join(base_path, args.ip)
-    seg_path = os.path.join(base_path, args.sp)
     task = os.path.join(data_path, args.ti)
+    img_path = os.path.join(base_path, args.ti, 'Training_dataset', 'images')
+    seg_path = os.path.join(base_path, args.ti, 'Training_dataset', 'labels')
     result_path = os.path.join(task, 'training_results')
     result_seg_path = os.path.join(result_path, 'SegNet')
     result_reg_path = os.path.join(result_path, 'RegNet')

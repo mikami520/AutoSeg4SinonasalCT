@@ -35,11 +35,11 @@ def split_data(img_path, seg_path, num_seg):
     seg_ids_train = map(path_to_id, seg_train)
     for seg_index, seg_id in enumerate(seg_ids_test):
         data_item = {}
-        if seg_id in img_ids:
-            img_test.append(total_img_paths[img_ids.index(seg_id)])
-            data_item['img'] = total_img_paths[img_ids.index(seg_id)]
-            total_img_paths1.pop(img_ids1.index(seg_id))
-            img_ids1.pop(img_ids1.index(seg_id))
+        assert seg_id in img_ids
+        img_test.append(total_img_paths[img_ids.index(seg_id)])
+        data_item['img'] = total_img_paths[img_ids.index(seg_id)]
+        total_img_paths1.pop(img_ids1.index(seg_id))
+        img_ids1.pop(img_ids1.index(seg_id))
         data_item['seg'] = seg_test[seg_index]
         test.append(data_item)
 
