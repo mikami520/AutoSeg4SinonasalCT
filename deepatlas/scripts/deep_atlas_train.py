@@ -196,8 +196,8 @@ def main():
     data_seg_unavailable = list(filter(lambda d: 'seg' not in d.keys(), train))
     data_seg_available_train, data_seg_available_valid = \
         monai.data.utils.partition_dataset(data_seg_available, ratios=(8, 2))
-    json_dict['seg_numTrain'] = len(data_seg_available)
-    json_dict['seg_train'] = data_seg_available
+    json_dict['seg_numValid'] = len(data_seg_available_valid)
+    json_dict['seg_valid'] = data_seg_available_valid
     dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(
         data_seg_available_train, data_seg_available_valid)
     data_item = random.choice(dataset_seg_available_train)
@@ -229,8 +229,24 @@ def main():
     num_train_both = len(data_pairs_train_subdivided['01']) +\
         len(data_pairs_train_subdivided['10']) +\
         len(data_pairs_train_subdivided['11'])
-    json_dict['reg_numTrain'] = num_train_reg_net + num_valid_reg_net
-    json_dict['reg_train'] = data_paires_without_seg_valid
+    json_dict['reg_seg_numTrain'] = num_train_reg_net
+    json_dict['reg_seg_numTrain_00'] = len(data_pairs_train_subdivided['00'])
+    json_dict['reg_seg_train_00'] = data_pairs_train_subdivided['00']
+    json_dict['reg_seg_numTrain_01'] = len(data_pairs_train_subdivided['01'])
+    json_dict['reg_seg_train_01'] = data_pairs_train_subdivided['01']
+    json_dict['reg_seg_numTrain_10'] = len(data_pairs_train_subdivided['10'])
+    json_dict['reg_seg_train_10'] = data_pairs_train_subdivided['10']
+    json_dict['reg_seg_numTrain_11'] = len(data_pairs_train_subdivided['11'])
+    json_dict['reg_seg_train_11'] = data_pairs_train_subdivided['11']
+    json_dict['reg_numValid'] = num_valid_reg_net
+    json_dict['reg_numValid_00'] = len(data_pairs_valid_subdivided['00'])
+    json_dict['reg_valid_00'] = data_pairs_valid_subdivided['00']
+    json_dict['reg_numValid_01'] = len(data_pairs_valid_subdivided['01'])
+    json_dict['reg_valid_01'] = data_pairs_valid_subdivided['01']
+    json_dict['reg_numValid_10'] = len(data_pairs_valid_subdivided['10'])
+    json_dict['reg_valid_10'] = data_pairs_valid_subdivided['10']
+    json_dict['reg_numValid_11'] = len(data_pairs_valid_subdivided['11'])
+    json_dict['reg_valid_11'] = data_pairs_valid_subdivided['11']
     print('---'*10)
     print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
     and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
