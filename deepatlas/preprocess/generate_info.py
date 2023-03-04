@@ -81,6 +81,12 @@ def main():
     label_list = glob.glob(seg_path + "/*.nii.gz")
     label, unlabel = split(image_list, label_list, seg_path)
     piece_data = {}
+    info_path = os.path.join(task_path, 'Training_dataset', 'data_info')
+    try:
+        os.mkdir(info_path)
+    except:
+        print(f'{info_path} is already existed !!!')
+    
     if num_seg < len(label):
         piece_data['fold_0'] = random.sample(label, num_seg)
         unused = list(filter(lambda x: x not in piece_data['fold_0'], label))
@@ -106,10 +112,10 @@ def main():
         piece_data[f'fold_{m+1}'] = unlabel[start_point:start_point+fold_num[m]]
         start_point += fold_num[m]
     
-    with open(os.path.join(task_path, "Training_dataset", "info.json"), 'w') as f:
+    with open(os.path.join(info_path, f'info_{num_seg}gt.json'), 'w') as f:
         json.dump(piece_data, f, indent=4, sort_keys=True)
 
-    if os.path.exists(os.path.join(task_path, "Training_dataset", 'info.json')):
+    if os.path.exists(os.path.join(info_path, f'info_{num_seg}gt.json')):
         print("new json file created!")
 
 if __name__ == '__main__':

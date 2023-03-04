@@ -94,11 +94,12 @@ def main():
     data_path = os.path.join(ROOT_DIR, 'deepatlas_results')
     base_path = os.path.join(ROOT_DIR, 'deepatlas_preprocessed')
     task = os.path.join(data_path, config.task_name)
+    gt_path = os.path.join(task, config.info_name.split('_')[1])
     img_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'images')
     seg_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'labels')
-    info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'info.json')
+    info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', config.info_name+'.json')
     info = load_json(info_path)
-    result_path = os.path.join(task, 'training_results')
+    result_path = os.path.join(gt_path, 'training_results')
     try:
         os.mkdir(data_path)
     except:
@@ -108,12 +109,16 @@ def main():
         os.mkdir(task)
     except:
         print(f'{task} is already existed !!!')
-
+    
+    try:
+        os.mkdir(gt_path)
+    except:
+        print(f'{gt_path} is already existed !!!')
+    
     try:
         os.mkdir(result_path)
     except:
         print(f'{result_path} is already existed !!!')
-    
     for i in range (1, config.num_fold+1):
         fold_path = os.path.join(result_path, f'fold_{i}')
         result_seg_path = os.path.join(fold_path, 'SegNet')
@@ -141,17 +146,17 @@ def main():
         try:
             os.mkdir(fold_path)
         except:
-            logger.warning(f'{fold_path} is already existed !!!')
+            logger.info(f'{fold_path} is already existed !!!')
         
         try:
             os.mkdir(result_seg_path)
         except:
-            logger.warning(f'{result_seg_path} is already existed !!!')
+            logger.info(f'{result_seg_path} is already existed !!!')
 
         try:
             os.mkdir(result_reg_path)
         except:
-            logger.warning(f'{result_reg_path} is already existed !!!')
+            logger.info(f'{result_reg_path} is already existed !!!')
 
         logger.info('prepare dataset into train and test')
         json_dict = OrderedDict()

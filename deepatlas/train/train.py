@@ -375,3 +375,4 @@ def plot_fig(
     plt.ylabel('loss')
     plt.title('Alternating training: segmentation anatomy loss')
     plt.savefig(os.path.join(result_seg_path, 'anatomy_seg_losses.png'))
+    plt.cla()

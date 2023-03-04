@@ -33,7 +33,8 @@ def main():
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
     task = config.task_name
-    output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, 'training_predicted_results')
+    info_name = config.info_name.split('_')[1]
+    output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, info_name, 'training_predicted_results')
     try:
         os.mkdir(output_path)
     except:
@@ -41,13 +42,13 @@ def main():
     for i in range(1, config.num_fold+1):
         num_fold = f'fold_{i}'
         json_path = os.path.join(
-            ROOT_DIR, 'deepatlas_results', task, 'training_results', num_fold, 'dataset.json')
+            ROOT_DIR, 'deepatlas_results', task, info_name, 'training_results', num_fold, 'dataset.json')
         #num_fold = json_file['num_fold']
         output_fold_path = os.path.join(output_path, num_fold)
         seg_model_path = os.path.join(
-            ROOT_DIR, 'deepatlas_results', task, 'training_results', num_fold, 'SegNet', 'seg_net_best.pth')
+            ROOT_DIR, 'deepatlas_results', task, info_name, 'training_results', num_fold, 'SegNet', 'seg_net_best.pth')
         reg_model_path = os.path.join(
-            ROOT_DIR, 'deepatlas_results', task, 'training_results', num_fold, 'RegNet', 'reg_net_best.pth')
+            ROOT_DIR, 'deepatlas_results', task, info_name, 'training_results', num_fold, 'RegNet', 'reg_net_best.pth')
         labels = config.labels
         num_label = len(labels.keys())
         network_info = config.network
