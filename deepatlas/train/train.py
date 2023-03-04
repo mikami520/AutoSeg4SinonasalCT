@@ -49,10 +49,10 @@ def train_network(dataloader_train_reg,
                   max_epoch,
                   val_step,
                   result_seg_path,
-                  result_reg_path
+                  result_reg_path,
+                  logger
                   ):
     # Training cell
-    # (if already done then you may skip this and uncomment the loading checkpoint cell below)
     ROOT_DIR = str(Path(result_reg_path).parent.absolute())
     seg_availabilities = ['00', '01', '10', '11']
     batch_generator_train_reg = generators.create_batch_generator(
@@ -101,14 +101,11 @@ def train_network(dataloader_train_reg,
     anatomy_loss_seg = []
     best_seg_validation_loss = float('inf')
     best_reg_validation_loss = float('inf')
-    with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'w') as f:
-        f.write('Deep Atlas Training Log\n')
+    logger.info('Start Training')
 
     for epoch_number in range(max_epochs):
 
-        print(f"Epoch {epoch_number+1}/{max_epochs}:")
-        with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-            f.write(f"Epoch {epoch_number+1}/{max_epochs}:\n")
+        logger.info(f"Epoch {epoch_number+1}/{max_epochs}:")
             # ------------------------------------------------
             #         reg_net training, with seg_net frozen
             # ------------------------------------------------
@@ -139,10 +136,8 @@ def train_network(dataloader_train_reg,
             [epoch_number, np.mean(regularization_loss)])
         similarity_loss_reg.append([epoch_number, np.mean(similarity_loss)])
         anatomy_loss_reg.append([epoch_number, np.mean(anatomy_loss)])
-        print(f"\treg training loss: {training_loss}")
+        logger.info(f"\treg training loss: {training_loss}")
         training_losses_reg.append([epoch_number, training_loss])
-        with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-            f.write(f"\treg training loss: {training_loss}\n")
 
         if epoch_number % val_interval == 0:
             reg_net.eval()
@@ -155,10 +150,8 @@ def train_network(dataloader_train_reg,
                     losses.append(loss.item())
             
             validation_loss = np.mean(losses)
-            print(f"\treg validation loss: {validation_loss}")
+            logger.info(f"\treg validation loss: {validation_loss}")
             validation_losses_reg.append([epoch_number, validation_loss])
-            with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-                f.write(f"\treg validation loss: {validation_loss}\n")
 
             if validation_loss < best_reg_validation_loss:
                 best_reg_validation_loss = validation_loss
@@ -245,10 +238,8 @@ def train_network(dataloader_train_reg,
         training_loss = np.mean(losses)
         supervised_loss_seg.append([epoch_number, np.mean(supervised_loss)])
         anatomy_loss_seg.append([epoch_number, np.mean(anatomy_loss)])
-        print(f"\tseg training loss: {training_loss}")
+        logger.info(f"\tseg training loss: {training_loss}")
         training_losses_seg.append([epoch_number, training_loss])
-        with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-            f.write(f"\tseg training loss: {training_loss}\n")
 
         if len(dataloader_valid_seg) == 0:
             torch.save(seg_net.state_dict(), os.path.join(
@@ -269,10 +260,8 @@ def train_network(dataloader_train_reg,
                         losses.append(loss.item())
 
                 validation_loss = np.mean(losses)
-                print(f"\tseg validation loss: {validation_loss}")
+                logger.info(f"\tseg validation loss: {validation_loss}")
                 validation_losses_seg.append([epoch_number, validation_loss])
-                with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-                    f.write(f"\tseg validation loss: {validation_loss}\n")
 
                 if validation_loss < best_seg_validation_loss:
                     best_seg_validation_loss = validation_loss
@@ -285,20 +274,12 @@ def train_network(dataloader_train_reg,
             seg1_predicted, seg2_predicted
         torch.cuda.empty_cache()
 
-    print(f"\n\nBest reg_net validation loss: {best_reg_validation_loss}")
+    logger.info(f"Best reg_net validation loss: {best_reg_validation_loss}")
     if len(validation_losses_seg) == 0:
-        print('Only one label is used for training, no need to do validation. Replace best validation loss with training loss !!!')
-        print(f'Best seg_net validation loss: {training_loss}')
+        logger.info('Only one label is used for training, no need to do validation. Replace best validation loss with training loss !!!')
+        logger.info(f'Best seg_net validation loss: {training_loss}')
     else:
-        print(f"Best seg_net validation loss: {best_seg_validation_loss}")
-    with open(os.path.join(ROOT_DIR, 'training_log.txt'), 'a') as f:
-        f.write(
-            f"\n\nBest reg_net validation loss: {best_reg_validation_loss}\n")
-        if len(validation_losses_seg) == 0:
-            f.write('Only one label is used for training, no need to do validation. Replace best validation loss with training loss !!!')
-            f.write(f"Best seg_net validation loss: {training_loss}")
-        else:
-            f.write(f"Best seg_net validation loss: {best_seg_validation_loss}")
+        logger.info(f"Best seg_net validation loss: {best_seg_validation_loss}")
     
     plot_fig(training_losses_reg,
              validation_losses_reg,

@@ -81,8 +81,9 @@ def load_reg_dataset(data_list):
 
 
 def load_json(json_path):
-    with open(json_path) as f:
-        json_file = json.load(f)
+    assert type(json_path) == str
+    fjson = open(json_path, 'r')
+    json_file = json.load(fjson)
     return json_file
 
 
@@ -249,7 +250,8 @@ def reg_training_inference(reg_net, device, model_path, output_path, num_label, 
     k = 0
     if len(subvided_data_list['01']) != 0:
         dataset01 = subvided_dataset['01']
-        for j in range(int(len(dataset01)/2)):
+        #test_len = int(len(dataset01) / 4)
+        for j in range(len(dataset01)):
             data_item = dataset01[j]
             img12 = data_item['img12'].unsqueeze(0).to(device)
             moving_raw_seg = data_item['seg2'].unsqueeze(0).to(device)
@@ -320,8 +322,8 @@ def reg_training_inference(reg_net, device, model_path, output_path, num_label, 
         eval_losses_img = []
         eval_losses_seg = []
         eval_los = []
-        half_len = int(len(dataset11) / 2)
-        for i in range(int(len(dataset11)/2)):
+        #test_len = int(len(dataset11) / 4)
+        for i in range(len(dataset11)):
             data_item = dataset11[i]
             img12 = data_item['img12'].unsqueeze(0).to(device)
             gt_raw_seg = data_item['seg1'].unsqueeze(0).to(device)

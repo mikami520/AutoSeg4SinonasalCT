@@ -24,6 +24,8 @@ def parse_command_line():
                         help='id of gpu device to use')
     parser.add_argument('-ti', metavar='task id and name', type=str,
                         help='task name and id')
+    parser.add_argument('-nf', metavar='number of fold', type=int,
+                        help='number of fold for testing')
     parser.add_argument('-op', metavar='output path for prediction step', type=str,
                         help="relative path of the output directory, should be same name in the registration, crop and final prediction steps")
     argv = parser.parse_args()
@@ -39,14 +41,16 @@ def main():
     args = parse_command_line()
     gpu = args.gpu
     task = args.ti
+    num_fold = f'fold_{args.nf}'
     output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, 'customize_predicted_results')
-    out_path = os.path.join(output_path, args.op)
+    fold_path = os.path.join(output_path, num_fold)
+    out_path = os.path.join(fold_path, args.op)
     json_path = os.path.join(
-        ROOT_DIR, 'deepatlas_results', task, 'dataset.json')
+        ROOT_DIR, 'deepatlas_results', task, "training_results", num_fold, 'dataset.json')
     seg_model_path = os.path.join(
-        ROOT_DIR, 'deepatlas_results', task, 'training_results', 'SegNet', 'seg_net_best.pth')
+        ROOT_DIR, 'deepatlas_results', task, 'training_results', num_fold, 'SegNet', 'seg_net_best.pth')
     reg_model_path = os.path.join(
-        ROOT_DIR, 'deepatlas_results', task, 'training_results', 'RegNet', 'reg_net_best.pth')
+        ROOT_DIR, 'deepatlas_results', task, 'training_results', num_fold, 'RegNet', 'reg_net_best.pth')
     json_file = load_json(json_path)
     labels = json_file['labels']
     num_label = len(labels.keys())
@@ -64,6 +68,11 @@ def main():
     except:
         print(f'{output_path} is already existed !!!')
 
+    try:
+        os.mkdir(fold_path)
+    except:
+        print(f'{fold_path} is already existed !!!')
+    
     try:
         os.mkdir(out_path)
     except:

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from typing import Optional, Sequence, Tuple, Union
 from monai.networks.layers.factories import Act, Norm
 
+
 def segNet(
     spatial_dim: int,
     in_channel: int,
