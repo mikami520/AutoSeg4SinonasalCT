@@ -72,7 +72,18 @@ def load_json(json_path):
     fjson = open(json_path, 'r')
     json_file = json.load(fjson)
     return json_file
-    
+
+def setup_logger(logger_name, log_file, level=logging.INFO):
+    log_setup = logging.getLogger(logger_name)
+    formatter = logging.Formatter('%(asctime)s %(message)s', datefmt="%Y-%m-%d %H:%M:%S")
+    fileHandler = logging.FileHandler(log_file, mode='w')
+    fileHandler.setFormatter(formatter)
+    streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(formatter)
+    log_setup.setLevel(level)
+    log_setup.addHandler(fileHandler)
+    log_setup.addHandler(streamHandler)
+  
 
 def main():
     args = parse_command_line()
@@ -88,17 +99,28 @@ def main():
     info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'info.json')
     info = load_json(info_path)
     result_path = os.path.join(task, 'training_results')
+    try:
+        os.mkdir(data_path)
+    except:
+        print(f'{data_path} is already existed !!!')
+
+    try:
+        os.mkdir(task)
+    except:
+        print(f'{task} is already existed !!!')
+
+    try:
+        os.mkdir(result_path)
+    except:
+        print(f'{result_path} is already existed !!!')
+    
     for i in range (1, config.num_fold+1):
         fold_path = os.path.join(result_path, f'fold_{i}')
         result_seg_path = os.path.join(fold_path, 'SegNet')
         result_reg_path = os.path.join(fold_path, 'RegNet')
         log_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'training_log.log')
-        logging.basicConfig(filename=log_path,
-                        format='%(asctime)s %(message)s',
-                        datefmt="%Y-%m-%d %H:%M:%S",
-                        filemode='w')
-        logger = logging.getLogger()
-        logger.setLevel(logging.INFO)
+        setup_logger(f'log_{i}', log_path)
+        logger = logging.getLogger(f'log_{i}')
         logger.info("Start Pipeline")
         spatial_dim = config.network['spatial_dim']
         dropout = config.network['dropout']
@@ -114,21 +136,7 @@ def main():
         max_epoch = config.network["number_epoch"]
         val_step = config.network["validation_step"]
         device = torch.device("cuda:" + gpu)
-        logger.info('Create Necessary Folders')
-        try:
-            os.mkdir(data_path)
-        except:
-            logger.warning(f'{data_path} is already existed !!!')
-
-        try:
-            os.mkdir(task)
-        except:
-            logger.warning(f'{task} is already existed !!!')
-
-        try:
-            os.mkdir(result_path)
-        except:
-            logger.warning(f'{result_path} is already existed !!!')
+        logger.info('create necessary folders')
 
         try:
             os.mkdir(fold_path)
@@ -238,7 +246,7 @@ def main():
         print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
         and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
         print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
-        logger.info('Generate dataset json file')
+        logger.info('generate dataset json file')
         with open(os.path.join(fold_path, 'dataset.json'), 'w') as f:
             json.dump(json_dict, f, indent=4, sort_keys=False)
 
@@ -283,7 +291,7 @@ def main():
             if len(dataset) > 0 else []
             for seg_availability, dataset in dataset_pairs_valid_subdivided.items()
         }
-        shutil.move(os.path.join(base_path, config.task_name, 'Training_dataset', 'training_log.log'), os.path.join(fold_path, 'training_log.log'))
+        shutil.move(os.path.join(base_path, config.task_name, 'Training_dataset', 'training_log.log'), fold_path)
         train_network(dataloader_train_reg,
                     dataloader_valid_reg,
                     dataloader_train_seg,

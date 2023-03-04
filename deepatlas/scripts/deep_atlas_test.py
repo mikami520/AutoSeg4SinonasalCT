@@ -33,9 +33,13 @@ def main():
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
     task = config.task_name
+    output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, 'training_predicted_results')
+    try:
+        os.mkdir(output_path)
+    except:
+        print(f'{output_path} is already existed !!!')
     for i in range(1, config.num_fold+1):
         num_fold = f'fold_{i}'
-        output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, 'training_predicted_results')
         json_path = os.path.join(
             ROOT_DIR, 'deepatlas_results', task, 'training_results', num_fold, 'dataset.json')
         #num_fold = json_file['num_fold']
@@ -55,10 +59,6 @@ def main():
         device = torch.device("cuda:" + config.gpu)
         seg_path = os.path.join(output_fold_path, 'SegNet')
         reg_path = os.path.join(output_fold_path, 'RegNet')
-        try:
-            os.mkdir(output_path)
-        except:
-            print(f'{output_path} is already existed !!!')
 
         try:
             os.mkdir(output_fold_path)

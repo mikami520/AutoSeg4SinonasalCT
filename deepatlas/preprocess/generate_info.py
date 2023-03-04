@@ -66,6 +66,7 @@ def split(img, seg, seg_path):
     return label, unlabel
 
 def main():
+    random.seed(2938649572)
     ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
     args = parse_command_line()
     task_id = args.ti
