@@ -296,6 +296,8 @@ def main():
             if len(dataset) > 0 else []
             for seg_availability, dataset in dataset_pairs_valid_subdivided.items()
         }
+        if os.path.exists(os.path.join(fold_path, 'training_log.log')):
+            os.remove(os.path.join(fold_path, 'training_log.log'))
         shutil.move(os.path.join(base_path, config.task_name, 'Training_dataset', 'training_log.log'), fold_path)
         train_network(dataloader_train_reg,
                     dataloader_valid_reg,
