@@ -12,9 +12,12 @@ from collections import namedtuple
 
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/test'))
-
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 from test import (
-    seg_training_inference, load_json, reg_training_inference
+    seg_training_inference, reg_training_inference
+)
+from utils import (
+    make_dir, load_json
 )
 
 def parse_command_line():
@@ -38,18 +41,15 @@ def main():
     if torch.cuda.is_available():
         device = torch.device("cuda:" + str(torch.cuda.current_device()))
     output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', 'training_predicted_results')
-    try:
-        os.mkdir(output_path)
-    except:
-        print(f'{output_path} is already existed !!!')
+    make_dir(output_path)
     for i in range(1, config.num_fold+1):
         num_fold = f'fold_{i}'
         json_path = os.path.join(
             ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', 'training_results', num_fold, 'dataset.json')
         #num_fold = json_file['num_fold']
         output_fold_path = os.path.join(output_path, num_fold)
-        seg_model_path = os.path.join(Path(json_path).parent.absolute(), 'SegNet', 'seg_net_best.pth')
-        reg_model_path = os.path.join(Path(json_path).parent.absolute(), 'RegNet', 'reg_net_best.pth')
+        seg_model_path = os.path.join(Path(json_path).parent.absolute(), 'SegNet', 'model', 'seg_net_best.pth')
+        reg_model_path = os.path.join(Path(json_path).parent.absolute(), 'RegNet', 'model', 'reg_net_best.pth')
         labels = config.labels
         num_label = len(labels.keys())
         network_info = config.network
@@ -60,22 +60,9 @@ def main():
         num_res = network_info['num_res']
         seg_path = os.path.join(output_fold_path, 'SegNet')
         reg_path = os.path.join(output_fold_path, 'RegNet')
-
-        try:
-            os.mkdir(output_fold_path)
-        except:
-            print(f'{output_fold_path} is already existed !!!')
-        
-        try:
-            os.mkdir(seg_path)
-        except:
-            print(f'{seg_path} is already existed !!!')
-
-        try:
-            os.mkdir(reg_path)
-        except:
-            print(f'{reg_path} is already existed !!!')
-
+        make_dir(output_fold_path)
+        make_dir(seg_path)
+        make_dir(reg_path)
         seg_net = deep_atlas_train.get_seg_net(
             spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
         reg_net = deep_atlas_train.get_reg_net(

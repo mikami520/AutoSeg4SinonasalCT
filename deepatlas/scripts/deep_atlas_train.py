@@ -14,12 +14,13 @@ import logging
 import shutil
 from collections import namedtuple
 import numpy as np
+import datetime
 
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/network'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/train'))
-sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/test'))
+sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 from train import (
     train_network
 )
@@ -29,12 +30,17 @@ from network import (
 from process_data import (
     split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
 )
+from utils import (
+    load_json, make_dir
+)
 
 def parse_command_line():
     parser = argparse.ArgumentParser(
         description='pipeline for deep atlas train')
     parser.add_argument('--config', metavar='path to the configuration file', type=str,
                         help='absolute path to the configuration file')
+    parser.add_argument('-c', '--continue_training', action='store_true',
+                        help='use this if you want to continue a training')
     argv = parser.parse_args()
     return argv
 
@@ -68,11 +74,6 @@ def get_reg_net(spatial_dims, num_label, dropout, activation_type, normalization
     )
     return reg_net
 
-def load_json(json_path):
-    assert type(json_path) == str
-    fjson = open(json_path, 'r')
-    json_file = json.load(fjson)
-    return json_file
 
 def setup_logger(logger_name, log_file, level=logging.INFO):
     log_setup = logging.getLogger(logger_name)
@@ -166,16 +167,11 @@ def combine_data(data_info, fold, exp, num_seg):
     
     return train, test
 
-def make_dir(path):
-    try:
-        os.mkdir(path)
-    except:
-        print(f'{path} is already existed !!!')
-
 
 def main():
     args = parse_command_line()
     config = args.config
+    continue_training = args.c
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
     num_seg_used = config.num_seg_used
@@ -186,141 +182,195 @@ def main():
     task = os.path.join(data_path, config.task_name)
     exp_path = os.path.join(task, f'set_{experiment_set}')
     gt_path = os.path.join(exp_path, f'{num_seg_used}gt')
-    img_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'images')
-    seg_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'labels')
+    result_path = os.path.join(gt_path, 'training_results')
     info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', config.info_name+'.json')
     info = load_json(info_path)
-    result_path = os.path.join(gt_path, 'training_results')
+    if torch.cuda.is_available():
+        device = torch.device("cuda:" + str(torch.cuda.current_device()))
+    
+    spatial_dim = config.network['spatial_dim']
+    dropout = config.network['dropout']
+    activation_type = config.network['activation_type']
+    normalization_type = config.network['normalization_type']
+    num_res = config.network['num_res']
+    lr_reg = config.network["registration_network_learning_rate"]
+    lr_seg = config.network["segmentation_network_learning_rate"]
+    lam_a = config.network["anatomy_loss_weight"]
+    lam_sp = config.network["supervised_segmentation_loss_weight"]
+    lam_re = config.network["regularization_loss_weight"]
+    max_epoch = config.network["number_epoch"]
+    val_step = config.network["validation_step"]
     make_dir(data_path)
     make_dir(task)
     make_dir(exp_path)
     make_dir(gt_path)
     make_dir(result_path)
-    if torch.cuda.is_available():
-        device = torch.device("cuda:" + str(torch.cuda.current_device()))
-    for i in range (1, config.num_fold+1):
+    
+    if not continue_training:
+        start_fold = 1
+    else:
+        loggers = [name for name in logging.root.manager.loggerDict]
+        last_fold_num = loggers[-1].split('_')[-1]
+        start_fold = int(last_fold_num)
+    
+    datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
+    log_path = os.path.join(base_path, config.task_name, 'Training_dataset', datetime_object)
+    
+    for i in range (start_fold, config.num_fold+1):
         fold_path = os.path.join(result_path, f'fold_{i}')
         result_seg_path = os.path.join(fold_path, 'SegNet')
         result_reg_path = os.path.join(fold_path, 'RegNet')
-        log_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'training_log.log')
-        setup_logger(f'log_{i}', log_path)
-        logger = logging.getLogger(f'log_{i}')
-        logger.info("Start Pipeline")
-        spatial_dim = config.network['spatial_dim']
-        dropout = config.network['dropout']
-        activation_type = config.network['activation_type']
-        normalization_type = config.network['normalization_type']
-        num_res = config.network['num_res']
-        lr_reg = config.network["registration_network_learning_rate"]
-        lr_seg = config.network["segmentation_network_learning_rate"]
-        lam_a = config.network["anatomy_loss_weight"]
-        lam_sp = config.network["supervised_segmentation_loss_weight"]
-        lam_re = config.network["regularization_loss_weight"]
-        max_epoch = config.network["number_epoch"]
-        val_step = config.network["validation_step"]
-        logger.info('create necessary folders')
-        make_dir(fold_path)
-        make_dir(result_seg_path)
-        make_dir(result_reg_path)
-
-        logger.info('prepare dataset into train and test')
-        json_dict = OrderedDict()
-        json_dict['name'] = os.path.basename(task).split('_')[0]
-        json_dict['description'] = '_'.join(os.path.basename(task).split('_')[1:])
-        json_dict['tensorImageSize'] = "4D"
-        json_dict['reference'] = "MODIFY"
-        json_dict['licence'] = "MODIFY"
-        json_dict['release'] = "0.0"
-        json_dict['modality'] = {
-            "0": "CT"
-        }
-        json_dict['labels'] = config.labels
-        json_dict['network'] = config.network
-        json_dict['num_fold'] = f'fold_{i}'
-        json_dict['experiment_set'] = experiment_set
-        #num_seg = 15
-        #train, test, num_train, num_test = split_data(img_path, seg_path, num_seg) 
-        #print(type(train))
-        train, test = combine_data(info, i, experiment_set, num_seg_used)
+        if not continue_training:
+            setup_logger(f'log_{i}', log_path)
+            logger = logging.getLogger(f'log_{i}')
+            logger.info("Start Pipeline")
+        else:
+            setup_logger(f'log_{i+1}', log_path)
+            logger = logging.getLogger(f'log_{i+1}')
+            logger.info("Resume Pipeline")
         
-        num_seg = num_seg_used
-        num_train = len(train)
-        num_test = len(test)
-        #print(train.keys())
-        json_dict['total_numScanTraining'] = num_train
-        json_dict['total_numLabelTraining'] = num_seg
-        json_dict['total_numTest'] = num_test
-        json_dict['total_train'] = train
-        json_dict['total_test'] = test
-        # prepare segmentation dataset
-        logger.info('prepare segmentation dataset')
-        data_seg_available = list(filter(lambda d: 'seg' in d.keys(), train))
-        data_seg_unavailable = list(filter(lambda d: 'seg' not in d.keys(), train))
-        data_seg_available_train, data_seg_available_valid = \
-            monai.data.utils.partition_dataset(data_seg_available, ratios=(8, 2))
-        json_dict['seg_numValid'] = len(data_seg_available_valid)
-        json_dict['seg_valid'] = data_seg_available_valid
-        dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(
-            data_seg_available_train, data_seg_available_valid)
-        data_item = random.choice(dataset_seg_available_train)
-        num_label = len(torch.unique(data_item['seg']))
-        logger.info('prepare segmentation network')
-        seg_net = get_seg_net(spatial_dim, num_label, dropout,
-                            activation_type, normalization_type, num_res)
-        print(seg_net)
+        make_dir(fold_path)
+        make_dir(result_reg_path)
+        make_dir(result_seg_path)
 
-        # prepare registration dataset
-        logger.info('prepare registration dataset')
-        data_without_seg_valid = data_seg_unavailable + data_seg_available_train
-        data_valid, data_train = monai.data.utils.partition_dataset(
-            data_without_seg_valid,  # Note the order
-            ratios=(2, 8),  # Note the order
-            shuffle=False
-        )
-        data_paires_without_seg_valid = take_data_pairs(data_without_seg_valid)
-        data_pairs_valid = take_data_pairs(data_valid)
-        data_pairs_train = take_data_pairs(data_train)
-        data_pairs_valid_subdivided = subdivide_list_of_data_pairs(
-            data_pairs_valid)
-        data_pairs_train_subdivided = subdivide_list_of_data_pairs(
-            data_pairs_train)
-        num_train_reg_net = len(data_pairs_train)
-        num_valid_reg_net = len(data_pairs_valid)
-        num_train_both = len(data_pairs_train_subdivided['01']) +\
-            len(data_pairs_train_subdivided['10']) +\
-            len(data_pairs_train_subdivided['11'])
-        json_dict['reg_seg_numTrain'] = num_train_reg_net
-        json_dict['reg_seg_numTrain_00'] = len(data_pairs_train_subdivided['00'])
-        json_dict['reg_seg_train_00'] = data_pairs_train_subdivided['00']
-        json_dict['reg_seg_numTrain_01'] = len(data_pairs_train_subdivided['01'])
-        json_dict['reg_seg_train_01'] = data_pairs_train_subdivided['01']
-        json_dict['reg_seg_numTrain_10'] = len(data_pairs_train_subdivided['10'])
-        json_dict['reg_seg_train_10'] = data_pairs_train_subdivided['10']
-        json_dict['reg_seg_numTrain_11'] = len(data_pairs_train_subdivided['11'])
-        json_dict['reg_seg_train_11'] = data_pairs_train_subdivided['11']
-        json_dict['reg_numValid'] = num_valid_reg_net
-        json_dict['reg_numValid_00'] = len(data_pairs_valid_subdivided['00'])
-        json_dict['reg_valid_00'] = data_pairs_valid_subdivided['00']
-        json_dict['reg_numValid_01'] = len(data_pairs_valid_subdivided['01'])
-        json_dict['reg_valid_01'] = data_pairs_valid_subdivided['01']
-        json_dict['reg_numValid_10'] = len(data_pairs_valid_subdivided['10'])
-        json_dict['reg_valid_10'] = data_pairs_valid_subdivided['10']
-        json_dict['reg_numValid_11'] = len(data_pairs_valid_subdivided['11'])
-        json_dict['reg_valid_11'] = data_pairs_valid_subdivided['11']
-        print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
-        and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
-        print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
-        logger.info('generate dataset json file')
-        with open(os.path.join(fold_path, 'dataset.json'), 'w') as f:
-            json.dump(json_dict, f, indent=4, sort_keys=False)
+        if not os.path.exists(os.path.join(fold_path, 'dataset.json')):
+            logger.info('prepare dataset into train and test')
+            json_dict = OrderedDict()
+            json_dict['name'] = os.path.basename(task).split('_')[0]
+            json_dict['description'] = '_'.join(os.path.basename(task).split('_')[1:])
+            json_dict['tensorImageSize'] = "4D"
+            json_dict['reference'] = "MODIFY"
+            json_dict['licence'] = "MODIFY"
+            json_dict['release'] = "0.0"
+            json_dict['modality'] = {
+                "0": "CT"
+            }
+            json_dict['labels'] = config.labels
+            json_dict['network'] = config.network
+            json_dict['num_fold'] = f'fold_{i}'
+            json_dict['experiment_set'] = experiment_set
+            #num_seg = 15
+            #train, test, num_train, num_test = split_data(img_path, seg_path, num_seg) 
+            #print(type(train))
+            train, test = combine_data(info, i, experiment_set, num_seg_used)
+            
+            num_seg = num_seg_used
+            num_train = len(train)
+            num_test = len(test)
+            #print(train.keys())
+            json_dict['total_numScanTraining'] = num_train
+            json_dict['total_numLabelTraining'] = num_seg
+            json_dict['total_numTest'] = num_test
+            json_dict['total_train'] = train
+            json_dict['total_test'] = test
+            # prepare segmentation dataset
+            logger.info('prepare segmentation dataset')
+            data_seg_available = list(filter(lambda d: 'seg' in d.keys(), train))
+            data_seg_unavailable = list(filter(lambda d: 'seg' not in d.keys(), train))
+            data_seg_available_train, data_seg_available_valid = \
+                monai.data.utils.partition_dataset(data_seg_available, ratios=(8, 2))
+            json_dict['seg_numTrain'] = len(data_seg_available_train)
+            json_dict['seg_train'] = data_seg_available_train
+            json_dict['seg_numValid'] = len(data_seg_available_valid)
+            json_dict['seg_valid'] = data_seg_available_valid
+            dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(
+                data_seg_available_train, data_seg_available_valid)
+            data_item = random.choice(dataset_seg_available_train)
+            num_label = len(torch.unique(data_item['seg']))
+            logger.info('prepare segmentation network')
+            seg_net = get_seg_net(spatial_dim, num_label, dropout,
+                                activation_type, normalization_type, num_res)
+            print(seg_net)
 
-        dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided = load_reg_dataset(
-            data_pairs_train_subdivided, data_pairs_valid_subdivided)
-        logger.info('prepare registration network')
-        reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
-                            activation_type, normalization_type, num_res)
-        print(reg_net)
+            # prepare registration dataset
+            logger.info('prepare registration dataset')
+            data_without_seg_valid = data_seg_unavailable + data_seg_available_train
+            data_valid, data_train = monai.data.utils.partition_dataset(
+                data_without_seg_valid,  # Note the order
+                ratios=(2, 8),  # Note the order
+                shuffle=False
+            )
+            data_paires_without_seg_valid = take_data_pairs(data_without_seg_valid)
+            data_pairs_valid = take_data_pairs(data_valid)
+            data_pairs_train = take_data_pairs(data_train)
+            data_pairs_valid_subdivided = subdivide_list_of_data_pairs(
+                data_pairs_valid)
+            data_pairs_train_subdivided = subdivide_list_of_data_pairs(
+                data_pairs_train)
+            num_train_reg_net = len(data_pairs_train)
+            num_valid_reg_net = len(data_pairs_valid)
+            num_train_both = len(data_pairs_train_subdivided['01']) +\
+                len(data_pairs_train_subdivided['10']) +\
+                len(data_pairs_train_subdivided['11'])
+            json_dict['reg_seg_numTrain'] = num_train_reg_net
+            json_dict['reg_seg_numTrain_00'] = len(data_pairs_train_subdivided['00'])
+            json_dict['reg_seg_train_00'] = data_pairs_train_subdivided['00']
+            json_dict['reg_seg_numTrain_01'] = len(data_pairs_train_subdivided['01'])
+            json_dict['reg_seg_train_01'] = data_pairs_train_subdivided['01']
+            json_dict['reg_seg_numTrain_10'] = len(data_pairs_train_subdivided['10'])
+            json_dict['reg_seg_train_10'] = data_pairs_train_subdivided['10']
+            json_dict['reg_seg_numTrain_11'] = len(data_pairs_train_subdivided['11'])
+            json_dict['reg_seg_train_11'] = data_pairs_train_subdivided['11']
+            json_dict['reg_numValid'] = num_valid_reg_net
+            json_dict['reg_numValid_00'] = len(data_pairs_valid_subdivided['00'])
+            json_dict['reg_valid_00'] = data_pairs_valid_subdivided['00']
+            json_dict['reg_numValid_01'] = len(data_pairs_valid_subdivided['01'])
+            json_dict['reg_valid_01'] = data_pairs_valid_subdivided['01']
+            json_dict['reg_numValid_10'] = len(data_pairs_valid_subdivided['10'])
+            json_dict['reg_valid_10'] = data_pairs_valid_subdivided['10']
+            json_dict['reg_numValid_11'] = len(data_pairs_valid_subdivided['11'])
+            json_dict['reg_valid_11'] = data_pairs_valid_subdivided['11']
+            print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
+            and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
+            print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
 
+            dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided = load_reg_dataset(
+                data_pairs_train_subdivided, data_pairs_valid_subdivided)
+            logger.info('prepare registration network')
+            reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
+                                activation_type, normalization_type, num_res)
+            print(reg_net)
+            logger.info('generate dataset json file')
+            with open(os.path.join(fold_path, 'dataset.json'), 'w') as f:
+                json.dump(json_dict, f, indent=4, sort_keys=False)
+
+        else:
+            dataset_json = load_json(os.path.join(fold_path, 'dataset.json'))
+            
+            data_seg_available_train = dataset_json['seg_train']
+            data_seg_available_valid = dataset_json['seg_valid']
+            dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(data_seg_available_train, data_seg_available_valid)
+            data_item = random.choice(dataset_seg_available_train)
+            num_label = len(torch.unique(data_item['seg']))
+            logger.info('prepare segmentation network')
+            seg_net = get_seg_net(spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
+            print(seg_net)
+            
+            data_pairs_train_subdivided = {
+                '00': dataset_json['reg_seg_train_00'],
+                '01': dataset_json['reg_seg_train_01'],
+                '10': dataset_json['reg_seg_train_10'],
+                '11': dataset_json['reg_seg_train_11']
+            }
+            data_pairs_valid_subdivided = {
+                '00': dataset_json['reg_valid_00'],
+                '01': dataset_json['reg_valid_01'],
+                '10': dataset_json['reg_valid_10'],
+                '11': dataset_json['reg_valid_11']
+            }
+            
+            print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
+            and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
+            print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
+
+            dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided = load_reg_dataset(
+                data_pairs_train_subdivided, data_pairs_valid_subdivided)
+            logger.info('prepare registration network')
+            reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
+                                activation_type, normalization_type, num_res)
+            print(reg_net)
+
+        
         dataloader_train_seg = monai.data.DataLoader(
             dataset_seg_available_train,
             batch_size=2,
@@ -355,9 +405,9 @@ def main():
             if len(dataset) > 0 else []
             for seg_availability, dataset in dataset_pairs_valid_subdivided.items()
         }
-        if os.path.exists(os.path.join(fold_path, 'training_log.log')):
-            os.remove(os.path.join(fold_path, 'training_log.log'))
-        shutil.move(os.path.join(base_path, config.task_name, 'Training_dataset', 'training_log.log'), fold_path)
+        if os.path.exists(os.path.join(fold_path, datetime_object)):
+            os.remove(os.path.join(fold_path, datetime_object))
+        shutil.move(os.path.join(base_path, config.task_name, 'Training_dataset', datetime_object), fold_path)
         train_network(dataloader_train_reg,
                     dataloader_valid_reg,
                     dataloader_train_seg,
@@ -375,9 +425,9 @@ def main():
                     val_step,
                     result_seg_path,
                     result_reg_path,
-                    logger
+                    logger,
+                    continue_training=continue_training
                     )
-
     '''
     seg_train.train_seg(
         dataloader_train_seg,

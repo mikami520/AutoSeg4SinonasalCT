@@ -3,7 +3,13 @@ import matplotlib.pyplot as plt
 import monai
 import torch
 import os
+import json
+import matplotlib
 
+
+def make_dir(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 def preview_image(image_array, normalize_by="volume", cmap=None, figsize=(12, 12), threshold=None):
     """
@@ -167,7 +173,88 @@ def jacobian_determinant(vf):
 
     return det
 
+def load_json(json_path):
+    assert type(json_path) == str
+    fjson = open(json_path, 'r')
+    json_file = json.load(fjson)
+    return json_file
 
+def plot_progress(logger, save_dir, train_loss, val_loss, name):
+    """
+    Should probably by improved
+    :return:
+    """
+    assert len(train_loss) != 0
+    try:
+        font = {'weight': 'normal',
+                'size': 18}
+
+        matplotlib.rc('font', **font)
+
+        fig = plt.figure(figsize=(30, 24))
+        ax = fig.add_subplot(111)
+        ax.plot(train_loss[:,0], train_loss[:,1], color='b', ls='-', label="loss_tr")
+        if len(val_loss) != 0:
+            ax.plot(val_loss[:, 0], val_loss[:, 1], color='r', ls='-', label="loss_val")
+
+        ax.set_xlabel("epoch")
+        ax.set_ylabel("loss")
+        ax.legend()
+        ax.set_title(name)
+        fig.savefig(os.path.join(save_dir, name + ".png"))
+        plt.close()
+    except:
+        logger.info(f"failed to plot {name} training progress")
+
+def save_reg_checkpoint(network, optimizer, epoch, best_loss, sim_loss=None, regular_loss=None, ana_loss=None, total_loss=None, save_dir=None, name=None):
+    all_loss = {
+        'best_loss': best_loss,
+        'total_loss': total_loss,
+    }
+    if sim_loss is not None:
+        all_loss['sim_loss'] = sim_loss
+    if regular_loss is not None:
+        all_loss['regular_loss'] = regular_loss
+    if ana_loss is not None:
+        all_loss['ana_loss'] = ana_loss
+    
+    torch.save({
+        'epoch': epoch,
+        'network_state_dict': network.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'all_loss': all_loss,
+    }, os.path.join(save_dir, name+'_checkpoint.pth'))
+
+
+def save_seg_checkpoint(network, optimizer, epoch, best_loss, super_loss=None, ana_loss=None, total_loss=None, save_dir=None, name=None):
+    all_loss = {
+        'best_loss': best_loss,
+        'total_loss': total_loss,
+    }
+    if super_loss is not None:
+        all_loss['super_loss'] = super_loss
+    if ana_loss is not None:
+        all_loss['ana_loss'] = ana_loss
+    
+    torch.save({
+        'epoch': epoch,
+        'network_state_dict': network.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'all_loss': all_loss,
+    }, os.path.join(save_dir, name+'_checkpoint.pth'))
+
+
+def load_checkpoint(path, network, optimizer, device, name):
+    checkpoint_path = os.path.join(path, name+'_checkpoint.pth')
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    network.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    epoch = checkpoint['epoch']
+    all_loss = checkpoint['all_loss']
+    return network, optimizer, epoch, all_loss
+
+
+'''
 def plot_against_epoch_numbers(train_epoch_and_value_pairs=None, validation_epoch_and_value_pairs=None, train_label=None, val_label=None):
     """
     Helper to reduce code duplication when plotting quantities that vary over training epochs
@@ -190,3 +277,4 @@ def plot_against_epoch_numbers(train_epoch_and_value_pairs=None, validation_epoc
         plt.plot(train_array[:, 0], train_array[:, 1], label=train_label)
         plt.plot(val_array[:, 0], val_array[:, 1], label=val_label)
         plt.xlabel("epochs")
+'''

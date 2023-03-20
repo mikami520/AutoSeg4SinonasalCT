@@ -19,7 +19,7 @@ from process_data import (
     take_data_pairs, subdivide_list_of_data_pairs
 )
 from utils import (
-    plot_2D_vector_field, jacobian_determinant, plot_2D_deformation
+    plot_2D_vector_field, jacobian_determinant, plot_2D_deformation, load_json
 )
 from losses import (
     warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func2, dice_loss_func
@@ -78,14 +78,6 @@ def load_reg_dataset(data_list):
     }
 
     return dataset_pairs_train_subdivided
-
-
-def load_json(json_path):
-    assert type(json_path) == str
-    fjson = open(json_path, 'r')
-    json_file = json.load(fjson)
-    return json_file
-
 
 def get_nii_info(data, reg=False):
     headers = []
@@ -174,9 +166,9 @@ def seg_training_inference(seg_net, device, model_path, output_path, num_label, 
         assert data is not None
         raw_data = data
     headers, affines, ids = get_nii_info(raw_data, reg=False)
-    seg_net.load_state_dict(torch.load(model_path, map_location=device))
     seg_net.to(device)
-    print(next(seg_net.parameters()).device)
+    seg_net.load_state_dict(torch.load(model_path, map_location=device))
+    seg_net.eval()
     dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
     data_seg = load_seg_dataset(raw_data)
     k = 0
@@ -192,7 +184,6 @@ def seg_training_inference(seg_net, device, model_path, output_path, num_label, 
         if 'seg' in data_item.keys():
             test_gt = data_item['seg']
             has_seg = True
-        seg_net.eval()
         with torch.no_grad():
             test_seg_predicted = seg_net(test_input.unsqueeze(0).to(device)).cpu()
 
@@ -238,8 +229,8 @@ def reg_training_inference(reg_net, device, model_path, output_path, num_label, 
         assert data is not None
         raw_data = data
     # Run this cell to try out reg net on a random validation pair
-    reg_net.load_state_dict(torch.load(model_path, map_location=device))
     reg_net.to(device)
+    reg_net.load_state_dict(torch.load(model_path, map_location=device))
     reg_net.eval()
     data_list = take_data_pairs(raw_data)
     headers, affines, ids = get_nii_info(data_list, reg=True)
