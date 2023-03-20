@@ -66,8 +66,8 @@ def train_network(dataloader_train_reg,
     will be sampled with respective weights {seg_train_sampling_weights}""")
     batch_generator_train_seg = generators.create_batch_generator(
         dataloader_train_reg, seg_train_sampling_weights)
-    seg_net.to(device)
-    reg_net.to(device)
+    seg_net = seg_net.to(device)
+    reg_net = reg_net.to(device)
 
     learning_rate_reg = lr_reg
     optimizer_reg = torch.optim.Adam(reg_net.parameters(), learning_rate_reg)

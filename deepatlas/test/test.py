@@ -174,8 +174,9 @@ def seg_training_inference(seg_net, device, model_path, output_path, num_label, 
         assert data is not None
         raw_data = data
     headers, affines, ids = get_nii_info(raw_data, reg=False)
-    seg_net.load_state_dict(torch.load(model_path))
+    seg_net.load_state_dict(torch.load(model_path, map_location=device))
     seg_net.to(device)
+    print(next(seg_net.parameters()).device)
     dice_metric = monai.metrics.DiceMetric(include_background=False, reduction='none')
     data_seg = load_seg_dataset(raw_data)
     k = 0
@@ -193,7 +194,7 @@ def seg_training_inference(seg_net, device, model_path, output_path, num_label, 
             has_seg = True
         seg_net.eval()
         with torch.no_grad():
-            test_seg_predicted = seg_net(test_input.unsqueeze(0).cuda()).cpu()
+            test_seg_predicted = seg_net(test_input.unsqueeze(0).to(device)).cpu()
 
         prediction = torch.argmax(torch.softmax(
             test_seg_predicted, dim=1), dim=1, keepdim=True)[0, 0]
@@ -237,7 +238,7 @@ def reg_training_inference(reg_net, device, model_path, output_path, num_label, 
         assert data is not None
         raw_data = data
     # Run this cell to try out reg net on a random validation pair
-    reg_net.load_state_dict(torch.load(model_path))
+    reg_net.load_state_dict(torch.load(model_path, map_location=device))
     reg_net.to(device)
     reg_net.eval()
     data_list = take_data_pairs(raw_data)

@@ -13,6 +13,7 @@ import monai
 import logging
 import shutil
 from collections import namedtuple
+import numpy as np
 
 ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/preprocess'))
@@ -83,42 +84,120 @@ def setup_logger(logger_name, log_file, level=logging.INFO):
     log_setup.setLevel(level)
     log_setup.addHandler(fileHandler)
     log_setup.addHandler(streamHandler)
-  
+
+def classify_data(data_info, fold):
+    lab_each_fold = {}
+    lab = []
+    unlab = []
+    total_seg = 0
+    total_seg_each_fold = {}
+    for key, value in data_info.items():
+        if key != f'fold_{fold}':
+            lab_each_fold[key] = []
+            total_seg_each_fold[key] = 0
+            for val in value:
+                if 'seg' not in val.keys():
+                    unlab.append(val)
+                else:
+                    lab_each_fold[key].append(val)
+                    lab.append(val)
+                    total_seg += 1
+                    total_seg_each_fold[key] += 1
+                    
+    return lab_each_fold, lab, unlab, total_seg, total_seg_each_fold
+
+def select_n_seg(lab, fold, num, total_seg_each_fold):
+    seg_items = lab[f'fold_{fold}']
+    num_seg = len(seg_items)
+    rand_num = random.sample(range(num_seg), num)
+    seg_item = np.array(seg_items)[np.array(rand_num)]
+    seg_items.pop(rand_num[0])
+    total_seg_each_fold[f'fold_{fold}'] -= 1
+    lab[f'fold_{fold}'] = seg_items
+    return list(seg_item), lab, total_seg_each_fold
+
+def combine_data(data_info, fold, exp, num_seg):
+    all_fold = np.arange(len(data_info.keys())) + 1
+    num_train_fold = len(data_info.keys()) - 1
+    fake_train_fold = np.delete(all_fold, fold-1)
+    fake_train_fold = np.tile(fake_train_fold, 2)
+    real_train_fold = fake_train_fold[fold-1:fold+num_train_fold-1]
+    train = []
+    test = []
+    for j in data_info[f'fold_{fold}']:
+        if 'seg' in j.keys():
+            test.append(j)
+    
+    lab_each_fold, lab, unlab, total_seg, total_seg_each_fold = classify_data(data_info, fold)
+    if total_seg < num_seg:
+        num_seg = total_seg
+    
+    num_each_fold_seg = divmod(num_seg, num_train_fold)[0]
+    fold_num_seg = np.repeat(num_each_fold_seg, num_train_fold)
+    num_remain_seg = divmod(num_seg, num_train_fold)[1]
+    count = 0
+    while num_remain_seg > 0:
+        fold_num_seg[count] += 1
+        count = (count+1) % num_train_fold
+        num_remain_seg -= 1
+    
+    train = unlab
+    k = 0
+    while num_seg > 0:
+        next_fold = real_train_fold[k]
+        if total_seg_each_fold[f'fold_{next_fold}'] > 0:
+            seg_items, lab_each_fold, total_seg_each_fold = select_n_seg(lab_each_fold, next_fold, 1, total_seg_each_fold)
+            train.extend(seg_items)     
+            num_seg -= 1
+        k = (k+1) % 4
+            
+    num_segs = 0
+    if exp != 1:
+        for key, value in total_seg_each_fold.items():
+            if value != 0:
+                for j in lab_each_fold[key]:
+                    item = {'img': j['img']}
+                    train.append(item)
+                    total_seg_each_fold[key] -= 1
+        for key, value in total_seg_each_fold.items():
+            num_segs += value
+        
+        assert num_segs == 0
+    
+    return train, test
+
+def make_dir(path):
+    try:
+        os.mkdir(path)
+    except:
+        print(f'{path} is already existed !!!')
+
 
 def main():
     args = parse_command_line()
     config = args.config
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
-    #monai.utils.set_determinism(seed=2938649572)
+    num_seg_used = config.num_seg_used
+    experiment_set = config.exp_set
+    monai.utils.set_determinism(seed=2938649572)
     data_path = os.path.join(ROOT_DIR, 'deepatlas_results')
     base_path = os.path.join(ROOT_DIR, 'deepatlas_preprocessed')
     task = os.path.join(data_path, config.task_name)
-    gt_path = os.path.join(task, config.info_name.split('_')[1])
+    exp_path = os.path.join(task, f'set_{experiment_set}')
+    gt_path = os.path.join(exp_path, f'{num_seg_used}gt')
     img_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'images')
     seg_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'labels')
     info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', config.info_name+'.json')
     info = load_json(info_path)
     result_path = os.path.join(gt_path, 'training_results')
-    try:
-        os.mkdir(data_path)
-    except:
-        print(f'{data_path} is already existed !!!')
-
-    try:
-        os.mkdir(task)
-    except:
-        print(f'{task} is already existed !!!')
-    
-    try:
-        os.mkdir(gt_path)
-    except:
-        print(f'{gt_path} is already existed !!!')
-    
-    try:
-        os.mkdir(result_path)
-    except:
-        print(f'{result_path} is already existed !!!')
+    make_dir(data_path)
+    make_dir(task)
+    make_dir(exp_path)
+    make_dir(gt_path)
+    make_dir(result_path)
+    if torch.cuda.is_available():
+        device = torch.device("cuda:" + str(torch.cuda.current_device()))
     for i in range (1, config.num_fold+1):
         fold_path = os.path.join(result_path, f'fold_{i}')
         result_seg_path = os.path.join(fold_path, 'SegNet')
@@ -132,7 +211,6 @@ def main():
         activation_type = config.network['activation_type']
         normalization_type = config.network['normalization_type']
         num_res = config.network['num_res']
-        gpu = config.gpu
         lr_reg = config.network["registration_network_learning_rate"]
         lr_seg = config.network["segmentation_network_learning_rate"]
         lam_a = config.network["anatomy_loss_weight"]
@@ -140,23 +218,10 @@ def main():
         lam_re = config.network["regularization_loss_weight"]
         max_epoch = config.network["number_epoch"]
         val_step = config.network["validation_step"]
-        device = torch.device("cuda:" + gpu)
         logger.info('create necessary folders')
-
-        try:
-            os.mkdir(fold_path)
-        except:
-            logger.info(f'{fold_path} is already existed !!!')
-        
-        try:
-            os.mkdir(result_seg_path)
-        except:
-            logger.info(f'{result_seg_path} is already existed !!!')
-
-        try:
-            os.mkdir(result_reg_path)
-        except:
-            logger.info(f'{result_reg_path} is already existed !!!')
+        make_dir(fold_path)
+        make_dir(result_seg_path)
+        make_dir(result_reg_path)
 
         logger.info('prepare dataset into train and test')
         json_dict = OrderedDict()
@@ -172,19 +237,13 @@ def main():
         json_dict['labels'] = config.labels
         json_dict['network'] = config.network
         json_dict['num_fold'] = f'fold_{i}'
+        json_dict['experiment_set'] = experiment_set
         #num_seg = 15
         #train, test, num_train, num_test = split_data(img_path, seg_path, num_seg) 
         #print(type(train))
-        train = []
-        test = info[f'fold_{i}']
-        train.extend(info['fold_0'])
-        for key, value in info.items():
-            if key != f'fold_{i}' and key != 'fold_0':
-                for item in value:
-                    it = {'img': item['img']}
-                    train.append(it)
+        train, test = combine_data(info, i, experiment_set, num_seg_used)
         
-        num_seg = len(info['fold_0'])
+        num_seg = num_seg_used
         num_train = len(train)
         num_test = len(test)
         #print(train.keys())
@@ -318,6 +377,7 @@ def main():
                     result_reg_path,
                     logger
                     )
+
     '''
     seg_train.train_seg(
         dataloader_train_seg,

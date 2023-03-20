@@ -29,12 +29,15 @@ def parse_command_line():
 def main():
     ROOT_DIR = str(Path(os.getcwd()).parent.parent.absolute())
     args = parse_command_line()
+    monai.utils.set_determinism(seed=2938649572)
     config = args.config
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
     task = config.task_name
-    info_name = config.info_name.split('_')[1]
-    output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, info_name, 'training_predicted_results')
+    info_name = config.info_name
+    if torch.cuda.is_available():
+        device = torch.device("cuda:" + str(torch.cuda.current_device()))
+    output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', 'training_predicted_results')
     try:
         os.mkdir(output_path)
     except:
@@ -42,13 +45,11 @@ def main():
     for i in range(1, config.num_fold+1):
         num_fold = f'fold_{i}'
         json_path = os.path.join(
-            ROOT_DIR, 'deepatlas_results', task, info_name, 'training_results', num_fold, 'dataset.json')
+            ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', 'training_results', num_fold, 'dataset.json')
         #num_fold = json_file['num_fold']
         output_fold_path = os.path.join(output_path, num_fold)
-        seg_model_path = os.path.join(
-            ROOT_DIR, 'deepatlas_results', task, info_name, 'training_results', num_fold, 'SegNet', 'seg_net_best.pth')
-        reg_model_path = os.path.join(
-            ROOT_DIR, 'deepatlas_results', task, info_name, 'training_results', num_fold, 'RegNet', 'reg_net_best.pth')
+        seg_model_path = os.path.join(Path(json_path).parent.absolute(), 'SegNet', 'seg_net_best.pth')
+        reg_model_path = os.path.join(Path(json_path).parent.absolute(), 'RegNet', 'reg_net_best.pth')
         labels = config.labels
         num_label = len(labels.keys())
         network_info = config.network
@@ -57,7 +58,6 @@ def main():
         activation_type = network_info['activation_type']
         normalization_type = network_info['normalization_type']
         num_res = network_info['num_res']
-        device = torch.device("cuda:" + config.gpu)
         seg_path = os.path.join(output_fold_path, 'SegNet')
         reg_path = os.path.join(output_fold_path, 'RegNet')
 
