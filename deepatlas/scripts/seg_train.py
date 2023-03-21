@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
 from utils import (
     preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_against_epoch_numbers
+    jacobian_determinant
 )
 from losses import (
     warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2

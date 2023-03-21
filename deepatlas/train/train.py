@@ -14,7 +14,8 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
 from utils import (
     preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_progress, make_dir, save_seg_checkpoint, save_reg_checkpoint, load_checkpoint
+    jacobian_determinant, plot_progress, make_dir, save_seg_checkpoint, save_reg_checkpoint, load_latest_checkpoint,
+    load_best_checkpoint, load_valid_checkpoint
 )
 from losses import (
     warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
@@ -72,7 +73,7 @@ def train_network(dataloader_train_reg,
         dataloader_valid_reg)
     seg_train_sampling_weights = [
         0] + [len(dataloader_train_reg[s]) for s in seg_availabilities[1:]]
-    print('---'*10)
+    print('----------'*10)
     print(f"""When training seg_net alone, segmentation availabilities {seg_availabilities}
     will be sampled with respective weights {seg_train_sampling_weights}""")
     batch_generator_train_seg = generators.create_batch_generator(
@@ -100,23 +101,35 @@ def train_network(dataloader_train_reg,
     best_seg_validation_loss = float('inf')
     best_reg_validation_loss = float('inf')
     
-    
+    last_epoch_valid = 0
     if continue_training:
-        
-        if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'best_checkpoint.pth')) and os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'best_checkpoint.pth')):
-            _,_,last_epoch_reg,all_validation_losses_reg = load_checkpoint(os.path.join(result_reg_path, 'checkpoints', 'best_checkpoint.pth'), reg_net, optimizer_reg, device, 'best')
-            _,_,last_epoch_seg,all_validation_losses_seg = load_checkpoint(os.path.join(result_seg_path, 'checkpoints', 'best_checkpoint.pth'), seg_net, optimizer_seg, device, 'best')
-            last_epoch_valid = np.min(last_epoch_reg, last_epoch_seg)
-            best_seg_validation_loss = all_validation_losses_seg['best_loss']
-            best_reg_validation_loss = all_validation_losses_reg['best_loss']
+        if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'valid_checkpoint.pth')) and os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'valid_checkpoint.pth')):
+            if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'best_checkpoint.pth')) and os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'best_checkpoint.pth')): 
+                best_seg_validation_loss = load_best_checkpoint(os.path.join(result_reg_path, 'checkpoints'), device)
+                best_reg_validation_loss = load_best_checkpoint(os.path.join(result_seg_path, 'checkpoints'), device)
+            
+            all_validation_losses_reg = load_valid_checkpoint(os.path.join(result_reg_path, 'checkpoints'), device)
+            all_validation_losses_seg = load_valid_checkpoint(os.path.join(result_seg_path, 'checkpoints'), device)
             validation_losses_reg = all_validation_losses_reg['total_loss']
             validation_losses_seg = all_validation_losses_seg['total_loss']
-            validation_losses_reg = validation_losses_reg[:(last_epoch_valid+1)]
-            validation_losses_seg = validation_losses_seg[:(last_epoch_valid+1)]
+            last_epoch_valid = np.minimum(len(validation_losses_reg), len(validation_losses_seg))
+            validation_losses_reg = validation_losses_reg[:last_epoch_valid]
+            validation_losses_seg = validation_losses_seg[:last_epoch_valid]
+            np_validation_losses_reg = np.array(validation_losses_reg)
+            np_validation_losses_seg = np.array(validation_losses_seg)
+            if best_reg_validation_loss not in np_validation_losses_reg[:, 1]:
+                best_reg_validation_loss = np.min(np_validation_losses_reg[:, 1])
+            if best_seg_validation_loss not in np_validation_losses_seg[:, 1]:
+                best_seg_validation_loss = np.min(np_validation_losses_seg[:, 1])
+        else:
+            if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'valid_checkpoint.pth')):
+                os.remove(os.path.join(result_seg_path, 'checkpoints', 'valid_checkpoint.pth'))  
+            elif os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'valid_checkpoint.pth')):
+                os.remove(os.path.join(result_reg_path, 'checkpoints', 'valid_checkpoint.pth'))
         
-        if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'latest_checkpoint.pth')) and os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'latest_checkpoint.pth')):
-            reg_net, optimizer_reg, last_epoch_seg, all_training_losses_reg = load_checkpoint(os.path.join(result_reg_path, 'checkpoints'), reg_net, optimizer_reg, device, 'latest')
-            seg_net, optimizer_seg, last_epoch_reg, all_training_losses_seg = load_checkpoint(os.path.join(result_seg_path, 'checkpoints'), seg_net, optimizer_seg, device, 'latest')
+        if last_epoch_valid != 0 and os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'latest_checkpoint.pth')) and os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'latest_checkpoint.pth')):
+            reg_net, optimizer_reg, all_training_losses_reg = load_latest_checkpoint(os.path.join(result_reg_path, 'checkpoints'), reg_net, optimizer_reg, device)
+            seg_net, optimizer_seg, all_training_losses_seg = load_latest_checkpoint(os.path.join(result_seg_path, 'checkpoints'), seg_net, optimizer_seg, device)
             regularization_loss_reg = all_training_losses_reg['regular_loss']
             anatomy_loss_reg = all_training_losses_reg['ana_loss']
             similarity_loss_reg = all_training_losses_reg['sim_loss']
@@ -124,18 +137,22 @@ def train_network(dataloader_train_reg,
             anatomy_loss_seg = all_training_losses_seg['ana_loss']
             training_losses_reg = all_training_losses_reg['total_loss']
             training_losses_seg = all_training_losses_seg['total_loss']
-            last_epoch_train = np.min(last_epoch_reg, last_epoch_seg)
-            regularization_loss_reg = regularization_loss_reg[:(last_epoch_train+1)]
-            anatomy_loss_reg = anatomy_loss_reg[:(last_epoch_train+1)]
-            similarity_loss_reg = similarity_loss_reg[:(last_epoch_train+1)]
-            supervised_loss_seg = supervised_loss_seg[:(last_epoch_train+1)]
-            anatomy_loss_seg = anatomy_loss_seg[:(last_epoch_train+1)]
-            training_losses_reg = training_losses_reg[:(last_epoch_train+1)]
-            training_losses_seg = training_losses_seg[:(last_epoch_train+1)]
+            last_epoch_train = np.min(np.array([last_epoch_valid, len(training_losses_reg), len(training_losses_seg)])) * val_step
+            regularization_loss_reg = regularization_loss_reg[:last_epoch_train]
+            anatomy_loss_reg = anatomy_loss_reg[:last_epoch_train]
+            similarity_loss_reg = similarity_loss_reg[:last_epoch_train]
+            supervised_loss_seg = supervised_loss_seg[:last_epoch_train]
+            anatomy_loss_seg = anatomy_loss_seg[:last_epoch_train]
+            training_losses_reg = training_losses_reg[:last_epoch_train]
+            training_losses_seg = training_losses_seg[:last_epoch_train]
         
 
-        last_epoch = np.min(last_epoch_reg, last_epoch_seg) + 1
-    
+            last_epoch = last_epoch_train
+        else:
+            if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'latest_checkpoint.pth')):
+                os.remove(os.path.join(result_seg_path, 'checkpoints', 'latest_checkpoint.pth'))  
+            elif os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'latest_checkpoint.pth')):
+                os.remove(os.path.join(result_reg_path, 'checkpoints', 'latest_checkpoint.pth'))
     
     lambda_a = lam_a  # anatomy loss weight
     lambda_sp = lam_sp  # supervised segmentation loss weight
@@ -151,7 +168,6 @@ def train_network(dataloader_train_reg,
     seg_phase_training_batches_per_epoch = 5
     reg_phase_num_validation_batches_to_use = 10
     val_interval = val_step
-
     logger.info('Start Training')
 
     for epoch_number in range(last_epoch, max_epochs):
@@ -162,7 +178,6 @@ def train_network(dataloader_train_reg,
             # ------------------------------------------------
 
             # Keep computational graph in memory for reg_net, but not for seg_net, and do reg_net.train()
-        logger.info(f"reg_net training, with seg_net frozen")
         swap_training(reg_net, seg_net)
 
         losses = []
@@ -190,11 +205,13 @@ def train_network(dataloader_train_reg,
         anatomy_loss_reg.append([epoch_number+1, np.mean(anatomy_loss)])
         logger.info(f"\treg training loss: {training_loss_reg}")
         training_losses_reg.append([epoch_number+1, training_loss_reg])
-        
+        logger.info("\tsave latest reg_net checkpoint")
+        save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, sim_loss=similarity_loss_reg, regular_loss=regularization_loss_reg, ana_loss=anatomy_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='latest')
         # validation process
         if len(dataloader_valid_reg) == 0:
-            logger.info("no enough paired images for validation, save the latest registration network as best checkpoint and model")
-            save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='best')
+            logger.info("\tno enough dataset for validation")
+            save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, sim_loss=similarity_loss_reg, regular_loss=regularization_loss_reg, ana_loss=anatomy_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='best')
+            save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, sim_loss=similarity_loss_reg, regular_loss=regularization_loss_reg, ana_loss=anatomy_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='valid')
             torch.save(reg_net.state_dict(), os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
         else:
             if epoch_number % val_interval == 0:
@@ -207,18 +224,17 @@ def train_network(dataloader_train_reg,
                         loss = loss_sim + lambda_r * loss_reg + lambda_a * loss_ana
                         losses.append(loss.item())
                 
-                validation_loss = np.mean(losses)
-                logger.info(f"\treg validation loss: {validation_loss}")
-                validation_losses_reg.append([epoch_number+1, validation_loss])
+                validation_loss_reg = np.mean(losses)
+                logger.info(f"\treg validation loss: {validation_loss_reg}")
+                validation_losses_reg.append([epoch_number+1, validation_loss_reg])
 
-                if validation_loss < best_reg_validation_loss:
-                    best_reg_validation_loss = validation_loss
-                    logger.info("save best registration network checkpoint and model")
+                if validation_loss_reg < best_reg_validation_loss:
+                    best_reg_validation_loss = validation_loss_reg
+                    logger.info("\tsave best reg_net checkpoint and model")
                     save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, best_reg_validation_loss, total_loss=validation_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='best')
                     torch.save(reg_net.state_dict(), os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
+                save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, validation_loss_reg, total_loss=validation_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='valid')
         
-        logger.info("save latest registration network checkpoint")
-        save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, sim_loss=similarity_loss_reg, regular_loss=regularization_loss_reg, ana_loss=anatomy_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='latest')
         plot_progress(logger, os.path.join(result_reg_path, 'training_plot'), training_losses_reg, validation_losses_reg, 'reg_net_training_loss')   
         plot_progress(logger, os.path.join(result_reg_path, 'training_plot'), regularization_loss_reg, [], 'regularization_reg_net_loss')
         plot_progress(logger, os.path.join(result_reg_path, 'training_plot'), anatomy_loss_reg, [], 'anatomy_reg_net_loss')
@@ -233,7 +249,7 @@ def train_network(dataloader_train_reg,
         # ------------------------------------------------
 
         # Keep computational graph in memory for seg_net, but not for reg_net, and do seg_net.train()
-        logger.info("seg_net training, with reg_net frozen")
+        logger.info('\t'+'----'*10)
         swap_training(seg_net, reg_net)
         losses = []
         supervised_loss = []
@@ -306,11 +322,13 @@ def train_network(dataloader_train_reg,
         anatomy_loss_seg.append([epoch_number+1, np.mean(anatomy_loss)])
         logger.info(f"\tseg training loss: {training_loss_seg}")
         training_losses_seg.append([epoch_number+1, training_loss_seg])
-
+        logger.info("\tsave latest seg_net checkpoint")
+        save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, super_loss=supervised_loss_seg,ana_loss=anatomy_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='latest')
         
         if len(dataloader_valid_seg) == 0:
-            logger.info("no enough label for validation, save the latest segmentation network as best checkpoint and model")
-            save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='best')
+            logger.info("\tno enough dataset for validation")
+            save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, super_loss=supervised_loss_seg,ana_loss=anatomy_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='valid')
+            save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, super_loss=supervised_loss_seg,ana_loss=anatomy_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='best')
             torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
         else:
             if epoch_number % val_interval == 0:
@@ -327,23 +345,22 @@ def train_network(dataloader_train_reg,
                         loss = dice_loss2(predicted_segs, true_segs)
                         losses.append(loss.item())
 
-                validation_loss = np.mean(losses)
-                logger.info(f"\tseg validation loss: {validation_loss}")
-                validation_losses_seg.append([epoch_number+1, validation_loss])
+                validation_loss_seg = np.mean(losses)
+                logger.info(f"\tseg validation loss: {validation_loss_seg}")
+                validation_losses_seg.append([epoch_number+1, validation_loss_seg])
 
-                if validation_loss < best_seg_validation_loss:
-                    best_seg_validation_loss = validation_loss
-                    logger.info("save best segmentation network checkpoint and model")
+                if validation_loss_seg < best_seg_validation_loss:
+                    best_seg_validation_loss = validation_loss_seg
+                    logger.info("\tsave best seg_net checkpoint and model")
                     save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, best_seg_validation_loss, total_loss=validation_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='best')
                     torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
+                save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, validation_loss_seg, total_loss=validation_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='valid')
         
-        logger.info("save latest segmentation network checkpoint")
-        save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, super_loss=supervised_loss_seg,ana_loss=anatomy_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='latest')
         plot_progress(logger, os.path.join(result_seg_path, 'training_plot'), training_losses_seg, validation_losses_seg, 'seg_net_training_loss')
         plot_progress(logger, os.path.join(result_seg_path, 'training_plot'), anatomy_loss_seg, [], 'anatomy_seg_net_loss')
         plot_progress(logger, os.path.join(result_seg_path, 'training_plot'), supervised_loss_seg, [], 'supervised_seg_net_loss')   
-        logger.info(f"seg lr: {optimizer_seg.param_groups[0]['lr']}")
-        logger.info(f"reg lr: {optimizer_reg.param_groups[0]['lr']}")
+        logger.info(f"\tseg lr: {optimizer_seg.param_groups[0]['lr']}")
+        logger.info(f"\treg lr: {optimizer_reg.param_groups[0]['lr']}")
         # scheduler_seg.step()
         # Free up memory
         del loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\

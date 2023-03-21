@@ -185,6 +185,7 @@ def plot_progress(logger, save_dir, train_loss, val_loss, name):
     :return:
     """
     assert len(train_loss) != 0
+    train_loss = np.array(train_loss)
     try:
         font = {'weight': 'normal',
                 'size': 18}
@@ -195,6 +196,7 @@ def plot_progress(logger, save_dir, train_loss, val_loss, name):
         ax = fig.add_subplot(111)
         ax.plot(train_loss[:,0], train_loss[:,1], color='b', ls='-', label="loss_tr")
         if len(val_loss) != 0:
+            val_loss = np.array(val_loss)
             ax.plot(val_loss[:, 0], val_loss[:, 1], color='r', ls='-', label="loss_val")
 
         ax.set_xlabel("epoch")
@@ -202,7 +204,8 @@ def plot_progress(logger, save_dir, train_loss, val_loss, name):
         ax.legend()
         ax.set_title(name)
         fig.savefig(os.path.join(save_dir, name + ".png"))
-        plt.close()
+        plt.cla()
+        plt.close(fig)
     except:
         logger.info(f"failed to plot {name} training progress")
 
@@ -244,15 +247,25 @@ def save_seg_checkpoint(network, optimizer, epoch, best_loss, super_loss=None, a
     }, os.path.join(save_dir, name+'_checkpoint.pth'))
 
 
-def load_checkpoint(path, network, optimizer, device, name):
-    checkpoint_path = os.path.join(path, name+'_checkpoint.pth')
+def load_latest_checkpoint(path, network, optimizer, device):
+    checkpoint_path = os.path.join(path, 'latest_checkpoint.pth')
     checkpoint = torch.load(checkpoint_path, map_location=device)
-    network.load_state_dict(checkpoint['model_state_dict'])
+    network.load_state_dict(checkpoint['network_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    epoch = checkpoint['epoch']
     all_loss = checkpoint['all_loss']
-    return network, optimizer, epoch, all_loss
+    return network, optimizer, all_loss
 
+def load_valid_checkpoint(path, device):
+    checkpoint_path = os.path.join(path, 'valid_checkpoint.pth')
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    all_loss = checkpoint['all_loss']
+    return all_loss
+
+def load_best_checkpoint(path, device):
+    checkpoint_path = os.path.join(path, 'best_checkpoint.pth')
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    best_loss = checkpoint['all_loss']['best_loss']
+    return best_loss
 
 '''
 def plot_against_epoch_numbers(train_epoch_and_value_pairs=None, validation_epoch_and_value_pairs=None, train_label=None, val_label=None):

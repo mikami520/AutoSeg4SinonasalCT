@@ -39,7 +39,7 @@ def parse_command_line():
         description='pipeline for deep atlas train')
     parser.add_argument('--config', metavar='path to the configuration file', type=str,
                         help='absolute path to the configuration file')
-    parser.add_argument('-c', '--continue_training', action='store_true',
+    parser.add_argument('--continue_training', action='store_true',
                         help='use this if you want to continue a training')
     argv = parser.parse_args()
     return argv
@@ -171,7 +171,7 @@ def combine_data(data_info, fold, exp, num_seg):
 def main():
     args = parse_command_line()
     config = args.config
-    continue_training = args.c
+    continue_training = args.continue_training
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
     num_seg_used = config.num_seg_used
@@ -209,9 +209,13 @@ def main():
     if not continue_training:
         start_fold = 1
     else:
-        loggers = [name for name in logging.root.manager.loggerDict]
-        last_fold_num = loggers[-1].split('_')[-1]
-        start_fold = int(last_fold_num)
+        folds = sorted(os.listdir(result_path))
+        if len(folds) == 0:
+            continue_training = False
+            start_fold = 1
+        else:
+            last_fold_num = folds[-1].split('_')[-1]
+            start_fold = int(last_fold_num)
     
     datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
     log_path = os.path.join(base_path, config.task_name, 'Training_dataset', datetime_object)
@@ -223,11 +227,11 @@ def main():
         if not continue_training:
             setup_logger(f'log_{i}', log_path)
             logger = logging.getLogger(f'log_{i}')
-            logger.info("Start Pipeline")
+            logger.info(f"Start Pipeline with fold_{i}")
         else:
             setup_logger(f'log_{i+1}', log_path)
             logger = logging.getLogger(f'log_{i+1}')
-            logger.info("Resume Pipeline")
+            logger.info(f"Resume Pipeline with fold_{i}")
         
         make_dir(fold_path)
         make_dir(result_reg_path)
@@ -320,8 +324,7 @@ def main():
             json_dict['reg_valid_10'] = data_pairs_valid_subdivided['10']
             json_dict['reg_numValid_11'] = len(data_pairs_valid_subdivided['11'])
             json_dict['reg_valid_11'] = data_pairs_valid_subdivided['11']
-            print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
-            and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
+            print(f"""We have {num_train_both} pairs to train reg_net and seg_net together, and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
             print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
 
             dataset_pairs_train_subdivided, dataset_pairs_valid_subdivided = load_reg_dataset(
@@ -358,7 +361,11 @@ def main():
                 '10': dataset_json['reg_valid_10'],
                 '11': dataset_json['reg_valid_11']
             }
-            
+            num_train_reg_net = dataset_json['reg_seg_numTrain']
+            num_valid_reg_net = dataset_json['reg_numValid']
+            num_train_both = len(data_pairs_train_subdivided['01']) +\
+                len(data_pairs_train_subdivided['10']) +\
+                len(data_pairs_train_subdivided['11'])
             print(f"""We have {num_train_both} pairs to train reg_net and seg_net together,
             and an additional {num_train_reg_net - num_train_both} to train reg_net alone.""")
             print(f"We have {num_valid_reg_net} pairs for reg_net validation.")
