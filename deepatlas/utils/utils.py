@@ -276,27 +276,3 @@ def load_best_checkpoint(path, device):
     best_loss = checkpoint['all_loss']['best_loss']
     return best_loss
 
-'''
-def plot_against_epoch_numbers(train_epoch_and_value_pairs=None, validation_epoch_and_value_pairs=None, train_label=None, val_label=None):
-    """
-    Helper to reduce code duplication when plotting quantities that vary over training epochs
-
-    epoch_and_value_pairs: An array_like consisting of pairs of the form (<epoch number>, <value of thing to plot>)
-    kwargs are forwarded to matplotlib.pyplot.plot
-    """
-    assert train_epoch_and_value_pairs is not None
-    assert train_label is not None
-    if validation_epoch_and_value_pairs is None:
-        array = np.array(train_epoch_and_value_pairs)
-        plt.figure()
-        plt.plot(array[:, 0], array[:, 1], label=train_label)
-        plt.xlabel("epochs")
-    else:
-        assert val_label is not None
-        train_array = np.array(train_epoch_and_value_pairs)
-        val_array = np.array(validation_epoch_and_value_pairs)
-        plt.figure()
-        plt.plot(train_array[:, 0], train_array[:, 1], label=train_label)
-        plt.plot(val_array[:, 0], val_array[:, 1], label=val_label)
-        plt.xlabel("epochs")
-'''
