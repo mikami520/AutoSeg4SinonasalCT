@@ -14,7 +14,7 @@ def make_if_dont_exist(folder_path, overwrite=False):
             print(f'{folder_path} exists.')
         else:
             print(f"{folder_path} overwritten")
-            shutil.rmtree(folder_path)
+            shutil.rmtree(folder_path, ignore_errors = True)
             os.makedirs(folder_path)
     else:
         os.makedirs(folder_path)
