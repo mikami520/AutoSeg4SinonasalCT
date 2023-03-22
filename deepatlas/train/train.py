@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/utils'))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
 from utils import (
     preview_image, preview_3D_vector_field, preview_3D_deformation,
-    jacobian_determinant, plot_progress, make_dir, save_seg_checkpoint, save_reg_checkpoint, load_latest_checkpoint,
+    jacobian_determinant, plot_progress, make_if_dont_exist, save_seg_checkpoint, save_reg_checkpoint, load_latest_checkpoint,
     load_best_checkpoint, load_valid_checkpoint
 )
 from losses import (
@@ -58,12 +58,12 @@ def train_network(dataloader_train_reg,
                   ):
     # Training cell
     
-    make_dir(os.path.join(result_seg_path, 'training_plot'))
-    make_dir(os.path.join(result_reg_path, 'training_plot'))
-    make_dir(os.path.join(result_seg_path, 'model'))
-    make_dir(os.path.join(result_reg_path, 'model'))
-    make_dir(os.path.join(result_seg_path, 'checkpoints'))
-    make_dir(os.path.join(result_reg_path, 'checkpoints'))
+    make_if_dont_exist(os.path.join(result_seg_path, 'training_plot'))
+    make_if_dont_exist(os.path.join(result_reg_path, 'training_plot'))
+    make_if_dont_exist(os.path.join(result_seg_path, 'model'))
+    make_if_dont_exist(os.path.join(result_reg_path, 'model'))
+    make_if_dont_exist(os.path.join(result_seg_path, 'checkpoints'))
+    make_if_dont_exist(os.path.join(result_reg_path, 'checkpoints'))
     
     ROOT_DIR = str(Path(result_reg_path).parent.absolute())
     seg_availabilities = ['00', '01', '10', '11']

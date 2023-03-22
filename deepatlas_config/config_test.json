@@ -1,0 +1,27 @@
+{
+    "task_name": "Task002_rnmw153_sim_Zsc",
+    "info_name": "info_train_only",
+    "num_seg_used": 1,
+    "exp_set": 2,
+    "labels": {
+        "0": "background",
+        "1": "Spetum",
+        "2": "IT",
+        "3": "MS"
+    },
+    "network": {
+        "spatial_dim": 3,
+        "dropout": 0.2,
+        "activation_type": "leakyrelu",
+        "normalization_type": "batch",
+        "num_res": 0,
+        "anatomy_loss_weight": 15.0,
+        "supervised_segmentation_loss_weight": 3.0,
+        "regularization_loss_weight": 5e-6,
+        "registration_network_learning_rate": 1e-3,
+        "segmentation_network_learning_rate": 5e-4,
+        "number_epoch": 10,
+        "validation_step": 1
+    },
+    "num_fold": 2
+}

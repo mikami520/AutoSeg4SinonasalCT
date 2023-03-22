@@ -31,7 +31,7 @@ from process_data import (
     split_data, load_seg_dataset, load_reg_dataset, take_data_pairs, subdivide_list_of_data_pairs
 )
 from utils import (
-    load_json, make_dir
+    load_json, make_if_dont_exist
 )
 
 def parse_command_line():
@@ -41,6 +41,8 @@ def parse_command_line():
                         help='absolute path to the configuration file')
     parser.add_argument('--continue_training', action='store_true',
                         help='use this if you want to continue a training')
+    parser.add_argument('--train_only', action='store_true',
+                        help='only training or training plus test')
     argv = parser.parse_args()
     return argv
 
@@ -172,6 +174,7 @@ def main():
     args = parse_command_line()
     config = args.config
     continue_training = args.continue_training
+    train_only = args.train_only
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
     num_seg_used = config.num_seg_used
@@ -183,7 +186,11 @@ def main():
     exp_path = os.path.join(task, f'set_{experiment_set}')
     gt_path = os.path.join(exp_path, f'{num_seg_used}gt')
     result_path = os.path.join(gt_path, 'training_results')
-    info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', config.info_name+'.json')
+    if train_only:
+        info_name = 'info_train_only'
+    else:
+        info_name = 'info'
+    info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', info_name+'.json')
     info = load_json(info_path)
     if torch.cuda.is_available():
         device = torch.device("cuda:" + str(torch.cuda.current_device()))
@@ -200,11 +207,11 @@ def main():
     lam_re = config.network["regularization_loss_weight"]
     max_epoch = config.network["number_epoch"]
     val_step = config.network["validation_step"]
-    make_dir(data_path)
-    make_dir(task)
-    make_dir(exp_path)
-    make_dir(gt_path)
-    make_dir(result_path)
+    make_if_dont_exist(data_path)
+    make_if_dont_exist(task)
+    make_if_dont_exist(exp_path)
+    make_if_dont_exist(gt_path)
+    make_if_dont_exist(result_path)
     
     if not continue_training:
         start_fold = 1
@@ -220,22 +227,38 @@ def main():
     datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
     log_path = os.path.join(base_path, config.task_name, 'Training_dataset', datetime_object)
     
-    for i in range (start_fold, config.num_fold+1):
-        fold_path = os.path.join(result_path, f'fold_{i}')
-        result_seg_path = os.path.join(fold_path, 'SegNet')
-        result_reg_path = os.path.join(fold_path, 'RegNet')
-        if not continue_training:
-            setup_logger(f'log_{i}', log_path)
-            logger = logging.getLogger(f'log_{i}')
-            logger.info(f"Start Pipeline with fold_{i}")
+    if train_only:
+        num_fold = 1
+    else:
+        num_fold = config.num_fold
+    
+    for i in range (start_fold, num_fold+1):
+        if not train_only:
+            fold_path = os.path.join(result_path, f'fold_{i}')
+            result_seg_path = os.path.join(fold_path, 'SegNet')
+            result_reg_path = os.path.join(fold_path, 'RegNet')
         else:
-            setup_logger(f'log_{i+1}', log_path)
-            logger = logging.getLogger(f'log_{i+1}')
-            logger.info(f"Resume Pipeline with fold_{i}")
+            fold_path = os.path.join(result_path, f'all')
+            result_seg_path = os.path.join(fold_path, 'SegNet')
+            result_reg_path = os.path.join(fold_path, 'RegNet')
         
-        make_dir(fold_path)
-        make_dir(result_reg_path)
-        make_dir(result_seg_path)
+        if not train_only:
+            if not continue_training:
+                setup_logger(f'log_{i}', log_path)
+                logger = logging.getLogger(f'log_{i}')
+                logger.info(f"Start Pipeline with fold_{i}")
+            else:
+                setup_logger(f'log_{i+1}', log_path)
+                logger = logging.getLogger(f'log_{i+1}')
+                logger.info(f"Resume Pipeline with fold_{i}")
+        else:
+            setup_logger(f'all', log_path)
+            logger = logging.getLogger(f'all')
+            logger.info(f"Start Pipeline with all data")
+        
+        make_if_dont_exist(fold_path)
+        make_if_dont_exist(result_reg_path)
+        make_if_dont_exist(result_seg_path)
 
         if not os.path.exists(os.path.join(fold_path, 'dataset.json')):
             logger.info('prepare dataset into train and test')
@@ -251,12 +274,18 @@ def main():
             }
             json_dict['labels'] = config.labels
             json_dict['network'] = config.network
-            json_dict['num_fold'] = f'fold_{i}'
             json_dict['experiment_set'] = experiment_set
+            if not train_only:
+                json_dict['num_fold'] = f'fold_{i}'
+                train, test = combine_data(info, i, experiment_set, num_seg_used)
+            else:
+                json_dict['num_fold'] = 'all'
+                train = info
+                test = []
+                num_seg_used = len(list(filter(lambda d: 'seg' in d.keys(), train)))
             #num_seg = 15
             #train, test, num_train, num_test = split_data(img_path, seg_path, num_seg) 
             #print(type(train))
-            train, test = combine_data(info, i, experiment_set, num_seg_used)
             
             num_seg = num_seg_used
             num_train = len(train)
@@ -377,7 +406,7 @@ def main():
                                 activation_type, normalization_type, num_res)
             print(reg_net)
 
-        
+        '''
         dataloader_train_seg = monai.data.DataLoader(
             dataset_seg_available_train,
             batch_size=2,
@@ -435,6 +464,7 @@ def main():
                     logger,
                     continue_training=continue_training
                     )
+                    '''
     '''
     seg_train.train_seg(
         dataloader_train_seg,

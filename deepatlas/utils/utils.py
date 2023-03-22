@@ -5,11 +5,20 @@ import torch
 import os
 import json
 import matplotlib
+import shutil
 
 
-def make_dir(path):
-    if not os.path.exists(path):
-        os.mkdir(path)
+def make_if_dont_exist(folder_path, overwrite=False):
+    if os.path.exists(folder_path):
+        if not overwrite:
+            print(f'{folder_path} exists.')
+        else:
+            print(f"{folder_path} overwritten")
+            shutil.rmtree(folder_path)
+            os.makedirs(folder_path)
+    else:
+        os.makedirs(folder_path)
+        print(f"{folder_path} created!")
 
 def preview_image(image_array, normalize_by="volume", cmap=None, figsize=(12, 12), threshold=None):
     """
