@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(ROOT_DIR, 'deepatlas/loss_function'))
 from utils import (
     preview_image, preview_3D_vector_field, preview_3D_deformation,
     jacobian_determinant, plot_progress, make_if_dont_exist, save_seg_checkpoint, save_reg_checkpoint, load_latest_checkpoint,
-    load_best_checkpoint, load_valid_checkpoint
+    load_best_checkpoint, load_valid_checkpoint, plot_architecture
 )
 from losses import (
     warp_func, warp_nearest_func, lncc_loss_func, dice_loss_func, reg_losses, dice_loss_func2
@@ -54,6 +54,8 @@ def train_network(dataloader_train_reg,
                   result_seg_path,
                   result_reg_path,
                   logger,
+                  img_shape,
+                  plot_network=False,
                   continue_training=False
                   ):
     # Training cell
@@ -145,7 +147,6 @@ def train_network(dataloader_train_reg,
             anatomy_loss_seg = anatomy_loss_seg[:last_epoch_train]
             training_losses_reg = training_losses_reg[:last_epoch_train]
             training_losses_seg = training_losses_seg[:last_epoch_train]
-        
 
             last_epoch = last_epoch_train
         else:
@@ -168,6 +169,10 @@ def train_network(dataloader_train_reg,
     seg_phase_training_batches_per_epoch = 5
     reg_phase_num_validation_batches_to_use = 10
     val_interval = val_step
+    if plot_network:
+        plot_architecture(seg_net, img_shape, seg_phase_training_batches_per_epoch, 'SegNet', result_seg_path)
+        plot_architecture(reg_net, img_shape, reg_phase_training_batches_per_epoch, 'RegNet', result_reg_path)
+    
     logger.info('Start Training')
 
     for epoch_number in range(last_epoch, max_epochs):

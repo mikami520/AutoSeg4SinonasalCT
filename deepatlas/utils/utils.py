@@ -6,8 +6,24 @@ import os
 import json
 import matplotlib
 import shutil
+from torchview import draw_graph
 
-
+def plot_architecture(network, img_shape, batch_size, name, save_dir):
+    if name == 'SegNet':
+        num_channels = 1
+    else:
+        num_channels = 2
+    
+    H, D, W = img_shape
+    model_graph = draw_graph(network, 
+                             input_size=(batch_size, num_channels, H, D, W), 
+                             device='meta', 
+                             roll=True, 
+                             expand_nested=True, 
+                             save_graph=True, 
+                             filename=f"{name}_Graph",
+                             directory=save_dir)
+    
 def make_if_dont_exist(folder_path, overwrite=False):
     if os.path.exists(folder_path):
         if not overwrite:

@@ -43,6 +43,8 @@ def parse_command_line():
                         help='use this if you want to continue a training')
     parser.add_argument('--train_only', action='store_true',
                         help='only training or training plus test')
+    parser.add_argument('--plot_network', action='store_true',
+                        help='whether to plot the network')
     argv = parser.parse_args()
     return argv
 
@@ -311,12 +313,11 @@ def main():
             dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(
                 data_seg_available_train, data_seg_available_valid)
             data_item = random.choice(dataset_seg_available_train)
+            img_shape = data_item['seg'].unsqueeze(0).shape[2:]
             num_label = len(torch.unique(data_item['seg']))
             logger.info('prepare segmentation network')
             seg_net = get_seg_net(spatial_dim, num_label, dropout,
                                 activation_type, normalization_type, num_res)
-            print(seg_net)
-
             # prepare registration dataset
             logger.info('prepare registration dataset')
             data_without_seg_valid = data_seg_unavailable + data_seg_available_train
@@ -363,7 +364,6 @@ def main():
             logger.info('prepare registration network')
             reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
                                 activation_type, normalization_type, num_res)
-            print(reg_net)
             logger.info('generate dataset json file')
             with open(os.path.join(fold_path, 'dataset.json'), 'w') as f:
                 json.dump(json_dict, f, indent=4, sort_keys=False)
@@ -375,10 +375,10 @@ def main():
             data_seg_available_valid = dataset_json['seg_valid']
             dataset_seg_available_train, dataset_seg_available_valid = load_seg_dataset(data_seg_available_train, data_seg_available_valid)
             data_item = random.choice(dataset_seg_available_train)
+            img_shape = data_item['seg'].unsqueeze(0).shape[2:]
             num_label = len(torch.unique(data_item['seg']))
             logger.info('prepare segmentation network')
             seg_net = get_seg_net(spatial_dim, num_label, dropout, activation_type, normalization_type, num_res)
-            print(seg_net)
             
             data_pairs_train_subdivided = {
                 '00': dataset_json['reg_seg_train_00'],
@@ -406,8 +406,8 @@ def main():
             logger.info('prepare registration network')
             reg_net = get_reg_net(spatial_dim, spatial_dim, dropout,
                                 activation_type, normalization_type, num_res)
-            print(reg_net)
 
+        
         dataloader_train_seg = monai.data.DataLoader(
             dataset_seg_available_train,
             batch_size=2,
@@ -460,6 +460,8 @@ def main():
                       result_seg_path,
                       result_reg_path,
                       logger,
+                      img_shape,
+                      plot_network=args.plot_network,
                       continue_training=continue_training
                       )
     '''
