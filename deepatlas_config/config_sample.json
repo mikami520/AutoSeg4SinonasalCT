@@ -1,6 +1,7 @@
 {
     "task_name": "Task002_rnmw153_sim_Zsc",
-    "info_name": "info_train_only",
+    "folder_name": "folder_name",
+    "info_name": "info",
     "num_seg_used": 1,
     "exp_set": 2,
     "labels": {

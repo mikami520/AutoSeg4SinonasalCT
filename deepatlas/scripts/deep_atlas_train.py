@@ -177,6 +177,7 @@ def main():
     train_only = args.train_only
     config = load_json(config)
     config = namedtuple("config", config.keys())(*config.values())
+    folder_name = config.folder_name
     num_seg_used = config.num_seg_used
     experiment_set = config.exp_set
     monai.utils.set_determinism(seed=2938649572)
@@ -185,12 +186,13 @@ def main():
     task = os.path.join(data_path, config.task_name)
     exp_path = os.path.join(task, f'set_{experiment_set}')
     gt_path = os.path.join(exp_path, f'{num_seg_used}gt')
-    result_path = os.path.join(gt_path, 'training_results')
+    folder_path = os.path.join(gt_path, folder_name)
+    result_path = os.path.join(folder_path, 'training_results')
     if train_only:
         info_name = 'info_train_only'
     else:
         info_name = 'info'
-    info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', info_name+'.json')
+    info_path = os.path.join(base_path, config.task_name, 'Training_dataset', 'data_info', folder_name, info_name+'.json')
     info = load_json(info_path)
     if torch.cuda.is_available():
         device = torch.device("cuda:" + str(torch.cuda.current_device()))
@@ -211,6 +213,7 @@ def main():
     make_if_dont_exist(task)
     make_if_dont_exist(exp_path)
     make_if_dont_exist(gt_path)
+    make_if_dont_exist(folder_path)
     make_if_dont_exist(result_path)
     
     if not continue_training:
@@ -223,9 +226,6 @@ def main():
         else:
             last_fold_num = folds[-1].split('_')[-1]
             start_fold = int(last_fold_num)
-    
-    datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
-    log_path = os.path.join(base_path, config.task_name, 'Training_dataset', datetime_object)
     
     if train_only:
         num_fold = 1
@@ -242,6 +242,12 @@ def main():
             result_seg_path = os.path.join(fold_path, 'SegNet')
             result_reg_path = os.path.join(fold_path, 'RegNet')
         
+        make_if_dont_exist(fold_path)
+        make_if_dont_exist(result_reg_path)
+        make_if_dont_exist(result_seg_path)
+        datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
+        log_path = os.path.join(fold_path, datetime_object)
+        
         if not train_only:
             if not continue_training:
                 setup_logger(f'log_{i}', log_path)
@@ -255,10 +261,6 @@ def main():
             setup_logger(f'all', log_path)
             logger = logging.getLogger(f'all')
             logger.info(f"Start Pipeline with all data")
-        
-        make_if_dont_exist(fold_path)
-        make_if_dont_exist(result_reg_path)
-        make_if_dont_exist(result_seg_path)
 
         if not os.path.exists(os.path.join(fold_path, 'dataset.json')):
             logger.info('prepare dataset into train and test')
@@ -406,7 +408,6 @@ def main():
                                 activation_type, normalization_type, num_res)
             print(reg_net)
 
-        '''
         dataloader_train_seg = monai.data.DataLoader(
             dataset_seg_available_train,
             batch_size=2,
@@ -441,30 +442,26 @@ def main():
             if len(dataset) > 0 else []
             for seg_availability, dataset in dataset_pairs_valid_subdivided.items()
         }
-        if os.path.exists(os.path.join(fold_path, datetime_object)):
-            os.remove(os.path.join(fold_path, datetime_object))
-        shutil.move(os.path.join(base_path, config.task_name, 'Training_dataset', datetime_object), fold_path)
         train_network(dataloader_train_reg,
-                    dataloader_valid_reg,
-                    dataloader_train_seg,
-                    dataloader_valid_seg,
-                    device,
-                    seg_net,
-                    reg_net,
-                    num_label,
-                    lr_reg,
-                    lr_seg,
-                    lam_a,
-                    lam_sp,
-                    lam_re,
-                    max_epoch,
-                    val_step,
-                    result_seg_path,
-                    result_reg_path,
-                    logger,
-                    continue_training=continue_training
-                    )
-                    '''
+                      dataloader_valid_reg,
+                      dataloader_train_seg,
+                      dataloader_valid_seg,
+                      device,
+                      seg_net,
+                      reg_net,
+                      num_label,
+                      lr_reg,
+                      lr_seg,
+                      lam_a,
+                      lam_sp,
+                      lam_re,
+                      max_epoch,
+                      val_step,
+                      result_seg_path,
+                      result_reg_path,
+                      logger,
+                      continue_training=continue_training
+                      )
     '''
     seg_train.train_seg(
         dataloader_train_seg,

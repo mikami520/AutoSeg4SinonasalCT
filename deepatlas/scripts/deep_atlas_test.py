@@ -43,13 +43,13 @@ def main():
         task = config.task_name
         if torch.cuda.is_available():
             device = torch.device("cuda:" + str(torch.cuda.current_device()))
-        output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', 'training_predicted_results')
+        output_path = os.path.join(ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', config.folder_name, 'training_predicted_results')
         make_if_dont_exist(output_path)
         
         for i in range(1, config.num_fold+1):
             num_fold = f'fold_{i}'
             json_path = os.path.join(
-                ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', 'training_results', num_fold, 'dataset.json')
+                ROOT_DIR, 'deepatlas_results', task, f'set_{config.exp_set}',f'{config.num_seg_used}gt', config.folder_name, 'training_results', num_fold, 'dataset.json')
             #num_fold = json_file['num_fold']
             output_fold_path = os.path.join(output_path, num_fold)
             seg_model_path = os.path.join(Path(json_path).parent.absolute(), 'SegNet', 'model', 'seg_net_best.pth')

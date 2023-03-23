@@ -67,6 +67,7 @@ def main():
     config = namedtuple("config", config.keys())(*config.values())
     task_id = config.task_name
     k_fold = config.num_fold
+    folder_name = config.folder_name
     train_only = args.train_only
     deepatlas_path = ROOT_DIR
     base_path = os.path.join(deepatlas_path, "deepatlas_preprocessed")
@@ -78,7 +79,9 @@ def main():
     label, unlabel, total = split(image_list, label_list, seg_path)
     piece_data = {}
     info_path = os.path.join(task_path, 'Training_dataset', 'data_info')
+    folder_path = os.path.join(info_path, folder_name)
     make_if_dont_exist(info_path)
+    make_if_dont_exist(folder_path)
     
     if not train_only: 
         # compute number of scans for each fold
@@ -115,10 +118,10 @@ def main():
             start_point += fold_num_seg[m]
             start_point1 += fold_num_unlabel
         
-        info_json_path = os.path.join(info_path, f'info.json')
+        info_json_path = os.path.join(folder_path, f'info.json')
     else:
         piece_data = total
-        info_json_path = os.path.join(info_path, f'info_train_only.json')
+        info_json_path = os.path.join(folder_path, f'info_train_only.json')
     
     with open(info_json_path, 'w') as f:
         json.dump(piece_data, f, indent=4, sort_keys=True)
