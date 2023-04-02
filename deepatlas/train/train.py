@@ -121,8 +121,16 @@ def train_network(dataloader_train_reg,
             np_validation_losses_seg = np.array(validation_losses_seg)
             if best_reg_validation_loss not in np_validation_losses_reg[:, 1]:
                 best_reg_validation_loss = np.min(np_validation_losses_reg[:, 1])
+                if os.path.exists(os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth')):
+                    assert os.path.exists(os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
+                    os.remove(os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
+                    os.rename(os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth'), os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
             if best_seg_validation_loss not in np_validation_losses_seg[:, 1]:
                 best_seg_validation_loss = np.min(np_validation_losses_seg[:, 1])
+                if os.path.exists(os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth')):
+                    assert os.path.exists(os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
+                    os.remove(os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
+                    os.rename(os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth'), os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
         else:
             if os.path.exists(os.path.join(result_seg_path, 'checkpoints', 'valid_checkpoint.pth')):
                 os.remove(os.path.join(result_seg_path, 'checkpoints', 'valid_checkpoint.pth'))  
@@ -217,6 +225,10 @@ def train_network(dataloader_train_reg,
             logger.info("\tno enough dataset for validation")
             save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, sim_loss=similarity_loss_reg, regular_loss=regularization_loss_reg, ana_loss=anatomy_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='best')
             save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, training_loss_reg, sim_loss=similarity_loss_reg, regular_loss=regularization_loss_reg, ana_loss=anatomy_loss_reg, total_loss=training_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='valid')
+            if os.path.exists(os.path.join(result_reg_path, 'model', 'reg_net_best.pth')):
+                if os.path.exists(os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth')):
+                    os.remove(os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth'))
+                os.rename(os.path.join(result_reg_path, 'model', 'reg_net_best.pth'), os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth'))
             torch.save(reg_net.state_dict(), os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
         else:
             if epoch_number % val_interval == 0:
@@ -237,6 +249,10 @@ def train_network(dataloader_train_reg,
                     best_reg_validation_loss = validation_loss_reg
                     logger.info("\tsave best reg_net checkpoint and model")
                     save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, best_reg_validation_loss, total_loss=validation_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='best')
+                    if os.path.exists(os.path.join(result_reg_path, 'model', 'reg_net_best.pth')):
+                        if os.path.exists(os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth')):
+                            os.remove(os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth'))
+                        os.rename(os.path.join(result_reg_path, 'model', 'reg_net_best.pth'), os.path.join(result_reg_path, 'model', 'reg_net_last_best.pth'))
                     torch.save(reg_net.state_dict(), os.path.join(result_reg_path, 'model', 'reg_net_best.pth'))
                 save_reg_checkpoint(reg_net, optimizer_reg, epoch_number, validation_loss_reg, total_loss=validation_losses_reg, save_dir=os.path.join(result_reg_path, 'checkpoints'), name='valid')
         
@@ -334,6 +350,10 @@ def train_network(dataloader_train_reg,
             logger.info("\tno enough dataset for validation")
             save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, super_loss=supervised_loss_seg,ana_loss=anatomy_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='valid')
             save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, training_loss_seg, super_loss=supervised_loss_seg,ana_loss=anatomy_loss_seg, total_loss=training_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='best')
+            if os.path.exists(os.path.join(result_seg_path, 'model', 'seg_net_best.pth')):
+                if os.path.exists(os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth')):
+                    os.remove(os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth'))
+                os.rename(os.path.join(result_seg_path, 'model', 'seg_net_best.pth'), os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth'))
             torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
         else:
             if epoch_number % val_interval == 0:
@@ -358,6 +378,10 @@ def train_network(dataloader_train_reg,
                     best_seg_validation_loss = validation_loss_seg
                     logger.info("\tsave best seg_net checkpoint and model")
                     save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, best_seg_validation_loss, total_loss=validation_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='best')
+                    if os.path.exists(os.path.join(result_seg_path, 'model', 'seg_net_best.pth')):
+                        if os.path.exists(os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth')):
+                            os.remove(os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth'))
+                        os.rename(os.path.join(result_seg_path, 'model', 'seg_net_best.pth'), os.path.join(result_seg_path, 'model', 'seg_net_last_best.pth'))
                     torch.save(seg_net.state_dict(), os.path.join(result_seg_path, 'model', 'seg_net_best.pth'))
                 save_seg_checkpoint(seg_net, optimizer_seg, epoch_number, validation_loss_seg, total_loss=validation_losses_seg, save_dir=os.path.join(result_seg_path, 'checkpoints'), name='valid')
         
@@ -368,8 +392,8 @@ def train_network(dataloader_train_reg,
         logger.info(f"\treg lr: {optimizer_reg.param_groups[0]['lr']}")
         # scheduler_seg.step()
         # Free up memory
-        del loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\
-            seg1_predicted, seg2_predicted
+        del (loss, seg1, seg2, displacement_fields, img12, loss_supervised, loss_anatomy, loss_metric,\
+            seg1_predicted, seg2_predicted)
         torch.cuda.empty_cache()
 
     if len(validation_losses_reg) == 0:
