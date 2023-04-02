@@ -139,7 +139,7 @@ def train_network(dataloader_train_reg,
             anatomy_loss_seg = all_training_losses_seg['ana_loss']
             training_losses_reg = all_training_losses_reg['total_loss']
             training_losses_seg = all_training_losses_seg['total_loss']
-            last_epoch_train = np.min(np.array([last_epoch_valid, len(training_losses_reg), len(training_losses_seg)])) * val_step
+            last_epoch_train = np.min(np.array([last_epoch_valid * val_step, len(training_losses_reg), len(training_losses_seg)]))
             regularization_loss_reg = regularization_loss_reg[:last_epoch_train]
             anatomy_loss_reg = anatomy_loss_reg[:last_epoch_train]
             similarity_loss_reg = similarity_loss_reg[:last_epoch_train]
