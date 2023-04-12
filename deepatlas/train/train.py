@@ -163,6 +163,12 @@ def train_network(dataloader_train_reg,
             elif os.path.exists(os.path.join(result_reg_path, 'checkpoints', 'latest_checkpoint.pth')):
                 os.remove(os.path.join(result_reg_path, 'checkpoints', 'latest_checkpoint.pth'))
     
+    if len(dataloader_valid_reg) == 0:
+        validation_losses_reg = []
+    
+    if len(dataloader_valid_seg) == 0:
+        validation_losses_seg = []
+    
     lambda_a = lam_a  # anatomy loss weight
     lambda_sp = lam_sp  # supervised segmentation loss weight
 
