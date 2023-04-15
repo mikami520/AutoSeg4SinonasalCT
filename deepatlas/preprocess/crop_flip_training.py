@@ -189,20 +189,40 @@ def crop_flip_save_file(left_img, left_seg, flipped_right_img, flipped_right_seg
         output_seg, 'left_' + scan_id + '.nii.gz'))
 
 def get_geometry_info(seg_path, img_path):
-    template = (glob.glob(seg_path + '/*nii.gz'))[0]
-    template_id = os.path.basename(template).split('.')[0]
-    img = ants.image_read(os.path.join(img_path, template_id + '.nii.gz'))
-    seg = ants.image_read(template)
-    gem = ants.label_geometry_measures(seg, img)
-    low_x = min(list(gem.loc[:, 'BoundingBoxLower_x']))
-    upp_x = max(list(gem.loc[:, 'BoundingBoxUpper_x']))
-    low_y = min(list(gem.loc[:, 'BoundingBoxLower_y']))
-    upp_y = max(list(gem.loc[:, 'BoundingBoxUpper_y']))
-    low_z = min(list(gem.loc[:, 'BoundingBoxLower_z']))
-    upp_z = max(list(gem.loc[:, 'BoundingBoxUpper_z']))
-    tuple_x = tuple([low_x, upp_x])
-    tuple_y = tuple([low_y, upp_y])
-    tuple_z = tuple([low_z, upp_z])
+    abs_low_x = np.Inf
+    abs_upp_x = -np.Inf
+    abs_low_y = np.Inf
+    abs_upp_y = -np.Inf
+    abs_low_z = np.Inf
+    abs_upp_z = -np.Inf
+    for i in sorted(glob.glob(os.path.join(img_path, '*.nii.gz'))):
+        name = os.path.basename(i)
+        if os.path.exists(os.path.join(seg_path, name)):
+            seg = ants.image_read(os.path.join(seg_path, name))
+            img = ants.image_read(i)
+            gem = ants.label_geometry_measures(seg, img)
+            low_x = min(list(gem.loc[:, 'BoundingBoxLower_x']))
+            upp_x = max(list(gem.loc[:, 'BoundingBoxUpper_x']))
+            low_y = min(list(gem.loc[:, 'BoundingBoxLower_y']))
+            upp_y = max(list(gem.loc[:, 'BoundingBoxUpper_y']))
+            low_z = min(list(gem.loc[:, 'BoundingBoxLower_z']))
+            upp_z = max(list(gem.loc[:, 'BoundingBoxUpper_z']))
+            if low_x < abs_low_x:
+                abs_low_x = low_x
+            if upp_x > abs_upp_x:
+                abs_upp_x = upp_x
+            if low_y < abs_low_y:
+                abs_low_y = low_y
+            if upp_y > abs_upp_y:
+                abs_upp_y = upp_y
+            if low_z < abs_low_z:
+                abs_low_z = low_z
+            if upp_z > abs_upp_z:
+                abs_upp_z = upp_z
+    
+    tuple_x = tuple([abs_low_x, abs_upp_x])
+    tuple_y = tuple([abs_low_y, abs_upp_y])
+    tuple_z = tuple([abs_low_z, abs_upp_z])
     return [tuple_x, tuple_y, tuple_z]
 
 
@@ -244,6 +264,7 @@ def main():
     output_seg = os.path.join(deepatlas_path, 'deepatlas_preprocessed', task_id, 'Training_dataset', 'labels')
     label_list = path_to_id(seg_path)
     geo_info = get_geometry_info(seg_path, image_path)
+    print(geo_info)
     try:
         os.mkdir(output_path)
     except:
