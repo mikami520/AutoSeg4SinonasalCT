@@ -20,14 +20,15 @@ pip3 install -r requirements.txt
 ### Step 2.1: Co-align the data (make sure scan and segmentation are co-aligned)
 Activate scripting environment
 ```
-cd <path to repo>/deepatlas/preprocessing
+cd <path to repo>/deepatlas/preprocess
 ```
 Co-align the scans and segmentations (recommendation: Similarity registration)
 ```
-python3 registration.py 
+python3 registration_training.py 
 -bp <full path of base dir> 
 -ip <relative path to nifti images dir> 
--sp <relative path to segmentations dir> 
+-sp <relative path to segmentations dir>
+-ti <task id> 
 ```
 If you want to make sure correspondence of the name and value of segmentations, you can add the following commands after above command (**Option for nrrd format**)
 ```
@@ -35,35 +36,24 @@ If you want to make sure correspondence of the name and value of segmentations, 
 ```
 For example, if I have two labels for maxillary sinus named ```L-MS``` and ```R-MS``` and I want ```L-MS``` matched to ```label 1``` and ```R-MS``` to ```label 2``` (**Pay attention to the order**)
 ```
-python3 registration.py -bp /Users/mikamixiao/Desktop -ip images -sp labels -sl 1 L-MS 2 R-MS
+python3 registration_training.py -bp /Users/mikamixiao/Desktop -ip images -sp labels -sl 1 L-MS 2 R-MS
 ```
 Final output of registered images and segmentations will be saved in 
 ```
-base_dir/imagesRS/ && base_dir/labelsRS/
+base_dir/deepatlas_raw_data_base/task_id/Training_dataset/images && base_dir/deepatlas_raw_data_base/task_id/Training_dataset/labels
 ```
 ### Step 2.2: Crop Normalize and Flip Data (if needed)
 Crop，normalize and flip data to extract region of interest (ROI). **Notice: the images and segmentations should be co-registered. We recommend to use the outputs of Step 2.1**
 ```
-python3 crop_flip.py 
--bp <full path of base dir> 
--ip <relative path to nifti images dir> 
--sp <relative path to segmentations dir> 
--op <relative path to output dir> 
+python3 crop_flip_training.py 
+-fp <if need to flip data, use flag for true and not use for false> 
+-ti <task id> 
 -rs <customized resized shape>
 ``` 
-or **only crop and no need to flip**
-```
-python3 crop.py 
--bp <full path of base dir> 
--ip <relative path to nifti images dir> 
--sp <relative path to segmentations dir> 
--op <relative path to output dir> 
--rs <customized resized shape>
-```
 **Pay attention to the resized dimension which should not be smaller than cropped dimension**\
 Final output of ROI will be saved in
 ```
-base_dir/output/images/ && base_dir/output/labels
+base_dir/deepatlas_preprocessed/task_id/Training_dataset/images && base_dir/deepatlas_preprocessed/task_id/Training_dataset/labels
 ```
 
 ## Step 3: Model Training
@@ -74,29 +64,15 @@ cd <path to repo>/deepatlas/scripts
 Start training, **Note: please use the outputs of Step 2.2**
 ```
 python3 deep_atlas_train.py
--bp <full path of base dir> 
--ip <relative path to preprocessed nifti images dir> 
--sp <relative path to preprocessed segmentations dir>
--ns <number of segmentations used for training>
--sd <spatial dimension of dataset>
--dr <dropout ratio of the network>
--gpu <id of gpu device to use>
--at <activation type and arguments>
--nm <feature normalization type and arguments>
--nr <number of residual units>
--lr <learning rate of registration network>
--ls <learning rate of segmentation network>
--lg <regularization loss weight>
--ba <anatomy loss weight>
--bs <supervised segmentation loss weight>
--me <maximum number of training epochs>
--vs <validation steps per epoch>
--ti <task id and name>
+--config <configuration file of network parameters>
+--continue_training <check if need to resume training>
+--train_only <only training or training plus test>
+--plot_network <whether to plot the network>
 ```
 **For detailed information, use ```-h``` to see more instructions**
-Before training, a folder named ```DeepAtlas_dataset``` is created automatically under the repository directory. All training results are stored in this folder. A clear structure is shown below:
+Before training, a folder named ```deepatlas_results``` is created automatically under the repository directory. All training results are stored in this folder. A clear structure is shown below:
 ```
-DeepAtlas/DeepAtlas_dataset/
+DeepAtlas/deepatlas_results/
     ├── Task001_ET
     |   └── results
     |       └── RegNet
