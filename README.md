@@ -5,7 +5,7 @@
 <a href="https://github.com/mikami520/AutoSeg4SinonasalCT"><img src="https://img.shields.io/badge/Code-Page-magenta"></a>
 </p>
 <h5 align="center"><em>Manish Sahu<sup>*</sup>, Yuliang Xiao<sup>*</sup>, Russell Taylor, Mathias Unberath, Bryan K. Ward, Deepa Galaiya, Masaru Ishii, Francis X. Creighton</em></h5>
-<p align="center"> * Indicates Equal Contribution </p>
+<p align="center"> <sup>*</sup> Indicates Equal Contribution </p>
 <p align="center">
   <a href="#news">News</a> |
   <a href="#abstract">Abstract</a> |
