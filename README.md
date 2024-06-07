@@ -3,7 +3,7 @@ Deep Atlas: Joint Semi-supervised Learning of Image Registration and Segmentatio
 
 ## Step 0: Fork This GitHub Repository 
 ```bash
-git clone [https://github.com/mikami520/DeepAtlas.git](https://github.com/mikami520/AutoSeg4SinonasalCT.git)
+git clone https://github.com/mikami520/AutoSeg4SinonasalCT.git
 ```
 
 ## Step 1: Set Up Two Environments Using requirements.txt Files (virtual environment is recommended)
