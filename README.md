@@ -17,9 +17,9 @@
 
 ## News 
 
-**2024.06.03** - Our paper is accepted to **American Academy of Otolaryngology–Head and Neck Surgery 2024 (OTO-HNS2024)**.
-
 **2024.06.07** - The data preprocessing, training, inference, and evaluation code are released.
+
+**2024.06.03** - Our paper is accepted to **American Academy of Otolaryngology–Head and Neck Surgery 2024 (OTO-HNS2024)**.
 
 ## Installation
 ### Step 0: Fork This GitHub Repository 
