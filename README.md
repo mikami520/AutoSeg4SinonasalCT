@@ -31,8 +31,10 @@
 
 - Conclusion: We have evaluated a label-efficient pipeline for segmentation of sinonasal structures. Empirical results demonstrate that automated DL methods can achieve submillimeter accuracy using a small number of labeled CT scans. Our pipeline has the potential to improve preoperative planning workflows, robotic- and image-guidance navigation systems, computer-assisted diagnosis, and the construction of statistical shape models to quantify population variations.
 
-![](assets/method.png)
-<figcaption align = "center"><b>Figure 1: Overview of Workflow.
+<p align="center">
+  <img src="assets/nasal.gif" />
+</p>
+<figcaption align = "center"><b>Figure 1: 3D Heatmap Visualization of nasal septum, inferior turbinate, maxillary sinus, and optic nerve
 </b></figcaption>
 
 ## Installation
