@@ -4,7 +4,7 @@
 <a href="https://pubmed.ncbi.nlm.nih.gov/38686594/"><img src="https://img.shields.io/badge/PubMed-Link-blue"></a>
 <a href="https://github.com/mikami520/AutoSeg4SinonasalCT"><img src="https://img.shields.io/badge/Code-Page-magenta"></a>
 </p>
-<h5 align="center"><em>Manish Sahu<sup>*</sup>, Yuliang Xiao<sup>*</sup>, Russell Taylor, Mathias Unberath, Bryan K. Ward, Deepa Galaiya, Masaru Ishii, Francis X. Creighton</em></h5>
+<h5 align="center"><em>Manish Sahu<sup>*</sup>, Yuliang Xiao<sup>*</sup>, Jose L. Porras, Ameen Amanian, Aseem Jain, Andrew Thamboo, Russell H. Taylor, Francis X. Creighton, Masaru Ishii</em></h5>
 <p align="center"> <sup>*</sup> Indicates Equal Contribution </p>
 <p align="center">
   <a href="#news">News</a> |
@@ -23,7 +23,16 @@
 
 ## Abstract
 
-TBD
+**Objective**: Segmentation, the partitioning of patient imaging into multiple, labeled segments, has several potential clinical benefits but when performed manually is tedious and resource intensive. Automated deep learning (DL)-based segmentation methods can streamline the process. The objective of this study was to evaluate a label-efficient DL pipeline that requires only a small number of annotated scans for semantic segmentation of sinonasal structures in CT scans.
+<br />
+<br />
+**Methods**: Forty CT scans were used in this study including 16 scans in which the nasal septum (NS), inferior turbinate (IT), maxillary sinus (MS), and optic nerve (ON) were manually annotated using an open-source software. A label-efficient DL framework was used to train jointly on a few manually labeled scans and the remaining unlabeled scans. Quantitative analysis was then performed to obtain the number of annotated scans needed to achieve submillimeter average surface distances (ASDs).
+<br />
+<br />
+**Results**: Our findings reveal that merely four labeled scans are necessary to achieve median submillimeter ASDs for large sinonasal structures—NS (0.96 mm), IT (0.74 mm), and MS (0.43 mm), whereas eight scans are required for smaller structures—ON (0.80 mm).
+<br />
+<br />
+**Conclusion**: We have evaluated a label-efficient pipeline for segmentation of sinonasal structures. Empirical results demonstrate that automated DL methods can achieve submillimeter accuracy using a small number of labeled CT scans. Our pipeline has the potential to improve preoperative planning workflows, robotic- and image-guidance navigation systems, computer-assisted diagnosis, and the construction of statistical shape models to quantify population variations.
 
 ## Installation
 
