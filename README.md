@@ -23,16 +23,17 @@
 
 ## Abstract
 
-**Objective**: Segmentation, the partitioning of patient imaging into multiple, labeled segments, has several potential clinical benefits but when performed manually is tedious and resource intensive. Automated deep learning (DL)-based segmentation methods can streamline the process. The objective of this study was to evaluate a label-efficient DL pipeline that requires only a small number of annotated scans for semantic segmentation of sinonasal structures in CT scans.
-<br />
-<br />
-**Methods**: Forty CT scans were used in this study including 16 scans in which the nasal septum (NS), inferior turbinate (IT), maxillary sinus (MS), and optic nerve (ON) were manually annotated using an open-source software. A label-efficient DL framework was used to train jointly on a few manually labeled scans and the remaining unlabeled scans. Quantitative analysis was then performed to obtain the number of annotated scans needed to achieve submillimeter average surface distances (ASDs).
-<br />
-<br />
-**Results**: Our findings reveal that merely four labeled scans are necessary to achieve median submillimeter ASDs for large sinonasal structures—NS (0.96 mm), IT (0.74 mm), and MS (0.43 mm), whereas eight scans are required for smaller structures—ON (0.80 mm).
-<br />
-<br />
-**Conclusion**: We have evaluated a label-efficient pipeline for segmentation of sinonasal structures. Empirical results demonstrate that automated DL methods can achieve submillimeter accuracy using a small number of labeled CT scans. Our pipeline has the potential to improve preoperative planning workflows, robotic- and image-guidance navigation systems, computer-assisted diagnosis, and the construction of statistical shape models to quantify population variations.
+- Objective: Segmentation, the partitioning of patient imaging into multiple, labeled segments, has several potential clinical benefits but when performed manually is tedious and resource intensive. Automated deep learning (DL)-based segmentation methods can streamline the process. The objective of this study was to evaluate a label-efficient DL pipeline that requires only a small number of annotated scans for semantic segmentation of sinonasal structures in CT scans.
+
+- Methods: Forty CT scans were used in this study including 16 scans in which the nasal septum (NS), inferior turbinate (IT), maxillary sinus (MS), and optic nerve (ON) were manually annotated using an open-source software. A label-efficient DL framework was used to train jointly on a few manually labeled scans and the remaining unlabeled scans. Quantitative analysis was then performed to obtain the number of annotated scans needed to achieve submillimeter average surface distances (ASDs).
+
+- Results: Our findings reveal that merely four labeled scans are necessary to achieve median submillimeter ASDs for large sinonasal structures—NS (0.96 mm), IT (0.74 mm), and MS (0.43 mm), whereas eight scans are required for smaller structures—ON (0.80 mm).
+
+- Conclusion: We have evaluated a label-efficient pipeline for segmentation of sinonasal structures. Empirical results demonstrate that automated DL methods can achieve submillimeter accuracy using a small number of labeled CT scans. Our pipeline has the potential to improve preoperative planning workflows, robotic- and image-guidance navigation systems, computer-assisted diagnosis, and the construction of statistical shape models to quantify population variations.
+
+![](assets/method.png)
+<figcaption align = "center"><b>Figure 1: Overview of Workflow.
+</b></figcaption>
 
 ## Installation
 
