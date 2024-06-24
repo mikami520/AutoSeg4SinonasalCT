@@ -33,9 +33,8 @@
 
 <p align="center">
   <img src="assets/nasal.gif" />
+  <b>Figure 1: 3D Heatmap Visualization of Nasal Septum (NS), Inferior Turbinate (IT), Maxillary Sinus (MS), and Optic Nerve (ON)</b>
 </p>
-<figcaption align = "center"><b>Figure 1: 3D Heatmap Visualization of Nasal Septum (NS), Inferior Turbinate (IT), Maxillary Sinus (MS), and Optic Nerve (ON)
-</b></figcaption>
 
 ## Installation
 
