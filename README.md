@@ -1,7 +1,7 @@
 <h2 align="center"> [OTO–HNS2024] A Label-Efficient Framework for Automated Sinonasal CT Segmentation in Image-Guided Surgery </h2>
 <p align="center">
 <a href="https://aao-hnsfjournals.onlinelibrary.wiley.com/doi/10.1002/ohn.868"><img src="https://img.shields.io/badge/Wiley-Paper-red"></a>
-<a href="https://pubmed.ncbi.nlm.nih.gov/38686594/"><img src="https://img.shields.io/badge/PubMed-Link-blue"></a>
+<a href="https://pubmed.ncbi.nlm.nih.gov/38922721/"><img src="https://img.shields.io/badge/PubMed-Link-blue"></a>
 <a href="https://github.com/mikami520/AutoSeg4SinonasalCT"><img src="https://img.shields.io/badge/Code-Page-magenta"></a>
 </p>
 <h5 align="center"><em>Manish Sahu<sup>*</sup>, Yuliang Xiao<sup>*</sup>, Jose L. Porras, Ameen Amanian, Aseem Jain, Andrew Thamboo, Russell H. Taylor, Francis X. Creighton, Masaru Ishii</em></h5>
