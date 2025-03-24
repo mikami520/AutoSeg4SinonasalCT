@@ -189,6 +189,18 @@ DeepAtlas/DeepAtlas_dataset/
     ├── Task002_Nasal_Cavity
 ```
 
+## Citing Paper
+
+If you find this paper helpful, please consider citing:
+```bibtex
+@article{sahu2024label,
+  title={A Label-Efficient Framework for Automated Sinonasal CT Segmentation in Image-Guided Surgery},
+  author={Sahu, Manish and Xiao, Yuliang and Porras, Jose L. and Amanian, Ameen and Jain, Aseem and Thamboo, Andrew and Taylor, Russell H. and Creighton, Francis X. and Ishii, Masaru},
+  journal={Otolaryngology--Head and Neck Surgery},
+  publisher={Wiley Online Library}
+}
+```
+
 # Star History
 <p align="center">
   <a href="https://www.star-history.com/#mikami520/AutoSeg4SinonasalCT&Date">
