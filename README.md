@@ -214,6 +214,6 @@ If you find this paper helpful, please consider citing:
 
 ---
 <div align="center">
-<p>Developed by Chris Xiao | University of Toronto</p>
-<p>© 2025 All Rights Reserved</p>
+<p>Developed by Chris Xiao | Johns Hopkins University</p>
+<p>© 2024 All Rights Reserved</p>
 </div>
